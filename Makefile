@@ -1,40 +1,38 @@
-# Copyright 2009-2010 Jon Klein
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#change this to the name of the Main class file, without file extension
+MAIN_FILE = Psh
 
-SOURCES = *.java  org/spiderland/Psh/*.java org/spiderland/Psh/ProbClass/*.java org/spiderland/Psh/Coevolution/*.java
-CLASSES	= *.class org/spiderland/Psh/*.class org/spiderland/Psh/ProbClass/*.class org/spiderland/Psh/Coevolution/*.class
+#change this to the depth of the project folders
+#if needed, add a preffix for a common project folder
+CSHARP_SOURCE_FILES = $(wildcard */*/*.cs */*.cs *.cs)
 
-.PHONY: docs
+UNITY_HOME=/Applications/Unity5.3.2f1
+#add needed flags to the compilerCSHARP_FLAGS = -out:$(EXECUTABLE)
+CSHARP_FLAGS = -unsafe
+# CSHARP_FLAGS = -r:$(UNITY_HOME)/Unity.app/Contents/Frameworks/Mono/lib/mono/micro/mscorlib.dll
 
-all: Psh.jar docs
+#change to the environment compiler
+CSHARP_COMPILER = mcs
+# CSHARP_COMPILER = $(UNITY_HOME)/Unity.app/Contents/Frameworks/Mono/bin/mcs
 
-Psh.jar: $(SOURCES) 
-	javac -source 1.6 -target 1.6 -Xlint $(SOURCES)
-	jar cf Psh.jar Manifest LICENSE NOTICE README.md $(CLASSES)
+#if needed, change the executable file
+EXECUTABLE = $(MAIN_FILE).exe
+LIBRARY = $(MAIN_FILE).dll
+
+#if needed, change the remove command according to your system
+RM_CMD = -rm -f $(EXECUTABLE)
+
+
+
+all: $(LIBRARY)
+
+$(EXECUTABLE): $(CSHARP_SOURCE_FILES)
+	$(CSHARP_COMPILER) $(CSHARP_SOURCE_FILES) $(CSHARP_FLAGS) -out:$(EXECUTABLE)
+
+$(LIBRARY): $(CSHARP_SOURCE_FILES)
+	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library $(CSHARP_SOURCE_FILES) -out:$(LIBRARY)
+
+run: all
+	./$(EXECUTABLE)
 
 clean:
-	rm -f org/spiderland/Psh/*.class *.class Psh.jar
-
-tilde:
-	rm -f *~
-	rm -f gpsamples/*~
-	rm -f pushsamples/*~
-	rm -f tools/*~
-	rm -f org/spiderland/Psh/*~
-
-test:
-	java -cp junit-4.4.jar:. junit.textui.TestRunner org.spiderland.Psh.test.ProgramTest
-
-docs:
-	javadoc -d docs/api org.spiderland.Psh
+	$(RM_CMD)
