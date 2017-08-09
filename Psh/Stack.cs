@@ -20,7 +20,7 @@ namespace Psh
 {
   /// <summary>Abstract class for implementing stacks.</summary>
   [System.Serializable]
-  internal abstract class Stack
+public abstract class Stack
   {
     private const long serialVersionUID = 1L;
 

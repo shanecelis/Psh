@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -56,7 +55,7 @@ namespace Psh
       int hash = 7;
       for (int i = 0; i < _size; i++)
       {
-        hash = 41 * hash + float.ValueOf(_stack[i]).GetHashCode();
+        hash = 41 * hash + _stack[i].GetHashCode();
       }
       return hash;
     }

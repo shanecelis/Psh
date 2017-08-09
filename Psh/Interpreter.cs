@@ -15,6 +15,7 @@ using System;
 * limitations under the License.
 */
 using System.Collections.Generic;
+using System.Linq;
 using Sharpen;
 
 namespace Psh
@@ -435,7 +436,7 @@ namespace Psh
       }
       if (inObject is string)
       {
-        Instruction i = _instructions.Get(inObject);
+        Instruction i = (Instruction) _instructions.Get(inObject);
         if (i != null)
         {
           i.Execute(this);
@@ -739,8 +740,22 @@ namespace Psh
     {
       AList<int> result = new AList<int>();
       RandomCodeDistribution(result, inCount, inMaxElements);
-      Sharpen.Collections.Shuffle(result);
+      Shuffle(result);
       return result;
+    }
+
+    // Fisher-Yates-Durstenfeld shuffle
+    //$ cite -ma 1653204 -t excerpt -u \
+    // http://stackoverflow.com/questions/1651619/optimal-linq-query-to-get-a-random-sub-collection-shuffle
+    public static IEnumerable<T> Shuffle<T>(IEnumerable<T> source, Random rng = null) {
+      if (rng == null)
+        rng = new Random();
+      var buffer = source.ToList();
+      for (int i = 0; i < buffer.Count; i++) {
+        int j = rng.Next(i, buffer.Count);
+        yield return buffer[j];
+        buffer[j] = buffer[i];
+      }
     }
 
     /// <summary>The recursive worker function for the public RandomCodeDistribution.</summary>
@@ -759,7 +774,7 @@ namespace Psh
     }
 
     [System.Serializable]
-    internal abstract class AtomGenerator
+    protected internal abstract class AtomGenerator
     {
       private const long serialVersionUID = 1L;
 
@@ -802,7 +817,7 @@ namespace Psh
 
       internal override object Generate(Interpreter inInterpreter)
       {
-        float r = this._enclosing.Rng.NextFloat() * (this._enclosing._maxRandomFloat - this._enclosing._minRandomFloat);
+        float r = (float) this._enclosing.Rng.NextDouble() * (this._enclosing._maxRandomFloat - this._enclosing._minRandomFloat);
         r -= (r % this._enclosing._randomFloatResolution);
         return r + this._enclosing._minRandomFloat;
       }

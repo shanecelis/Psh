@@ -1,5 +1,4 @@
 using System;
-using System;
 using Psh;
 using Sharpen;
 
@@ -44,7 +43,7 @@ namespace Psh.TestCase
 
     private float TestCaseFunction(float x)
     {
-      return (float)(Math.Exp(Math.Abs(x)) * Math.Sin(2.0 * Math.Pi * x));
+      return (float)(Math.Exp(Math.Abs(x)) * Math.Sin(2.0 * Math.PI * x));
     }
   }
 }

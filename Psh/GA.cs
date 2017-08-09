@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -60,7 +59,7 @@ namespace Psh
     protected internal Type _individualClass;
 
     [System.NonSerialized]
-    protected internal OutputStream _outputStream;
+    protected internal TextWriter _outputStream;
 
     protected internal Psh.Checkpoint _checkpoint;
 
@@ -107,7 +106,7 @@ namespace Psh
       // Wowzers! This is, indeed, a question that truly tests mens' souls.
       if (ga._outputfile != null)
       {
-        ga._outputStream = new FileOutputStream(new FilePath(ga._outputfile));
+        ga._outputStream = new StreamWriter(new FilePath(ga._outputfile));
       }
       else
       {
@@ -239,7 +238,7 @@ namespace Psh
       _outputfile = GetParam("output-file", true);
       if (_outputfile != null)
       {
-        _outputStream = new FileOutputStream(new FilePath(_outputfile));
+        _outputStream = new StreamWriter(new FilePath(_outputfile));
       }
     }
 
@@ -516,7 +515,7 @@ namespace Psh
       {
         total += Math.Abs(inArray[n]);
       }
-      if (float.IsInfinite(total))
+      if (float.IsInfinity(total))
       {
         return float.MaxValue;
       }
@@ -597,8 +596,8 @@ namespace Psh
         return;
       }
       FilePath file = new FilePath(_checkpointPrefix + _checkpoint.checkpointNumber + ".gz");
-      ObjectOutputStream @out = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(file)));
-      @out.WriteObject(_checkpoint);
+      var @out = new StreamWriter(new GZIPOutputStream(new FileOutputStream(file)));
+      @out.Write(_checkpoint);
       @out.Flush();
       @out.Close();
       System.Console.Out.Println("Wrote checkpoint file " + file.GetAbsolutePath());

@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -341,7 +340,7 @@ namespace Psh
       // Java clone() is useless :(
       if (inObject is string)
       {
-        return new string((string)inObject);
+        return inObject; //new string((string)inObject);
       }
       if (inObject is int)
       {

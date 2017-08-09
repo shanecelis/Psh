@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -59,7 +58,14 @@ namespace Psh
     public override int GetHashCode()
     {
       int hash = GetType().GetHashCode();
-      hash = 37 * hash + Arrays.DeepHashCode(this._stack);
+      hash = 37 * hash + /*Arrays.*/DeepHashCode(this._stack);
+      return hash;
+    }
+
+    private int DeepHashCode(T[] array) {
+      int hash = 0;
+      for (int i = 0; i < array.Length; i++)
+        hash ^= array[i].GetHashCode();
       return hash;
     }
 
@@ -81,7 +87,7 @@ namespace Psh
 
     internal override void Resize(int inSize)
     {
-      T[] newstack = (T[])new object[inSize];
+      T[] newstack = new T[inSize];
       if (_stack != null)
       {
         System.Array.Copy(_stack, 0, newstack, 0, _size);
@@ -96,7 +102,7 @@ namespace Psh
       {
         return _stack[inIndex];
       }
-      return null;
+      return default(T);
     }
 
     public virtual T Top()
@@ -106,7 +112,7 @@ namespace Psh
 
     public virtual T Pop()
     {
-      T result = null;
+      T result = default(T);
       if (_size > 0)
       {
         result = _stack[_size - 1];
@@ -117,10 +123,11 @@ namespace Psh
 
     public virtual void Push(T inValue)
     {
-      if (inValue is Program)
-      {
-        inValue = (T)new Program((Program)inValue);
-      }
+      // XXX I do not get what this is supposed to be doing here:
+      // if (inValue is Program)
+      // {
+      //   inValue = (T)new Program((Program)inValue);
+      // }
       _stack[_size] = inValue;
       _size++;
       if (_size >= _maxsize)

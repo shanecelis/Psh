@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -182,7 +181,7 @@ namespace Psh.Coevolution
     private Dictionary<string, string> GetPredictorParameters(Dictionary<string, string> parameters)
     {
       Dictionary<string, string> predictorParameters = new Dictionary<string, string>();
-      predictorParameters.Put("max-generations", Sharpen.Extensions.ToString(int.MaxValue));
+      predictorParameters.Put("max-generations", int.MaxValue.ToString());
       predictorParameters.Put("problem-class", GetParam("PREDICTOR-problem-class"));
       predictorParameters.Put("individual-class", GetParam("PREDICTOR-individual-class"));
       predictorParameters.Put("population-size", GetParam("PREDICTOR-population-size"));

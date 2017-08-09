@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -479,11 +478,11 @@ namespace Psh
     {
       // Test for overflow
       double result = Math.Pow(inA, inB);
-      if (double.IsInfinite(result) && result > 0)
+      if (double.IsInfinity(result) && result > 0)
       {
         return int.MaxValue;
       }
-      if (double.IsInfinite(result) && result < 0)
+      if (double.IsInfinity(result) && result < 0)
       {
         return int.MinValue;
       }
@@ -504,11 +503,11 @@ namespace Psh
     {
       // Test for overflow
       double result = Math.Log(inB) / Math.Log(inA);
-      if (double.IsInfinite(result) && result > 0)
+      if (double.IsInfinity(result) && result > 0)
       {
         return int.MaxValue;
       }
-      if (double.IsInfinite(result) && result < 0)
+      if (double.IsInfinity(result) && result < 0)
       {
         return int.MinValue;
       }
@@ -598,11 +597,11 @@ namespace Psh
     {
       // Test for overflow
       double result = Math.Log(inA);
-      if (double.IsInfinite(result) && result > 0)
+      if (double.IsInfinity(result) && result > 0)
       {
         return int.MaxValue;
       }
-      if (double.IsInfinite(result) && result < 0)
+      if (double.IsInfinity(result) && result < 0)
       {
         return int.MinValue;
       }
@@ -767,11 +766,11 @@ namespace Psh
     {
       // Test for overflow
       float result = inA + inB;
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -788,11 +787,11 @@ namespace Psh
     {
       // Test for overflow
       float result = inA - inB;
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -809,11 +808,11 @@ namespace Psh
     {
       // Test for overflow
       float result = inA * inB;
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -834,11 +833,11 @@ namespace Psh
     {
       // Test for overflow
       float result = inA / inB;
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -870,11 +869,11 @@ namespace Psh
     {
       // Test for overflow
       float result = (float)Math.Pow(inA, inB);
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -895,11 +894,11 @@ namespace Psh
     {
       // Test for overflow
       float result = (float)(Math.Log(inB) / Math.Log(inA));
-      if (double.IsInfinite(result) && result > 0)
+      if (double.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (double.IsInfinite(result) && result < 0)
+      if (double.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -984,11 +983,11 @@ namespace Psh
     {
       // Test for overflow
       float result = (float)Math.Tan(inValue);
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -1009,11 +1008,11 @@ namespace Psh
     {
       // Test for overflow
       float result = (float)Math.Exp(inValue);
-      if (float.IsInfinite(result) && result > 0)
+      if (float.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (float.IsInfinite(result) && result < 0)
+      if (float.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -1056,11 +1055,11 @@ namespace Psh
     {
       // Test for overflow
       float result = (float)Math.Log(inA);
-      if (double.IsInfinite(result) && result > 0)
+      if (double.IsInfinity(result) && result > 0)
       {
         return float.MaxValue;
       }
-      if (double.IsInfinite(result) && result < 0)
+      if (double.IsInfinity(result) && result < 0)
       {
         return (1.0f - float.MaxValue);
       }
@@ -1087,7 +1086,7 @@ namespace Psh
     public override void Execute(Interpreter inI)
     {
       float range = (inI._maxRandomFloat - inI._minRandomFloat) / inI._randomFloatResolution;
-      float randFloat = (Rng.NextFloat() * range * inI._randomFloatResolution) + inI._minRandomFloat;
+      float randFloat = ((float)Rng.NextDouble() * range * inI._randomFloatResolution) + inI._minRandomFloat;
       inI.FloatStack().Push(randFloat);
     }
   }
@@ -1288,7 +1287,7 @@ namespace Psh
 
     public override void Execute(Interpreter inI)
     {
-      inI.BoolStack().Push(Rng.NextBoolean());
+      inI.BoolStack().Push(Rng.Next(2) == 1);
     }
   }
 

@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -207,7 +206,7 @@ namespace Psh.Coevolution
     {
       string report = base.Report();
       report = report.Replace('-', '#');
-      report = report.ReplaceFirst("Report for", " Predictor");
+      report = report.Replace("Report for", " Predictor");
       report += ";; Best Predictor: " + _populations[_currentPopulation][_bestIndividual] + "\n";
       report += ";; Best Predictor Fitness: " + _bestMeanFitness + "\n\n";
       report += ";; Mean Predictor Fitness: " + _populationMeanFitness + "\n";

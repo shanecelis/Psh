@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -43,7 +42,7 @@ namespace Psh.Coevolution
       {
         total += Math.Abs(inArray[n]);
       }
-      if (float.IsInfinite(total))
+      if (float.IsInfinity(total))
       {
         return float.MaxValue;
       }

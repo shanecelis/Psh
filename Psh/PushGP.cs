@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -316,7 +315,7 @@ namespace Psh
     protected internal override string Report()
     {
       string report = base.Report();
-      if (double.IsInfinite(_populationMeanFitness))
+      if (double.IsInfinity(_populationMeanFitness))
       {
         _populationMeanFitness = double.MaxValue;
       }
@@ -341,8 +340,8 @@ namespace Psh
       report += ";; Mean Program Size: " + _averageSize + "\n";
       PushGPIndividual simplified = Autosimplify((PushGPIndividual)_populations[_currentPopulation][_bestIndividual], _reportSimplifications);
       report += ";; Number of Evaluations Thus Far: " + _interpreter.GetEvaluationExecutions() + "\n";
-      string mem = (Runtime.GetRuntime().TotalMemory() / 10000000.0f).ToString();
-      report += ";; Memory usage: " + mem + "\n\n";
+      // string mem = (Runtime.GetRuntime().TotalMemory() / 10000000.0f).ToString();
+      // report += ";; Memory usage: " + mem + "\n\n";
       report += ";; Partial Simplification (may beat best):\n  ";
       report += simplified._program + "\n";
       report += ";; Partial Simplification Size: ";

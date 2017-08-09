@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -45,7 +44,7 @@ namespace Psh
       string filename = "<string>";
       try
       {
-        BufferedReader reader = new BufferedReader(new Sharpen.StringReader(inParams));
+        var reader = new System.IO.StringReader(inParams);
         string line;
         string parent;
         if (inFile == null)
