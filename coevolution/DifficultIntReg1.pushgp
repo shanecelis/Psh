@@ -43,10 +43,10 @@ final-simplifications = 2000
 
 ### Setup problem class and test cases.
 
-problem-class = org.spiderland.Psh.ProbClass.IntSymbolicRegression
+problem-class = Psh.ProbClass.IntSymbolicRegression
 instruction-set = (registered.integer registered.exec input.makeinputs1)
 
-test-case-class = org.spiderland.Psh.TestCase.IntRegTestCases1
+test-case-class = Psh.TestCase.IntRegTestCases1
 
 ### Setup Optional Parameters
 

@@ -22,7 +22,7 @@
 
 ### Setup required parameters
 
-problem-class = org.spiderland.Psh.ProbClass.FloatSymbolicRegression
+problem-class = Psh.ProbClass.FloatSymbolicRegression
 
 max-generations = 500
 population-size = 200

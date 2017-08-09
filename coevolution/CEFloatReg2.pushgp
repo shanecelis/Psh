@@ -52,16 +52,16 @@ target-function-string = y = (e ^ |x|) * sin(x)
 
 ### Setup problem class and test cases.
 
-problem-class = org.spiderland.Psh.Coevolution.CEFloatSymbolicRegression
-test-case-class = org.spiderland.Psh.TestCase.FloatRegTestCases2
+problem-class = Psh.Coevolution.CEFloatSymbolicRegression
+test-case-class = Psh.TestCase.FloatRegTestCases2
 
 #instruction-set = (registered.float input.makeinputs1)
 instruction-set = (input.makeinputs1 float.+ float.- float.* float./ float.exp float.sin float.cos)
 
 ### Setup predictor GP parameters
 
-PREDICTOR-problem-class = org.spiderland.Psh.Coevolution.FloatRegFitPrediction
-PREDICTOR-individual-class = org.spiderland.Psh.Coevolution.FloatRegFitPredictionIndividual
+PREDICTOR-problem-class = Psh.Coevolution.FloatRegFitPrediction
+PREDICTOR-individual-class = Psh.Coevolution.FloatRegFitPredictionIndividual
 PREDICTOR-population-size = 10
 PREDICTOR-effort-percent = 5
 

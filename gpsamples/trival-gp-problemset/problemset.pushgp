@@ -36,8 +36,8 @@ include ../standard.pushgp
 ### Set classes for the Push intepreter and individuals.  We 
 ### can use this to implement custom interpreter behaviors.
 
-interpreter-class	= org.spiderland.Psh.Interpreter
-individual-class	= org.spiderland.Psh.PushGPIndividual
+interpreter-class	= Psh.Interpreter
+individual-class	= Psh.PushGPIndividual
 
 ### Setup some standard GP parameters
 
@@ -66,6 +66,6 @@ final-simplifications	= 1000
 ### how fitness scores are computed.  The FloatSymbolicRegression
 ### class uses a set of float inputs and a single output.
 
-problem-class		= org.spiderland.Psh.ProbClass.FloatSymbolicRegression
+problem-class		= Psh.ProbClass.FloatSymbolicRegression
 
 instruction-set	= ( float.* float.+ float.% float.dup float.- float.swap float.erc registered.input)

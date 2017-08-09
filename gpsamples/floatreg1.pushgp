@@ -52,7 +52,7 @@ target-function-string = y = 12x^2 + 5
 ### how fitness scores are computed.  The FloatSymbolicRegression
 ### class uses a set of float inputs and a single output.
 
-problem-class		= org.spiderland.Psh.ProbClass.FloatSymbolicRegression
+problem-class		= Psh.ProbClass.FloatSymbolicRegression
 
 test-cases		= ( ( 1 17 ) ( 2 53 ) ( 3 113 ) ( 4 197 ) ( 5 305 ) )
 

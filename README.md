@@ -92,7 +92,7 @@ PshGP runs are setup using configuration files which have the extension `.pushgp
 
 The following parameters must be defined in the configuration file, given with example values:
 
-    problem-class = org.spiderland.Psh.IntSymbolicRegression
+    problem-class = Psh.IntSymbolicRegression
     
     max-generations = 200
     population-size = 1000
@@ -132,9 +132,9 @@ The following parameters are optional. If not specified, the default values belo
     
     target-function-string = "y = x^4 - 2x + 7"
     
-    interpreter-class = org.spiderland.Psh.Interpreter
-    individual-class = org.spiderland.Psh.PushGPIndividual
-    inputpusher-class = org.spiderland.Psh.InputPusher
+    interpreter-class = Psh.Interpreter
+    individual-class = Psh.PushGPIndividual
+    inputpusher-class = Psh.InputPusher
     
     output-file = out.txt
     push-frame-mode = pushstacks

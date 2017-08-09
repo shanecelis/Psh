@@ -212,7 +212,7 @@ namespace Psh
       // Default parameters to be used when optional parameters are not
       // given.
       int defaultTrivialGeographyRadius = 0;
-      string defaultIndividualClass = "org.spiderland.Psh.PushGPIndividual";
+      string defaultIndividualClass = "Psh.PushGPIndividual";
       string individualClass = GetParam("individual-class", true);
       if (individualClass == null)
       {

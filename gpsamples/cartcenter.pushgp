@@ -30,9 +30,9 @@
 ### values can used to implement custom interpreter or individual 
 ### behaviors.
 
-interpreter-class = org.spiderland.Psh.Interpreter
-inputpusher-class = org.spiderland.Psh.InputPusher
-individual-class = org.spiderland.Psh.PushGPIndividual
+interpreter-class = Psh.Interpreter
+inputpusher-class = Psh.InputPusher
+individual-class = Psh.PushGPIndividual
 
 ### Setup GP parameters
 
@@ -62,7 +62,7 @@ final-simplifications = 1000
 ### class uses a set of test case position-velocity pairs that are
 ### initial positions for the simulation
 
-problem-class = org.spiderland.Psh.ProbClass.CartCentering
+problem-class = Psh.ProbClass.CartCentering
 
 ### Each test case is a random pair in ([-1,1], [-1,1]).
 

@@ -25,9 +25,9 @@
 ### values can used to implement custom interpreter or individual 
 ### behaviors.
 
-interpreter-class       	= org.spiderland.Psh.Interpreter
-inputpusher-class               = org.spiderland.Psh.InputPusher
-individual-class        	= org.spiderland.Psh.PushGPIndividual
+interpreter-class       	= Psh.Interpreter
+inputpusher-class               = Psh.InputPusher
+individual-class        	= Psh.PushGPIndividual
 
 ### Setup GP parameters
 
@@ -57,7 +57,7 @@ final-simplifications	= 1000
 ### how fitness scores are computed.  The IntSymbolicRegression
 ### class uses a set of int inputs and a single output.
 
-problem-class		= org.spiderland.Psh.ProbClass.IntSymbolicRegression
+problem-class		= Psh.ProbClass.IntSymbolicRegression
 
 #This test case is for factorial
 test-cases		= ((1 1) (2 2) (3 6) (4 24) (5 120) (6 720))
