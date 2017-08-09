@@ -26,33 +26,33 @@
 
 ### Setup some standard GP parameters
 
-tournament-size         = 7
-trivial-geography-radius= 10
-max-points-in-program	= 100
-mutation-mode		= fair
-fair-mutation-range     = .5
+tournament-size              = 7
+trivial-geography-radius     = 10
+max-points-in-program        = 100
+mutation-mode                = fair
+fair-mutation-range          = .5
 
-population-size 	= 2000
-mutation-percent	= 10
-crossover-percent	= 75
-simplification-percent	= 5
-max-generations		= 200
-max-random-code-size	= 40
+population-size              = 2000
+mutation-percent             = 10
+crossover-percent            = 75
+simplification-percent       = 5
+max-generations              = 200
+max-random-code-size         = 40
 
-execution-limit		= 80
+execution-limit              = 80
 
 reproduction-simplifications = 25
-report-simplifications	= 100
-final-simplifications	= 1000
+report-simplifications       = 100
+final-simplifications        = 1000
 
-target-function-string = y = 12x^2 + 5
+target-function-string       = y = 12x^2 + 5
 
 
 ### The problem class determines how test cases are setup and
 ### how fitness scores are computed.  The IntSymbolicRegression
 ### class uses a set of int inputs and a single output.
 
-problem-class		= org.spiderland.Psh.ProbClass.IntSymbolicRegression
+problem-class		= Psh.ProbClass.IntSymbolicRegression
 
 #This test case is for y = 12x^2 + 5
 test-cases		= ( ( 1 17 ) ( 2 53 ) ( 3 113 ) ( 4 197 ) ( 5 305 ) )

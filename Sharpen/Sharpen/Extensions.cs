@@ -22,7 +22,7 @@ namespace Sharpen
     public static class Extensions
     {
         private static readonly long EPOCH_TICKS;
-        
+
         //  The format specifiers which do not correspond to arguments have the following syntax:
         //  %[flags][width]conversion
         //  http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
@@ -42,7 +42,7 @@ namespace Sharpen
         {
             list.Insert(index, item);
         }
-        
+
         public static void Add<T>(this IList<T> list, int index, T item)
         {
             list.Insert(index, item);
@@ -225,7 +225,7 @@ namespace Sharpen
             d.TryGetValue(key, out val);
             return val;
         }
-        
+
         public static object Get(this IDictionary d, object key)
         {
             return d[key];
@@ -238,7 +238,7 @@ namespace Sharpen
             d[key] = value;
             return old;
         }
-        
+
         public static object Put(this IDictionary d, object key, object value)
         {
             object old = d[key];
@@ -377,7 +377,7 @@ namespace Sharpen
         {
             return (col.Count == 0);
         }
-        
+
         public static bool IsEmpty<T>(this ICollection<T> col)
         {
             return (col.Count == 0);
@@ -402,7 +402,7 @@ namespace Sharpen
         {
             return new EnumeratorWrapper(col, col.GetEnumerator());
         }
-        
+
         public static Sharpen.Iterator<T> Iterator<T>(this ICollection<T> col)
         {
             return new EnumeratorWrapper<T>(col, col.GetEnumerator());
@@ -412,7 +412,7 @@ namespace Sharpen
         {
             return new EnumeratorWrapper(col, col.GetEnumerator());
         }
-        
+
         public static Sharpen.Iterator<T> Iterator<T>(this IEnumerable<T> col)
         {
             return new EnumeratorWrapper<T>(col, col.GetEnumerator());
@@ -575,7 +575,7 @@ namespace Sharpen
             list[index] = item;
             return old;
         }
-        
+
         public static T Set<T>(this IList<T> list, int index, T item)
         {
             T old = list[index];
@@ -610,7 +610,7 @@ namespace Sharpen
             return true;
         }
 
-        // Conflicts with System.Linq.Enumerable.Contains<T>(System.Collections.Generic.IEnumerable<T>, T) 
+        // Conflicts with System.Linq.Enumerable.Contains<T>(System.Collections.Generic.IEnumerable<T>, T)
         /* public static bool Contains<T>(this ICollection<T> col, object item)
         {
             if (!(item is T))
@@ -627,7 +627,7 @@ namespace Sharpen
                 list[i] = sorted[i];
             }
         }
-        
+
         public static void Sort<T>(this IList<T> list)
         {
             List<T> sorted = new List<T>(list);
@@ -1044,7 +1044,7 @@ namespace Sharpen
 
             return result.ToArray();
         }
-        
+
         /// <summary>
         /// Returns all public static fields values with specified type
         /// </summary>
@@ -1183,7 +1183,7 @@ namespace Sharpen
                 sbuffer[i] = (sbyte) buffer[i];
             }
         }
-        
+
         public static sbyte ByteValue(this int value)
         {
             return (sbyte) value;
@@ -1193,12 +1193,12 @@ namespace Sharpen
         {
             return (sbyte)value.Value;
         }
-        
+
         public static int IntValue(this int value)
         {
             return value;
         }
-        
+
         public static long LongValue(this long value)
         {
             return value;
@@ -1213,12 +1213,12 @@ namespace Sharpen
         {
             writer.Write(value);
         }
-        
+
         public static void Println(this TextWriter writer)
         {
             writer.WriteLine();
         }
-        
+
         public static void Println(this TextWriter writer, object value)
         {
             writer.WriteLine(value);
@@ -1320,7 +1320,7 @@ namespace Sharpen
                     formatSetting.IsZeroPadded = true;
                     continue;
                 }
-                
+
                 if (flag == ',')
                 {
                     formatSetting.HasLocalSpesificSeparator = true;
@@ -1390,7 +1390,7 @@ namespace Sharpen
                     case 'f':
                     case 's':
                         break;
-                    
+
                     case 'x':
                         format = "x";
                         break;

@@ -1,5 +1,5 @@
 #change this to the name of the Main class file, without file extension
-MAIN_FILE = Psh
+MAIN_FILE = PshGP
 
 #change this to the depth of the project folders
 #if needed, add a preffix for a common project folder
@@ -23,10 +23,12 @@ RM_CMD = -rm -f $(EXECUTABLE)
 
 
 
-all: $(LIBRARY)
+all: $(LIBRARY) $(EXECUTABLE)
 
 $(EXECUTABLE): $(CSHARP_SOURCE_FILES)
-	$(CSHARP_COMPILER) $(CSHARP_SOURCE_FILES) $(CSHARP_FLAGS) -out:$(EXECUTABLE)
+	$(CSHARP_COMPILER) $(CSHARP_FLAGS) $(CSHARP_SOURCE_FILES) -out:$(EXECUTABLE) -main:$(MAIN_FILE)
+
+# $(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) $(MAIN_FILE).cs -out:$(EXECUTABLE)
 
 $(LIBRARY): $(CSHARP_SOURCE_FILES)
 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library $(CSHARP_SOURCE_FILES) -out:$(LIBRARY)

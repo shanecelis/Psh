@@ -65,8 +65,8 @@ namespace Psh
       // given.
       float defaultFairMutationRange = 0.3f;
       float defaultsimplifyFlattenPercent = 20f;
-      string defaultInterpreterClass = "org.spiderland.Psh.Interpreter";
-      string defaultInputPusherClass = "org.spiderland.Psh.InputPusher";
+      string defaultInterpreterClass = "Psh.Interpreter";
+      string defaultInputPusherClass = "Psh.InputPusher";
       string defaultTargetFunctionString = string.Empty;
       float defaultNodeSelectionLeafProbability = 10;
       int defaultNodeSelectionTournamentSize = 2;
