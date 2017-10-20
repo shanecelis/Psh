@@ -42,7 +42,7 @@ namespace Psh
 
     protected internal int _bestIndividual;
 
-    protected internal AList<float> _bestErrors;
+    protected internal List<float> _bestErrors;
 
     protected internal int _maxGenerations;
 
@@ -54,7 +54,7 @@ namespace Psh
 
     protected internal Dictionary<string, string> _parameters;
 
-    public AList<GATestCase> _testCases;
+    public List<GATestCase> _testCases;
 
     protected internal Type _individualClass;
 
@@ -508,7 +508,7 @@ namespace Psh
 
     /// <summary>Computes the absolute-average-of-errors fitness from an error vector.</summary>
     /// <returns>the average error value for the vector.</returns>
-    protected internal virtual float AbsoluteAverageOfErrors(AList<float> inArray)
+    protected internal virtual float AbsoluteAverageOfErrors(List<float> inArray)
     {
       float total = 0.0f;
       for (int n = 0; n < inArray.Count; n++)

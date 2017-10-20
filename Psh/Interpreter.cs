@@ -31,7 +31,7 @@ namespace Psh
 
     protected internal Dictionary<string, Interpreter.AtomGenerator> _generators = new Dictionary<string, Interpreter.AtomGenerator>();
 
-    protected internal AList<Interpreter.AtomGenerator> _randomGenerators = new AList<Interpreter.AtomGenerator>();
+    protected internal List<Interpreter.AtomGenerator> _randomGenerators = new List<Interpreter.AtomGenerator>();
 
     protected internal Psh.IntStack _intStack;
 
@@ -47,7 +47,7 @@ namespace Psh
 
     protected internal ObjectStack _inputStack = new ObjectStack();
 
-    protected internal AList<Stack> _customStacks = new AList<Stack>();
+    protected internal List<Stack> _customStacks = new List<Stack>();
 
     protected internal ObjectStack _intFrameStack = new ObjectStack();
 
@@ -146,8 +146,8 @@ namespace Psh
       DefineInstruction<int>("integer./", (a, b) => { return unchecked(b != 0 ? a / b : 0); } );
       DefineInstruction<int>("integer.%", (a, b) => { return unchecked(b != 0 ? a % b : 0); } );
       DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
-      DefineInstruction("integer.pow", new IntegerPow());
-      DefineInstruction("integer.log", new IntegerLog());
+      DefineInstruction<int>("integer.pow", (a, b) => unchecked((int) Math.Pow(a, b)));
+      DefineInstruction<int>("integer.log", (a, b) => unchecked((int) Math.Log(a, b)));
       DefineInstruction<int, bool>("integer.=", (a, b) => (a == b));
       DefineInstruction<int, bool>("integer.>", (a, b) => (a > b));
       DefineInstruction<int, bool>("integer.<", (a, b) => (a < b));
@@ -155,7 +155,8 @@ namespace Psh
       DefineInstruction<int>("integer.max", (a, b) => (a > b ? a : b));
       DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
       DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
-      DefineInstruction("integer.ln", new IntegerLn());
+      DefineInstruction<int>("integer.log", (a) => unchecked((int) Math.Log(a)));
+      // DefineInstruction("integer.ln", new IntegerLn());
       DefineInstruction("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
       DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
       DefineInstruction("integer.rand", new IntegerRand());

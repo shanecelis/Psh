@@ -401,56 +401,6 @@ internal class BinaryInstruction<T> : Instruction
   // }
 }
 
-  [System.Serializable]
-  internal class IntegerPow : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      // Test for overflow
-      double result = Math.Pow(inA, inB);
-      if (double.IsInfinity(result) && result > 0)
-      {
-        return int.MaxValue;
-      }
-      if (double.IsInfinity(result) && result < 0)
-      {
-        return int.MinValue;
-      }
-      if (double.IsNaN(result))
-      {
-        return 0;
-      }
-      return (int)result;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerLog : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      // Test for overflow
-      double result = Math.Log(inB) / Math.Log(inA);
-      if (double.IsInfinity(result) && result > 0)
-      {
-        return int.MaxValue;
-      }
-      if (double.IsInfinity(result) && result < 0)
-      {
-        return int.MinValue;
-      }
-      if (double.IsNaN(result))
-      {
-        return 0;
-      }
-      return (int)result;
-    }
-  }
-
 [System.Serializable]
 internal class UnaryInstruction<T> : Instruction
 {
@@ -514,30 +464,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
-  internal class IntegerLn : UnaryIntInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int UnaryOperator(int inA)
-    {
-      // Test for overflow
-      double result = Math.Log(inA);
-      if (double.IsInfinity(result) && result > 0)
-      {
-        return int.MaxValue;
-      }
-      if (double.IsInfinity(result) && result < 0)
-      {
-        return int.MinValue;
-      }
-      if (double.IsNaN(result))
-      {
-        return 0;
-      }
-      return (int)result;
-    }
-  }
   internal class IntegerRand : Instruction
   {
     private const long serialVersionUID = 1L;
@@ -607,125 +533,30 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
-  internal class FloatLog : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
+  // [System.Serializable]
+  // internal class FloatTan : UnaryFloatInstruction
+  // {
+  //   private const long serialVersionUID = 1L;
 
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = (float)(Math.Log(inB) / Math.Log(inA));
-      if (double.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (double.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (double.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
-    }
-  }
-
-  [System.Serializable]
-  internal abstract class UnaryFloatInstruction : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Unary float instructions
-    //
-    internal abstract float UnaryOperator(float inValue);
-
-    public void Execute(Interpreter inI)
-    {
-      FloatStack stack = inI.FloatStack();
-      if (stack.Size() > 0)
-      {
-        stack.Push(UnaryOperator(stack.Pop()));
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatTan : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      // Test for overflow
-      float result = (float)Math.Tan(inValue);
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (float.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatExp : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      // Test for overflow
-      float result = (float)Math.Exp(inValue);
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (float.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatLn : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inA)
-    {
-      // Test for overflow
-      float result = (float)Math.Log(inA);
-      if (double.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (double.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (double.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
-    }
-  }
+  //   internal override float UnaryOperator(float inValue)
+  //   {
+  //     // Test for overflow
+  //     float result = (float)Math.Tan(inValue);
+  //     if (float.IsInfinity(result) && result > 0)
+  //     {
+  //       return float.MaxValue;
+  //     }
+  //     if (float.IsInfinity(result) && result < 0)
+  //     {
+  //       return (1.0f - float.MaxValue);
+  //     }
+  //     if (float.IsNaN(result))
+  //     {
+  //       return 0.0f;
+  //     }
+  //     return result;
+  //   }
+  // }
 
   [System.Serializable]
   internal class FloatRand : Instruction
@@ -744,56 +575,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
       float range = (inI._maxRandomFloat - inI._minRandomFloat) / inI._randomFloatResolution;
       float randFloat = ((float)Rng.NextDouble() * range * inI._randomFloatResolution) + inI._minRandomFloat;
       inI.FloatStack().Push(randFloat);
-    }
-  }
-
-  [System.Serializable]
-  internal abstract class BinaryFloatBoolInstruction : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Binary float instructions with boolean output
-    //
-    internal abstract bool BinaryOperator(float inA, float inB);
-
-    public void Execute(Interpreter inI)
-    {
-      FloatStack fstack = inI.FloatStack();
-      BooleanStack bstack = inI.BoolStack();
-      if (fstack.Size() > 1)
-      {
-        float a;
-        float b;
-        b = fstack.Pop();
-        a = fstack.Pop();
-        bstack.Push(BinaryOperator(a, b));
-      }
-    }
-  }
-
-
-  [System.Serializable]
-  internal abstract class BinaryBoolInstruction : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    //Binary bool instructions with bool output
-    //
-    internal abstract bool BinaryOperator(bool inA, bool inB);
-
-    public void Execute(Interpreter inI)
-    {
-      BooleanStack stack = inI.BoolStack();
-      if (stack.Size() > 1)
-      {
-        bool a;
-        bool b;
-        a = stack.Pop();
-        b = stack.Pop();
-        stack.Push(BinaryOperator(b, a));
-      }
     }
   }
 
@@ -1343,8 +1124,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
     public void Execute(Interpreter inI)
     {
+      // Does Nothing
     }
-    // Does Nothing
   }
 
   [System.Serializable]
