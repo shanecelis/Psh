@@ -363,6 +363,41 @@ namespace Psh
     }
   }
 
+[System.Serializable]
+internal class BinaryInstruction<T> : Instruction
+{
+  private const long serialVersionUID = 1L;
+
+  private Func<T,T,T> func;
+  public BinaryInstruction(Func<T,T,T> func) {
+    this.func = func;
+  }
+
+  //
+  //
+  // Binary integer instructions
+  //
+  // internal abstract T BinaryOperator(T inA, T inB);
+
+  public override void Execute(Interpreter inI)
+  {
+    GenericStack<T> stack = inI.GetStack<T>();
+    if (stack.Size() > 1)
+    {
+      T a;
+      T b;
+      a = stack.Pop();
+      b = stack.Pop();
+      stack.Push(func(b, a));
+    }
+  }
+
+  public static implicit operator BinaryInstruction<T>(Func<T,T,T> f) {
+    return new BinaryInstruction<T>(f);
+  }
+}
+
+
   [System.Serializable]
   internal class IntegerAdd : BinaryIntegerInstruction
   {

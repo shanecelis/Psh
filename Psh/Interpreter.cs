@@ -95,7 +95,42 @@ namespace Psh
       */
       _useFrames = false;
       PushStacks();
-      DefineInstruction("integer.+", new IntegerAdd());
+
+      // How it used to be:
+      // ------------------
+      // DefineInstruction("integer.+", new IntegerAdd());
+      // [System.Serializable]
+      // internal class IntegerAdd : BinaryIntegerInstruction
+      // {
+      //   private const long serialVersionUID = 1L;
+      //   internal override int BinaryOperator(int inA, int inB)
+      //   {
+      //     // Test for overflow
+      //     if (inA.WillAdditionOverflow(inB))
+      //       // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
+      //     {
+      //       long lA = (long)inA;
+      //       long lB = (long)inB;
+      //       if (lA + lB != inA + inB)
+      //       {
+      //         if (inA > 0)
+      //         {
+      //           return int.MaxValue;
+      //         }
+      //         else
+      //         {
+      //           return int.MinValue;
+      //         }
+      //       }
+      //     }
+      //     return inA + inB;
+      //   }
+      // }
+      // DefineInstruction("integer.+", new BinaryInstruction<int>((a,b) => {
+      //       // throw new Exception("Ha ha");
+      //       return a + b;
+      //       }));
+      DefineInstruction<int>("integer.+", (a, b) => a + b);
       DefineInstruction("integer.-", new IntegerSub());
       DefineInstruction("integer./", new IntegerDiv());
       DefineInstruction("integer.%", new IntegerMod());
@@ -317,6 +352,10 @@ namespace Psh
       _randomGenerators.Add(iag);
     }
 
+    protected internal virtual void DefineInstruction<T>(string inName, Func<T,T,T> f)
+    {
+      DefineInstruction(inName, new BinaryInstruction<T>(f));
+    }
     protected internal virtual void DefineInstruction(string inName, Instruction inInstruction)
     {
       _instructions.Put(inName, inInstruction);
@@ -429,6 +468,11 @@ namespace Psh
         _floatStack.Push(((Number)inObject).FloatValue());
         return 0;
       }
+      if (inObject is float)
+      {
+        _floatStack.Push((float)inObject);
+        return 0;
+      }
       if (inObject is Instruction)
       {
         ((Instruction)inObject).Execute(this);
@@ -448,6 +492,15 @@ namespace Psh
         return 0;
       }
       return -1;
+    }
+
+    public virtual Psh.GenericStack<T> GetStack<T>()
+    {
+      if (typeof(T) == typeof(int))
+        return _intStack as Psh.GenericStack<T>;
+      else 
+      // XXX Do the good thing!
+      return null;
     }
 
     /// <summary>Fetch the active integer stack.</summary>

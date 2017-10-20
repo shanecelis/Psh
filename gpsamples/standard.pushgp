@@ -22,17 +22,17 @@
 ### values can used to implement custom interpreter or individual 
 ### behaviors.
 
-interpreter-class       	= Psh.Interpreter
-inputpusher-class               = Psh.InputPusher
-individual-class        	= Psh.PushGPIndividual
+interpreter-class        = Psh.Interpreter
+inputpusher-class        = Psh.InputPusher
+individual-class         = Psh.PushGPIndividual
 
-# push-frame-mode		= pushstacks
+# push-frame-mode        = pushstacks
 
 ### Reasonable default values for GP -- may be changed by problem
 ### specific configuration files
 
-tournament-size         	= 7
-trivial-geography-radius	= 0
-max-points-in-program		= 100
-mutation-mode			= fair
-fair-mutation-range     	= .3
+tournament-size          = 7
+trivial-geography-radius = 0
+max-points-in-program    = 100
+mutation-mode            = fair
+fair-mutation-range      = .3
