@@ -6,6 +6,7 @@ using System;
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
+
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
@@ -142,51 +143,54 @@ namespace Psh
       // under-flow checking.
 
       DefineInstruction<int>("integer.-", (a, b) => unchecked(a - b));
-      DefineInstruction<int>("integer./", (a, b) => unchecked(a / b));
-      DefineInstruction<int>("integer.%", (a, b) => unchecked(a % b));
+      DefineInstruction<int>("integer./", (a, b) => { return unchecked(b != 0 ? a / b : 0); } );
+      DefineInstruction<int>("integer.%", (a, b) => { return unchecked(b != 0 ? a % b : 0); } );
       DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
       DefineInstruction("integer.pow", new IntegerPow());
       DefineInstruction("integer.log", new IntegerLog());
-      DefineBoolInstruction<int>("integer.=", (a, b) => (a == b));
-      DefineBoolInstruction<int>("integer.>", (a, b) => (a > b));
-      DefineBoolInstruction<int>("integer.<", (a, b) => (a < b));
-      DefineInstruction<int>("integer.min", (a, b) => unchecked(a < b ? a : b));
-      DefineInstruction<int>("integer.max", (a, b) => unchecked(a > b ? a : b));
+      // DefineBoolInstruction<int>("integer.=", (a, b) => (a == b));
+      // DefineBoolInstruction<int>("integer.>", (a, b) => (a > b));
+      // DefineBoolInstruction<int>("integer.<", (a, b) => (a < b));
+      DefineInstruction<int, bool>("integer.=", (a, b) => (a == b));
+      DefineInstruction<int, bool>("integer.>", (a, b) => (a > b));
+      DefineInstruction<int, bool>("integer.<", (a, b) => (a < b));
+      DefineInstruction<int>("integer.min", (a, b) => (a < b ? a : b));
+      DefineInstruction<int>("integer.max", (a, b) => (a > b ? a : b));
       DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
       DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
       DefineInstruction("integer.ln", new IntegerLn());
-      DefineInstruction("integer.fromfloat", new IntegerFromFloat());
-      DefineInstruction("integer.fromboolean", new IntegerFromBoolean());
+      DefineInstruction<float, int>("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
+      DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
       DefineInstruction("integer.rand", new IntegerRand());
-      DefineInstruction("float.+", new FloatAdd());
-      DefineInstruction("float.-", new FloatSub());
-      DefineInstruction("float./", new FloatDiv());
-      DefineInstruction("float.%", new FloatMod());
-      DefineInstruction("float.*", new FloatMul());
-      DefineInstruction("float.pow", new FloatPow());
-      DefineInstruction("float.log", new FloatLog());
-      DefineInstruction("float.=", new FloatEquals());
-      DefineInstruction("float.>", new FloatGreaterThan());
-      DefineInstruction("float.<", new FloatLessThan());
-      DefineInstruction("float.min", new FloatMin());
-      DefineInstruction("float.max", new FloatMax());
-      DefineInstruction("float.sin", new FloatSin());
-      DefineInstruction("float.cos", new FloatCos());
-      DefineInstruction("float.tan", new FloatTan());
-      DefineInstruction("float.exp", new FloatExp());
-      DefineInstruction("float.abs", new FloatAbs());
-      DefineInstruction("float.neg", new FloatNeg());
-      DefineInstruction("float.ln", new FloatLn());
-      DefineInstruction("float.frominteger", new FloatFromInteger());
-      DefineInstruction("float.fromboolean", new FloatFromBoolean());
+      DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));
+      DefineInstruction<float>("float.-", (a, b) => unchecked(a - b));
+      DefineInstruction<float>("float./", (a, b) => unchecked(b != 0f ? a / b : 0f));
+      DefineInstruction<float>("float.%", (a, b) => unchecked(b != 0f ? a % b : 0f));
+      DefineInstruction<float>("float.*", (a, b) => unchecked(a * b));
+      DefineInstruction<float>("float.pow", (a, b) => unchecked((float) Math.Pow(a, b)));
+      DefineInstruction<float>("float.log", (a, b) => unchecked((float) Math.Log(a, b)));
+      DefineInstruction<float, bool>("float.=", (a, b) => unchecked(a == b));
+      DefineInstruction<float, bool>("float.>", (a, b) => unchecked(a > b));
+      DefineInstruction<float, bool>("float.<", (a, b) => unchecked(a < b));
+      DefineInstruction<float>("float.min", (a, b) => unchecked(a < b ? a : b));
+      DefineInstruction<float>("float.max", (a, b) => unchecked(a > b ? a : b));
+      DefineInstruction<float>("float.sin", (a) => unchecked((float) Math.Sin(a)));
+      DefineInstruction<float>("float.cos", (a) => unchecked((float) Math.Cos(a)));
+      DefineInstruction<float>("float.tan", (a) => unchecked((float) Math.Tan(a)));
+      DefineInstruction<float>("float.exp", (a) => unchecked((float) Math.Exp(a)));
+      DefineInstruction<float>("float.abs", (a) => unchecked(a < 0 ? -a : a));
+      DefineInstruction<float>("float.neg", (a) => unchecked(-a));
+      DefineInstruction<float>("float.ln", (a) => unchecked((float) Math.Log(a)));
+      DefineInstruction("float.frominteger", (int a) => (float) a);
+      DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
       DefineInstruction("float.rand", new FloatRand());
-      DefineInstruction("boolean.=", new BoolEquals());
-      DefineInstruction("boolean.not", new BoolNot());
-      DefineInstruction("boolean.and", new BoolAnd());
-      DefineInstruction("boolean.or", new BoolOr());
-      DefineInstruction("boolean.xor", new BoolXor());
-      DefineInstruction("boolean.frominteger", new BooleanFromInteger());
-      DefineInstruction("boolean.fromfloat", new BooleanFromFloat());
+      DefineInstruction<bool>("boolean.=", (a, b) => a == b);
+      DefineInstruction<bool>("boolean.not", a => ! a);
+      DefineInstruction<bool>("boolean.and", (a, b) => a && b);
+      DefineInstruction<bool>("boolean.or", (a, b) => a || b);
+      DefineInstruction<bool>("boolean.xor", (a, b) => a ^ b);
+      DefineInstruction("boolean.frominteger", (int a) => a != 0);
+      DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
       DefineInstruction("boolean.rand", new BoolRand());
       DefineInstruction("code.quote", new Quote());
       DefineInstruction("code.fromboolean", new CodeFromBoolean());
@@ -366,6 +370,11 @@ namespace Psh
     {
       DefineInstruction(inName, new UnaryInstruction<T>(f));
     }
+
+    protected internal virtual void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f)
+    {
+      DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
+    }
     protected internal virtual void DefineInstruction<T>(string inName, Func<T,T,T> f)
     {
       DefineInstruction(inName, new BinaryInstruction<T>(f));
@@ -373,6 +382,11 @@ namespace Psh
     protected internal virtual void DefineBoolInstruction<T>(string inName, Func<T,T,bool> f)
     {
       DefineInstruction(inName, new BinaryBoolInstruction<T>(f));
+    }
+
+    protected internal virtual void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f)
+    {
+      DefineInstruction(inName, new BinaryInstruction<inT,outT>(f));
     }
     protected internal virtual void DefineInstruction(string inName, Instruction inInstruction)
     {
@@ -400,7 +414,8 @@ namespace Psh
     /// <param name="minRandomFloat"/>
     /// <param name="maxRandomFloat"/>
     /// <param name="randomFloatResolution"/>
-    public virtual void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution, float minRandomFloat, float maxRandomFloat, float randomFloatResolution
+    public virtual void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution,
+                                            float minRandomFloat, float maxRandomFloat, float randomFloatResolution
       , int maxRandomCodeSize, int maxPointsInProgram)
     {
       _minRandomInt = minRandomInt;
@@ -516,9 +531,14 @@ namespace Psh
     {
       if (typeof(T) == typeof(int))
         return _intStack as Psh.GenericStack<T>;
-      else 
-      // XXX Do the good thing!
-      return null;
+      else if (typeof(T) == typeof(bool))
+        return _boolStack as Psh.GenericStack<T>;
+      else if (typeof(T) == typeof(float))
+        return _floatStack as Psh.GenericStack<T>;
+      else
+        throw new Exception("No stack for type " + typeof(T));
+        // XXX Do the good thing!
+        // return null;
     }
 
     /// <summary>Fetch the active integer stack.</summary>

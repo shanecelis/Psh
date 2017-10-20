@@ -606,6 +606,28 @@ internal class UnaryInstruction<T> : Instruction
   }
 }
 
+[System.Serializable]
+internal class UnaryInstruction<inT,outT> : Instruction
+{
+  private const long serialVersionUID = 1L;
+  private Func<inT,outT> func;
+
+  public UnaryInstruction(Func<inT,outT> func)
+  {
+    this.func = func;
+  }
+
+  public override void Execute(Interpreter inI)
+  {
+    var istack = inI.GetStack<inT>();
+    var ostack = inI.GetStack<outT>();
+    if (istack.Size() > 0)
+    {
+      ostack.Push(func(istack.Pop()));
+    }
+  }
+}
+
   [System.Serializable]
   internal abstract class UnaryIntInstruction : Instruction
   {
@@ -741,6 +763,31 @@ internal class UnaryInstruction<T> : Instruction
     }
   }
 
+
+[System.Serializable]
+internal class BinaryInstruction<inT,outT> : Instruction
+{
+  private const long serialVersionUID = 1L;
+  private Func<inT,inT,outT> func;
+
+  public BinaryInstruction(Func<inT,inT,outT> func) {
+    this.func = func;
+  }
+
+  public override void Execute(Interpreter inI)
+  {
+    var istack = inI.GetStack<inT>();
+    var ostack = inI.GetStack<outT>();
+    if (istack.Size() > 1)
+    {
+      inT a;
+      inT b;
+      a = istack.Pop();
+      b = istack.Pop();
+      ostack.Push(func(b, a));
+    }
+  }
+}
 
 [System.Serializable]
 internal class BinaryBoolInstruction<T> : Instruction
