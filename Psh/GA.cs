@@ -443,7 +443,7 @@ namespace Psh
     {
       if (_outputStream != null)
       {
-        _outputStream.Write(Sharpen.Runtime.GetBytesForString(inStr));
+        _outputStream.Write(inStr);//Sharpen.Runtime.GetBytesForString(inStr));
         _outputStream.Flush();
       }
       _checkpoint.report.Append(inStr);

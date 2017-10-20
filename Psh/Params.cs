@@ -137,15 +137,16 @@ namespace Psh
     /// <exception cref="System.Exception"/>
     public static string ReadFileString(FilePath inFile)
     {
-      InputStream s = new FileInputStream(inFile);
-      sbyte[] tmp = new sbyte[1024];
-      int read;
-      string result = string.Empty;
-      while ((read = s.Read(tmp)) > 0)
-      {
-        result += Sharpen.Runtime.GetStringForBytes(tmp, 0, read);
-      }
-      return result;
+      return File.ReadAllText(inFile);
+      // InputStream s = new FileInputStream(inFile);
+      // sbyte[] tmp = new sbyte[1024];
+      // int read;
+      // string result = string.Empty;
+      // while ((read = s.Read(tmp)) > 0)
+      // {
+      //   result += Sharpen.Runtime.GetStringForBytes(tmp, 0, read);
+      // }
+      // return result;
     }
   }
 }

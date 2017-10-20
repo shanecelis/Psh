@@ -319,7 +319,7 @@ namespace Psh
       {
         if (result[result.Length - 1] == '(')
         {
-          result += (string)_stack[n];
+          result += _stack[n].ToString();
         }
         else
         {
