@@ -240,7 +240,7 @@ namespace Psh
     /// each stack is passed to the new frame, and likewise when the frame pops,
     /// allowing for input arguments and return values.
     /// </remarks>
-    public virtual void SetUseFrames(bool inUseFrames)
+    public void SetUseFrames(bool inUseFrames)
     {
       _useFrames = inUseFrames;
     }
@@ -254,7 +254,7 @@ namespace Psh
     /// be placed in the instruction set.
     /// </param>
     /// <exception cref="Sharpen.RuntimeException"/>
-    public virtual void SetInstructions(Program inInstructionList)
+    public void SetInstructions(Program inInstructionList)
     {
       _randomGenerators.Clear();
       for (int n = 0; n < inInstructionList.Size(); n++)
@@ -355,7 +355,7 @@ namespace Psh
       }
     }
 
-    public virtual void AddInstruction(string inName, Instruction inInstruction)
+    public void AddInstruction(string inName, Instruction inInstruction)
     {
       Interpreter.InstructionAtomGenerator iag = new Interpreter.InstructionAtomGenerator(this, inName);
       _instructions.Put(inName, inInstruction);
@@ -363,31 +363,31 @@ namespace Psh
       _randomGenerators.Add(iag);
     }
 
-    protected internal virtual void DefineInstruction<T>(string inName, Func<T,T> f)
+    protected internal void DefineInstruction<T>(string inName, Func<T,T> f)
     {
       DefineInstruction(inName, new UnaryInstruction<T>(f));
     }
 
-    protected internal virtual void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f)
+    protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f)
     {
       DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
     }
-    protected internal virtual void DefineInstruction<T>(string inName, Func<T,T,T> f)
+    protected internal void DefineInstruction<T>(string inName, Func<T,T,T> f)
     {
       DefineInstruction(inName, new BinaryInstruction<T>(f));
     }
 
-    protected internal virtual void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f)
+    protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f)
     {
       DefineInstruction(inName, new BinaryInstruction<inT,outT>(f));
     }
-    protected internal virtual void DefineInstruction(string inName, Instruction inInstruction)
+    protected internal void DefineInstruction(string inName, Instruction inInstruction)
     {
       _instructions.Put(inName, inInstruction);
       _generators.Put(inName, new Interpreter.InstructionAtomGenerator(this, inName));
     }
 
-    protected internal virtual void DefineStackInstructions(string inTypeName, Stack inStack)
+    protected internal void DefineStackInstructions(string inTypeName, Stack inStack)
     {
       DefineInstruction(inTypeName + ".pop", new Pop(inStack));
       DefineInstruction(inTypeName + ".swap", new Swap(inStack));
@@ -407,7 +407,7 @@ namespace Psh
     /// <param name="minRandomFloat"/>
     /// <param name="maxRandomFloat"/>
     /// <param name="randomFloatResolution"/>
-    public virtual void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution,
+    public void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution,
                                             float minRandomFloat, float maxRandomFloat, float randomFloatResolution
       , int maxRandomCodeSize, int maxPointsInProgram)
     {
@@ -423,7 +423,7 @@ namespace Psh
 
     /// <summary>Executes a Push program with no execution limit.</summary>
     /// <returns>The number of instructions executed.</returns>
-    public virtual int Execute(Program inProgram)
+    public int Execute(Program inProgram)
     {
       return Execute(inProgram, -1);
     }
@@ -431,7 +431,7 @@ namespace Psh
     /// <summary>Executes a Push program with a given instruction limit.</summary>
     /// <param name="inMaxSteps">The maximum number of instructions allowed to be executed.</param>
     /// <returns>The number of instructions executed.</returns>
-    public virtual int Execute(Program inProgram, int inMaxSteps)
+    public int Execute(Program inProgram, int inMaxSteps)
     {
       _evaluationExecutions++;
       LoadProgram(inProgram);
@@ -441,7 +441,7 @@ namespace Psh
 
     /// <summary>Loads a Push program into the interpreter's exec and code stacks.</summary>
     /// <param name="inProgram">The program to load.</param>
-    public virtual void LoadProgram(Program inProgram)
+    public void LoadProgram(Program inProgram)
     {
       _codeStack.Push(inProgram);
       _execStack.Push(inProgram);
@@ -455,7 +455,7 @@ namespace Psh
     /// </remarks>
     /// <param name="inMaxSteps">The maximum number of instructions allowed to be executed.</param>
     /// <returns>The number of instructions executed.</returns>
-    public virtual int Step(int inMaxSteps)
+    public int Step(int inMaxSteps)
     {
       int executed = 0;
       while (inMaxSteps != 0 && _execStack.Size() > 0)
@@ -468,7 +468,7 @@ namespace Psh
       return executed;
     }
 
-    public virtual int ExecuteInstruction(object inObject)
+    public int ExecuteInstruction(object inObject)
     {
       if (inObject is Program)
       {
@@ -520,7 +520,7 @@ namespace Psh
       return -1;
     }
 
-    public virtual Psh.GenericStack<T> GetStack<T>()
+    public Psh.GenericStack<T> GetStack<T>()
     {
       if (typeof(T) == typeof(int))
         return _intStack as Psh.GenericStack<T>;
@@ -535,61 +535,61 @@ namespace Psh
     }
 
     /// <summary>Fetch the active integer stack.</summary>
-    public virtual Psh.IntStack IntStack()
+    public Psh.IntStack IntStack()
     {
       return _intStack;
     }
 
     /// <summary>Fetch the active float stack.</summary>
-    public virtual Psh.FloatStack FloatStack()
+    public Psh.FloatStack FloatStack()
     {
       return _floatStack;
     }
 
     /// <summary>Fetch the active exec stack.</summary>
-    public virtual ObjectStack ExecStack()
+    public ObjectStack ExecStack()
     {
       return _execStack;
     }
 
     /// <summary>Fetch the active code stack.</summary>
-    public virtual ObjectStack CodeStack()
+    public ObjectStack CodeStack()
     {
       return _codeStack;
     }
 
     /// <summary>Fetch the active bool stack.</summary>
-    public virtual BooleanStack BoolStack()
+    public BooleanStack BoolStack()
     {
       return _boolStack;
     }
 
     /// <summary>Fetch the active name stack.</summary>
-    public virtual ObjectStack NameStack()
+    public ObjectStack NameStack()
     {
       return _nameStack;
     }
 
     /// <summary>Fetch the active input stack.</summary>
-    public virtual ObjectStack InputStack()
+    public ObjectStack InputStack()
     {
       return _inputStack;
     }
 
     /// <summary>Fetch the indexed custom stack</summary>
-    public virtual Stack GetCustomStack(int inIndex)
+    public Stack GetCustomStack(int inIndex)
     {
       return _customStacks[inIndex];
     }
 
     /// <summary>Add a custom stack, and return that stack's index</summary>
-    public virtual int AddCustomStack(Stack inStack)
+    public int AddCustomStack(Stack inStack)
     {
       _customStacks.Add(inStack);
       return _customStacks.Count - 1;
     }
 
-    protected internal virtual void AssignStacksFromFrame()
+    protected internal void AssignStacksFromFrame()
     {
       _floatStack = (Psh.FloatStack)_floatFrameStack.Top();
       _intStack = (Psh.IntStack)_intFrameStack.Top();
@@ -598,7 +598,7 @@ namespace Psh
       _nameStack = (ObjectStack)_nameFrameStack.Top();
     }
 
-    public virtual void PushStacks()
+    public void PushStacks()
     {
       _floatFrameStack.Push(new Psh.FloatStack());
       _intFrameStack.Push(new Psh.IntStack());
@@ -608,7 +608,7 @@ namespace Psh
       AssignStacksFromFrame();
     }
 
-    public virtual void PopStacks()
+    public void PopStacks()
     {
       _floatFrameStack.Pop();
       _intFrameStack.Pop();
@@ -618,7 +618,7 @@ namespace Psh
       AssignStacksFromFrame();
     }
 
-    public virtual void PushFrame()
+    public void PushFrame()
     {
       if (_useFrames)
       {
@@ -642,7 +642,7 @@ namespace Psh
       }
     }
 
-    public virtual void PopFrame()
+    public void PopFrame()
     {
       if (_useFrames)
       {
@@ -667,7 +667,7 @@ namespace Psh
     }
 
     /// <summary>Prints out the current stack states.</summary>
-    public virtual void PrintStacks()
+    public void PrintStacks()
     {
       System.Console.Out.Println(this);
     }
@@ -687,7 +687,7 @@ namespace Psh
     }
 
     /// <summary>Resets the Push interpreter state by clearing all of the stacks.</summary>
-    public virtual void ClearStacks()
+    public void ClearStacks()
     {
       _intStack.Clear();
       _floatStack.Clear();
@@ -704,7 +704,7 @@ namespace Psh
     }
 
     /// <summary>Returns a string list of all instructions enabled in the interpreter.</summary>
-    public virtual string GetRegisteredInstructionsString()
+    public string GetRegisteredInstructionsString()
     {
       object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
       Arrays.Sort(keys);
@@ -718,7 +718,7 @@ namespace Psh
 
     /// <summary>Returns a string of all the instructions used in this run.</summary>
     /// <returns/>
-    public virtual string GetInstructionsString()
+    public string GetInstructionsString()
     {
       object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
       AList<string> strings = new AList<string>();
@@ -750,24 +750,24 @@ namespace Psh
     /// <summary>Returns the Instruction whose name is given in instr.</summary>
     /// <param name="instr"/>
     /// <returns>the Instruction or null if no such Instruction.</returns>
-    public virtual Instruction GetInstruction(string instr)
+    public Instruction GetInstruction(string instr)
     {
       return _instructions.Get(instr);
     }
 
     /// <summary>Returns the number of evaluation executions so far this run.</summary>
     /// <returns>The number of evaluation executions during this run.</returns>
-    public virtual long GetEvaluationExecutions()
+    public long GetEvaluationExecutions()
     {
       return _evaluationExecutions;
     }
 
-    public virtual InputPusher GetInputPusher()
+    public InputPusher GetInputPusher()
     {
       return _inputPusher;
     }
 
-    public virtual void SetInputPusher(InputPusher _inputPusher)
+    public void SetInputPusher(InputPusher _inputPusher)
     {
       this._inputPusher = _inputPusher;
     }
@@ -780,7 +780,7 @@ namespace Psh
     /// A random atom based on the interpreter's current active
     /// instruction set.
     /// </returns>
-    public virtual object RandomAtom()
+    public object RandomAtom()
     {
       int index = Rng.Next(_randomGenerators.Count);
       return _randomGenerators[index].Generate(this);
@@ -789,7 +789,7 @@ namespace Psh
     /// <summary>Generates a random Push program of a given size.</summary>
     /// <param name="inSize">The requested size for the program to be generated.</param>
     /// <returns>A random Push program of the given size.</returns>
-    public virtual Program RandomCode(int inSize)
+    public Program RandomCode(int inSize)
     {
       Program p = new Program(this);
       IList<int> distribution = RandomCodeDistribution(inSize - 1, inSize - 1);
@@ -820,7 +820,7 @@ namespace Psh
     /// <param name="inCount">The desired resulting program size.</param>
     /// <param name="inMaxElements">The maxmimum number of elements at this level.</param>
     /// <returns>A list of integers representing the size distribution.</returns>
-    public virtual IList<int> RandomCodeDistribution(int inCount, int inMaxElements)
+    public IList<int> RandomCodeDistribution(int inCount, int inMaxElements)
     {
       AList<int> result = new AList<int>();
       RandomCodeDistribution(result, inCount, inMaxElements);
