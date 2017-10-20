@@ -26,15 +26,15 @@ namespace Psh
 
     internal Interpreter _interpreter = null;
 
-    public virtual Interpreter GetInterpreter()
-    {
-      return _interpreter;
-    }
+    // public virtual Interpreter GetInterpreter()
+    // {
+    //   return _interpreter;
+    // }
 
-    public virtual void SetInterpreter(Interpreter _interpreter)
-    {
-      this._interpreter = _interpreter;
-    }
+    // public virtual void SetInterpreter(Interpreter _interpreter)
+    // {
+    //   this._interpreter = _interpreter;
+    // }
 
     /// <summary>Constructs an empty Program.</summary>
     [System.ObsoleteAttribute]
