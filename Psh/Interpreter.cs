@@ -183,8 +183,8 @@ namespace Psh
       DefineInstruction("float.rand", new FloatRand());
       DefineInstruction<bool>("boolean.=", (a, b) => a == b);
       DefineInstruction<bool>("boolean.not", a => ! a);
-      DefineInstruction<bool>("boolean.and", (a, b) => a && b);
-      DefineInstruction<bool>("boolean.or", (a, b) => a || b);
+      DefineInstruction<bool>("boolean.and", (a, b) => a & b);
+      DefineInstruction<bool>("boolean.or", (a, b) => a | b);
       DefineInstruction<bool>("boolean.xor", (a, b) => a ^ b);
       DefineInstruction("boolean.frominteger", (int a) => a != 0);
       DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
@@ -375,10 +375,6 @@ namespace Psh
     protected internal virtual void DefineInstruction<T>(string inName, Func<T,T,T> f)
     {
       DefineInstruction(inName, new BinaryInstruction<T>(f));
-    }
-    protected internal virtual void DefineBoolInstruction<T>(string inName, Func<T,T,bool> f)
-    {
-      DefineInstruction(inName, new BinaryBoolInstruction<T>(f));
     }
 
     protected internal virtual void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f)

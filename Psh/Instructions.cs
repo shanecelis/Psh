@@ -392,125 +392,10 @@ internal class BinaryInstruction<T> : Instruction
     }
   }
 
-  public static implicit operator BinaryInstruction<T>(Func<T,T,T> f) {
-    return new BinaryInstruction<T>(f);
-  }
+  // public static implicit operator BinaryInstruction<T>(Func<T,T,T> f) {
+  //   return new BinaryInstruction<T>(f);
+  // }
 }
-
-
-  [System.Serializable]
-  internal class IntegerAdd : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      // Test for overflow
-      if (inA.WillAdditionOverflow(inB))
-      // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
-      {
-        long lA = (long)inA;
-        long lB = (long)inB;
-        if (lA + lB != inA + inB)
-        {
-          if (inA > 0)
-          {
-            return int.MaxValue;
-          }
-          else
-          {
-            return int.MinValue;
-          }
-        }
-      }
-      return inA + inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerSub : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      if (inA.WillSubtractionUnderflow(inB))
-      // Test for overflow
-      // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
-      {
-        long lA = (long)inA;
-        long lB = (long)inB;
-        if (lA - lB != inA - inB)
-        {
-          if (inA > 0)
-          {
-            return int.MaxValue;
-          }
-          else
-          {
-            return int.MinValue;
-          }
-        }
-      }
-      return inA - inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerDiv : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      // return inB != 0 && ! inA.WillDivisionUnderflow(inB) ? (inA / inB) : 0;
-      try {
-        return inB != 0 ? checked(inA / inB) : 0;
-      } catch (OverflowException) {
-        return 0;
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerMul : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      // Test for overflow
-      if (inA.WillMultiplicationOverflow(inB))
-      // if ((Math.Abs(inA) > Math.Sqrt(int.MaxValue - 1)) || (Math.Abs(inB) > Math.Sqrt(int.MaxValue - 1)))
-      {
-        long lA = (long)inA;
-        long lB = (long)inB;
-        if (lA * lB != inA * inB)
-        {
-          if ((inA > 0 && inB > 0) || (inA < 0 && inB < 0))
-          {
-            return int.MaxValue;
-          }
-          else
-          {
-            return int.MinValue;
-          }
-        }
-      }
-      return inA * inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerMod : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      return inB != 0 && ! inA.WillModuloOverflow(inB) ? (inA % inB) : 0;
-    }
-  }
 
   [System.Serializable]
   internal class IntegerPow : BinaryIntegerInstruction
@@ -561,29 +446,6 @@ internal class BinaryInstruction<T> : Instruction
       return (int)result;
     }
   }
-
-  [System.Serializable]
-  internal class IntegerMin : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      return Math.Min(inA, inB);
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerMax : BinaryIntegerInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int BinaryOperator(int inA, int inB)
-    {
-      return Math.Max(inA, inB);
-    }
-  }
-
 
 [System.Serializable]
 internal class UnaryInstruction<T> : Instruction
@@ -649,34 +511,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
   }
 
   [System.Serializable]
-  internal class IntegerAbs : UnaryIntInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int UnaryOperator(int inValue)
-    {
-      if(inValue == int.MinValue) return int.MaxValue;
-      return Math.Abs(inValue);
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerNeg : UnaryIntInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override int UnaryOperator(int inValue)
-    {
-      // Test for overflow
-      if (inValue == int.MinValue)
-      {
-        return int.MaxValue;
-      }
-      return -inValue;
-    }
-  }
-
-  [System.Serializable]
   internal class IntegerLn : UnaryIntInstruction
   {
     private const long serialVersionUID = 1L;
@@ -700,8 +534,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
       return (int)result;
     }
   }
-
-  [System.Serializable]
   internal class IntegerRand : Instruction
   {
     private const long serialVersionUID = 1L;
@@ -720,49 +552,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
       inI.IntStack().Push(randInt);
     }
   }
-
-  [System.Serializable]
-  internal class IntegerFromFloat : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Conversion instructions to integer
-    //
-    public override void Execute(Interpreter inI)
-    {
-      IntStack iStack = inI.IntStack();
-      FloatStack fStack = inI.FloatStack();
-      if (fStack.Size() > 0)
-      {
-        iStack.Push((int)fStack.Pop());
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerFromBoolean : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    public override void Execute(Interpreter inI)
-    {
-      BooleanStack bStack = inI.BoolStack();
-      IntStack iStack = inI.IntStack();
-      if (bStack.Size() > 0)
-      {
-        if (bStack.Pop())
-        {
-          iStack.Push(1);
-        }
-        else
-        {
-          iStack.Push(0);
-        }
-      }
-    }
-  }
-
 
 [System.Serializable]
 internal class BinaryInstruction<inT,outT> : Instruction
@@ -789,88 +578,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   }
 }
 
-[System.Serializable]
-internal class BinaryBoolInstruction<T> : Instruction
-{
-  private const long serialVersionUID = 1L;
-  private Func<T,T,bool> func;
-
-  public BinaryBoolInstruction(Func<T,T,bool> func) {
-    this.func = func;
-  }
-  
-  public override void Execute(Interpreter inI)
-  {
-    var istack = inI.GetStack<T>();
-    BooleanStack bstack = inI.BoolStack();
-    if (istack.Size() > 1)
-    {
-      T a;
-      T b;
-      a = istack.Pop();
-      b = istack.Pop();
-      bstack.Push(func(b, a));
-    }
-  }
-}
-
-  [System.Serializable]
-  internal abstract class BinaryIntegerBoolInstruction : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Integer instructions with boolean output
-    //
-    internal abstract bool BinaryOperator(int inA, int inB);
-
-    public override void Execute(Interpreter inI)
-    {
-      IntStack istack = inI.IntStack();
-      BooleanStack bstack = inI.BoolStack();
-      if (istack.Size() > 1)
-      {
-        int a;
-        int b;
-        a = istack.Pop();
-        b = istack.Pop();
-        bstack.Push(BinaryOperator(b, a));
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerGreaterThan : BinaryIntegerBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(int inA, int inB)
-    {
-      return inA > inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerLessThan : BinaryIntegerBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(int inA, int inB)
-    {
-      return inA < inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class IntegerEquals : BinaryIntegerBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(int inA, int inB)
-    {
-      return inA == inB;
-    }
-  }
 
   [System.Serializable]
   internal abstract class BinaryFloatInstruction : Instruction
@@ -893,134 +600,6 @@ internal class BinaryBoolInstruction<T> : Instruction
         b = stack.Pop();
         stack.Push(BinaryOperator(b, a));
       }
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatAdd : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = inA + inB;
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      return result;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatSub : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = inA - inB;
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      return inA - inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatMul : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = inA * inB;
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (float.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return inA * inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatDiv : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = inA / inB;
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (float.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatMod : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      return inB != 0.0f ? (inA % inB) : 0.0f;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatPow : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      // Test for overflow
-      float result = (float)Math.Pow(inA, inB);
-      if (float.IsInfinity(result) && result > 0)
-      {
-        return float.MaxValue;
-      }
-      if (float.IsInfinity(result) && result < 0)
-      {
-        return (1.0f - float.MaxValue);
-      }
-      if (float.IsNaN(result))
-      {
-        return 0.0f;
-      }
-      return result;
     }
   }
 
@@ -1050,28 +629,6 @@ internal class BinaryBoolInstruction<T> : Instruction
   }
 
   [System.Serializable]
-  internal class FloatMin : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      return Math.Min(inA, inB);
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatMax : BinaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float BinaryOperator(float inA, float inB)
-    {
-      return Math.Max(inA, inB);
-    }
-  }
-
-  [System.Serializable]
   internal abstract class UnaryFloatInstruction : Instruction
   {
     private const long serialVersionUID = 1L;
@@ -1088,28 +645,6 @@ internal class BinaryBoolInstruction<T> : Instruction
       {
         stack.Push(UnaryOperator(stack.Pop()));
       }
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatSin : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      return (float)Math.Sin(inValue);
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatCos : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      return (float)Math.Cos(inValue);
     }
   }
 
@@ -1164,28 +699,6 @@ internal class BinaryBoolInstruction<T> : Instruction
   }
 
   [System.Serializable]
-  internal class FloatAbs : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      return (float)Math.Abs(inValue);
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatNeg : UnaryFloatInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override float UnaryOperator(float inValue)
-    {
-      return -inValue;
-    }
-  }
-
-  [System.Serializable]
   internal class FloatLn : UnaryFloatInstruction
   {
     private const long serialVersionUID = 1L;
@@ -1231,48 +744,6 @@ internal class BinaryBoolInstruction<T> : Instruction
   }
 
   [System.Serializable]
-  internal class FloatFromInteger : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Conversion instructions to float
-    //
-    public override void Execute(Interpreter inI)
-    {
-      IntStack iStack = inI.IntStack();
-      FloatStack fStack = inI.FloatStack();
-      if (iStack.Size() > 0)
-      {
-        fStack.Push(iStack.Pop());
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatFromBoolean : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    public override void Execute(Interpreter inI)
-    {
-      BooleanStack bStack = inI.BoolStack();
-      FloatStack fStack = inI.FloatStack();
-      if (bStack.Size() > 0)
-      {
-        if (bStack.Pop())
-        {
-          fStack.Push(1);
-        }
-        else
-        {
-          fStack.Push(0);
-        }
-      }
-    }
-  }
-
-  [System.Serializable]
   internal abstract class BinaryFloatBoolInstruction : Instruction
   {
     private const long serialVersionUID = 1L;
@@ -1297,38 +768,6 @@ internal class BinaryBoolInstruction<T> : Instruction
     }
   }
 
-  [System.Serializable]
-  internal class FloatGreaterThan : BinaryFloatBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(float inA, float inB)
-    {
-      return inA > inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatLessThan : BinaryFloatBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(float inA, float inB)
-    {
-      return inA < inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class FloatEquals : BinaryFloatBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(float inA, float inB)
-    {
-      return inA == inB;
-    }
-  }
 
   [System.Serializable]
   internal abstract class BinaryBoolInstruction : Instruction
@@ -1355,64 +794,6 @@ internal class BinaryBoolInstruction<T> : Instruction
   }
 
   [System.Serializable]
-  internal class BoolEquals : BinaryBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(bool inA, bool inB)
-    {
-      return inA == inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class BoolAnd : BinaryBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(bool inA, bool inB)
-    {
-      return inA & inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class BoolOr : BinaryBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(bool inA, bool inB)
-    {
-      return inA | inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class BoolXor : BinaryBoolInstruction
-  {
-    private const long serialVersionUID = 1L;
-
-    internal override bool BinaryOperator(bool inA, bool inB)
-    {
-      return inA ^ inB;
-    }
-  }
-
-  [System.Serializable]
-  internal class BoolNot : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    public override void Execute(Interpreter inI)
-    {
-      if (inI.BoolStack().Size() > 0)
-      {
-        inI.BoolStack().Push(!inI.BoolStack().Pop());
-      }
-    }
-  }
-
-  [System.Serializable]
   internal class BoolRand : Instruction
   {
     private const long serialVersionUID = 1L;
@@ -1427,41 +808,6 @@ internal class BinaryBoolInstruction<T> : Instruction
     public override void Execute(Interpreter inI)
     {
       inI.BoolStack().Push(Rng.Next(2) == 1);
-    }
-  }
-
-  [System.Serializable]
-  internal class BooleanFromInteger : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    //
-    // Conversion instructions to boolean
-    //
-    public override void Execute(Interpreter inI)
-    {
-      BooleanStack bStack = inI.BoolStack();
-      IntStack iStack = inI.IntStack();
-      if (iStack.Size() > 0)
-      {
-        bStack.Push(iStack.Pop() != 0);
-      }
-    }
-  }
-
-  [System.Serializable]
-  internal class BooleanFromFloat : Instruction
-  {
-    private const long serialVersionUID = 1L;
-
-    public override void Execute(Interpreter inI)
-    {
-      BooleanStack bStack = inI.BoolStack();
-      FloatStack fStack = inI.FloatStack();
-      if (fStack.Size() > 0)
-      {
-        bStack.Push(fStack.Pop() != 0.0);
-      }
     }
   }
 
