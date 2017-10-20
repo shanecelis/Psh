@@ -36,6 +36,8 @@ namespace Psh
       //
       _stack = inStack;
     }
+
+    public abstract void Execute(Interpreter inI);
   }
 
   /// <summary>
@@ -53,6 +55,8 @@ namespace Psh
     {
       _stack = inStack;
     }
+
+    public abstract void Execute(Interpreter inI);
   }
 
   [System.Serializable]
@@ -64,7 +68,7 @@ namespace Psh
     {
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       ObjectStack cstack = inI.CodeStack();
       ObjectStack estack = inI.ExecStack();
@@ -277,7 +281,7 @@ namespace Psh
       _value = inValue;
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.IntStack().Push(_value);
     }
@@ -295,7 +299,7 @@ namespace Psh
       _value = inValue;
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.FloatStack().Push(_value);
     }
@@ -313,7 +317,7 @@ namespace Psh
       _value = inValue;
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.BoolStack().Push(_value);
     }
@@ -349,7 +353,7 @@ namespace Psh
     //
     internal abstract int BinaryOperator(int inA, int inB);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       IntStack stack = inI.IntStack();
       if (stack.Size() > 1)
@@ -379,7 +383,7 @@ internal class BinaryInstruction<T> : Instruction
   //
   // internal abstract T BinaryOperator(T inA, T inB);
 
-  public override void Execute(Interpreter inI)
+  public void Execute(Interpreter inI)
   {
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 1)
@@ -458,7 +462,7 @@ internal class UnaryInstruction<T> : Instruction
     this.func = func;
   }
 
-  public override void Execute(Interpreter inI)
+  public void Execute(Interpreter inI)
   {
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 0)
@@ -479,7 +483,7 @@ internal class UnaryInstruction<inT,outT> : Instruction
     this.func = func;
   }
 
-  public override void Execute(Interpreter inI)
+  public void Execute(Interpreter inI)
   {
     var istack = inI.GetStack<inT>();
     var ostack = inI.GetStack<outT>();
@@ -500,7 +504,7 @@ internal class UnaryInstruction<inT,outT> : Instruction
     //
     internal abstract int UnaryOperator(int inValue);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       IntStack stack = inI.IntStack();
       if (stack.Size() > 0)
@@ -545,7 +549,7 @@ internal class UnaryInstruction<inT,outT> : Instruction
       Rng = new Random();
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       int range = (inI._maxRandomInt - inI._minRandomInt) / inI._randomIntResolution;
       int randInt = (Rng.Next(range) * inI._randomIntResolution) + inI._minRandomInt;
@@ -563,7 +567,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     this.func = func;
   }
 
-  public override void Execute(Interpreter inI)
+  public void Execute(Interpreter inI)
   {
     var istack = inI.GetStack<inT>();
     var ostack = inI.GetStack<outT>();
@@ -589,7 +593,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     internal abstract float BinaryOperator(float inA, float inB);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       FloatStack stack = inI.FloatStack();
       if (stack.Size() > 1)
@@ -638,7 +642,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     internal abstract float UnaryOperator(float inValue);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       FloatStack stack = inI.FloatStack();
       if (stack.Size() > 0)
@@ -735,7 +739,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
       Rng = new Random();
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       float range = (inI._maxRandomFloat - inI._minRandomFloat) / inI._randomFloatResolution;
       float randFloat = ((float)Rng.NextDouble() * range * inI._randomFloatResolution) + inI._minRandomFloat;
@@ -753,7 +757,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     internal abstract bool BinaryOperator(float inA, float inB);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       FloatStack fstack = inI.FloatStack();
       BooleanStack bstack = inI.BoolStack();
@@ -779,7 +783,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     internal abstract bool BinaryOperator(bool inA, bool inB);
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       BooleanStack stack = inI.BoolStack();
       if (stack.Size() > 1)
@@ -805,7 +809,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
       Rng = new Random();
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.BoolStack().Push(Rng.Next(2) == 1);
     }
@@ -826,7 +830,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
       index = inIndex;
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.GetInputPusher().PushInput(inI, index);
     }
@@ -1060,7 +1064,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     // Conversion instructions to code
     //
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       ObjectStack codeStack = inI.CodeStack();
       BooleanStack bStack = inI.BoolStack();
@@ -1076,7 +1080,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
   {
     private const long serialVersionUID = 1L;
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       ObjectStack codeStack = inI.CodeStack();
       IntStack iStack = inI.IntStack();
@@ -1092,7 +1096,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
   {
     private const long serialVersionUID = 1L;
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       ObjectStack codeStack = inI.CodeStack();
       FloatStack fStack = inI.FloatStack();
@@ -1337,7 +1341,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
   {
     private const long serialVersionUID = 1L;
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
     }
     // Does Nothing
@@ -1443,7 +1447,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     //
     // Instructions for the activation stack
     //
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       // floatStack fstack = inI.floatStack();
       // float total = fstack.accumulate();
@@ -1465,7 +1469,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
     {
     }
 
-    public override void Execute(Interpreter inI)
+    public void Execute(Interpreter inI)
     {
       inI.PushFrame();
     }

@@ -19,11 +19,11 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>Abstract instruction base for all instructions.</summary>
-  [System.Serializable]
-  public abstract class Instruction
+  // [System.Serializable]
+  public interface Instruction
   {
-    private const long serialVersionUID = 1L;
+    // private const long serialVersionUID = 1L;
 
-    public abstract void Execute(Interpreter inI);
+    void Execute(Interpreter inI);
   }
 }
