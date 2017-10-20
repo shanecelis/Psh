@@ -12,9 +12,10 @@ namespace Sharpen
     {
         public const int January = (int) GregorianCalendarEnum.January;
 
-
+      #pragma warning disable 414
         private CultureInfo m_culture;
         private DateTime m_gregorianChange;
+      #pragma warning restore 414
 
         public GregorianCalendar()
         {

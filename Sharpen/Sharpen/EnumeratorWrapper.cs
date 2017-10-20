@@ -62,10 +62,10 @@ namespace Sharpen
 			col.Remove (lastVal);
 		}
 
-        private static IEnumerator<T> GetEnumerator<T>(IEnumerable<T> keys)
-        {
-            return keys.Iterator();
-        }
+    private static IEnumerator<S> GetEnumerator<S>(IEnumerable<S> keys)
+    {
+      return keys.Iterator();
+    }
 	}
     
     public class EnumeratorWrapper : Iterator

@@ -880,7 +880,7 @@ namespace Psh
 
       internal InstructionAtomGenerator(Interpreter _enclosing, string inInstructionName)
       {
-        this._enclosing = _enclosing;
+        // this._enclosing = _enclosing;
         this._instruction = inInstructionName;
       }
 
@@ -889,7 +889,7 @@ namespace Psh
         return this._instruction;
       }
 
-      private readonly Interpreter _enclosing;
+      // private readonly Interpreter _enclosing;
     }
 
     [System.Serializable]
