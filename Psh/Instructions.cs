@@ -584,6 +584,28 @@ internal class BinaryInstruction<T> : Instruction
     }
   }
 
+
+[System.Serializable]
+internal class UnaryInstruction<T> : Instruction
+{
+  private const long serialVersionUID = 1L;
+  private Func<T,T> func;
+
+  public UnaryInstruction(Func<T,T> func)
+  {
+    this.func = func;
+  }
+
+  public override void Execute(Interpreter inI)
+  {
+    GenericStack<T> stack = inI.GetStack<T>();
+    if (stack.Size() > 0)
+    {
+      stack.Push(func(stack.Pop()));
+    }
+  }
+}
+
   [System.Serializable]
   internal abstract class UnaryIntInstruction : Instruction
   {
@@ -718,6 +740,32 @@ internal class BinaryInstruction<T> : Instruction
       }
     }
   }
+
+
+[System.Serializable]
+internal class BinaryBoolInstruction<T> : Instruction
+{
+  private const long serialVersionUID = 1L;
+  private Func<T,T,bool> func;
+
+  public BinaryBoolInstruction(Func<T,T,bool> func) {
+    this.func = func;
+  }
+  
+  public override void Execute(Interpreter inI)
+  {
+    var istack = inI.GetStack<T>();
+    BooleanStack bstack = inI.BoolStack();
+    if (istack.Size() > 1)
+    {
+      T a;
+      T b;
+      a = istack.Pop();
+      b = istack.Pop();
+      bstack.Push(func(b, a));
+    }
+  }
+}
 
   [System.Serializable]
   internal abstract class BinaryIntegerBoolInstruction : Instruction

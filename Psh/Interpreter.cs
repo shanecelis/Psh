@@ -96,29 +96,25 @@ namespace Psh
       _useFrames = false;
       PushStacks();
 
+      // Auto converted Java to C# using Sharpen but it could still use some more love.
+
       // How it used to be:
       // ------------------
       // DefineInstruction("integer.+", new IntegerAdd());
+
+      // // The IntegerAdd class is defined like so:
       // [System.Serializable]
-      // internal class IntegerAdd : BinaryIntegerInstruction
-      // {
+      // internal class IntegerAdd : BinaryIntegerInstruction {
       //   private const long serialVersionUID = 1L;
-      //   internal override int BinaryOperator(int inA, int inB)
-      //   {
+      //   internal override int BinaryOperator(int inA, int inB) {
       //     // Test for overflow
-      //     if (inA.WillAdditionOverflow(inB))
-      //       // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
-      //     {
+      //     if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10)) {
       //       long lA = (long)inA;
       //       long lB = (long)inB;
-      //       if (lA + lB != inA + inB)
-      //       {
-      //         if (inA > 0)
-      //         {
+      //       if (lA + lB != inA + inB) {
+      //         if (inA > 0) {
       //           return int.MaxValue;
-      //         }
-      //         else
-      //         {
+      //         } else {
       //           return int.MinValue;
       //         }
       //       }
@@ -126,24 +122,38 @@ namespace Psh
       //     return inA + inB;
       //   }
       // }
-      // DefineInstruction("integer.+", new BinaryInstruction<int>((a,b) => {
-      //       // throw new Exception("Ha ha");
-      //       return a + b;
-      //       }));
-      DefineInstruction<int>("integer.+", (a, b) => a + b);
-      DefineInstruction("integer.-", new IntegerSub());
-      DefineInstruction("integer./", new IntegerDiv());
-      DefineInstruction("integer.%", new IntegerMod());
-      DefineInstruction("integer.*", new IntegerMul());
+      // And there are a lot of these classes: 
+      // DefineInstruction("integer.-", new IntegerSub());
+      // DefineInstruction("integer./", new IntegerDiv());
+      // DefineInstruction("integer.%", new IntegerMod());
+      // DefineInstruction("integer.*", new IntegerMul());
+      // Eek.
+
+      // How it is now:
+      // --------------
+      DefineInstruction<int>("integer.+", (a, b) => unchecked(a + b));
+      // Let's use some lambdas and unchecked arithmetic.
+
+      // Sympathy for the Original Author, Jon Klein
+      // -------------------------------------------
+      //
+      // Java has lambdas now, but it didn't when this code was written. Also I
+      // don't believe there's a nice way just turning off Java's over- and
+      // under-flow checking.
+
+      DefineInstruction<int>("integer.-", (a, b) => unchecked(a - b));
+      DefineInstruction<int>("integer./", (a, b) => unchecked(a / b));
+      DefineInstruction<int>("integer.%", (a, b) => unchecked(a % b));
+      DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
       DefineInstruction("integer.pow", new IntegerPow());
       DefineInstruction("integer.log", new IntegerLog());
-      DefineInstruction("integer.=", new IntegerEquals());
-      DefineInstruction("integer.>", new IntegerGreaterThan());
-      DefineInstruction("integer.<", new IntegerLessThan());
-      DefineInstruction("integer.min", new IntegerMin());
-      DefineInstruction("integer.max", new IntegerMax());
-      DefineInstruction("integer.abs", new IntegerAbs());
-      DefineInstruction("integer.neg", new IntegerNeg());
+      DefineBoolInstruction<int>("integer.=", (a, b) => (a == b));
+      DefineBoolInstruction<int>("integer.>", (a, b) => (a > b));
+      DefineBoolInstruction<int>("integer.<", (a, b) => (a < b));
+      DefineInstruction<int>("integer.min", (a, b) => unchecked(a < b ? a : b));
+      DefineInstruction<int>("integer.max", (a, b) => unchecked(a > b ? a : b));
+      DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
+      DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
       DefineInstruction("integer.ln", new IntegerLn());
       DefineInstruction("integer.fromfloat", new IntegerFromFloat());
       DefineInstruction("integer.fromboolean", new IntegerFromBoolean());
@@ -352,9 +362,17 @@ namespace Psh
       _randomGenerators.Add(iag);
     }
 
+    protected internal virtual void DefineInstruction<T>(string inName, Func<T,T> f)
+    {
+      DefineInstruction(inName, new UnaryInstruction<T>(f));
+    }
     protected internal virtual void DefineInstruction<T>(string inName, Func<T,T,T> f)
     {
       DefineInstruction(inName, new BinaryInstruction<T>(f));
+    }
+    protected internal virtual void DefineBoolInstruction<T>(string inName, Func<T,T,bool> f)
+    {
+      DefineInstruction(inName, new BinaryBoolInstruction<T>(f));
     }
     protected internal virtual void DefineInstruction(string inName, Instruction inInstruction)
     {
