@@ -371,7 +371,8 @@ namespace Psh
     internal override int BinaryOperator(int inA, int inB)
     {
       // Test for overflow
-      if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
+      if (inA.WillAdditionOverflow(inB))
+      // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
       {
         long lA = (long)inA;
         long lB = (long)inB;
@@ -398,8 +399,9 @@ namespace Psh
 
     internal override int BinaryOperator(int inA, int inB)
     {
+      if (inA.WillSubtractionUnderflow(inB))
       // Test for overflow
-      if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
+      // if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10))
       {
         long lA = (long)inA;
         long lB = (long)inB;
@@ -426,7 +428,12 @@ namespace Psh
 
     internal override int BinaryOperator(int inA, int inB)
     {
-      return inB != 0 ? (inA / inB) : 0;
+      // return inB != 0 && ! inA.WillDivisionUnderflow(inB) ? (inA / inB) : 0;
+      try {
+        return inB != 0 ? checked(inA / inB) : 0;
+      } catch (OverflowException) {
+        return 0;
+      }
     }
   }
 
@@ -438,7 +445,8 @@ namespace Psh
     internal override int BinaryOperator(int inA, int inB)
     {
       // Test for overflow
-      if ((Math.Abs(inA) > Math.Sqrt(int.MaxValue - 1)) || (Math.Abs(inB) > Math.Sqrt(int.MaxValue - 1)))
+      if (inA.WillMultiplicationOverflow(inB))
+      // if ((Math.Abs(inA) > Math.Sqrt(int.MaxValue - 1)) || (Math.Abs(inB) > Math.Sqrt(int.MaxValue - 1)))
       {
         long lA = (long)inA;
         long lB = (long)inB;
@@ -465,7 +473,7 @@ namespace Psh
 
     internal override int BinaryOperator(int inA, int inB)
     {
-      return inB != 0 ? (inA % inB) : 0;
+      return inB != 0 && ! inA.WillModuloOverflow(inB) ? (inA % inB) : 0;
     }
   }
 
@@ -568,6 +576,7 @@ namespace Psh
 
     internal override int UnaryOperator(int inValue)
     {
+      if(inValue == int.MinValue) return int.MaxValue;
       return Math.Abs(inValue);
     }
   }
@@ -1984,5 +1993,52 @@ namespace Psh
     {
       inI.PushFrame();
     }
+  }
+}
+
+// https://stackoverflow.com/questions/22612418/check-for-arithmetic-overflow-and-get-overflow-count
+public static class OverflowExtensions
+{
+  public static bool WillAdditionOverflow(this byte b, int val)
+  {
+    return byte.MaxValue - b < val;
+  }
+
+  public static bool WillSubtractionUnderflow(this byte b, int val)
+  {
+    return b - byte.MinValue < val;
+  }
+
+  public static bool WillAdditionOverflow(this int b, int val)
+  {
+    return int.MaxValue - b < val;
+  }
+
+  public static bool WillSubtractionUnderflow(this int b, int val)
+  {
+    return b - int.MinValue < val;
+  }
+
+  public static bool WillMultiplicationOverflow(this int b, int val)
+  {
+    if (b == 0)
+      return false;
+    return int.MaxValue / b < val;
+  }
+
+  public static bool WillDivisionUnderflow(this int b, int val)
+  {
+    return b * int.MinValue < val;
+  }
+
+  public static bool WillModuloOverflow(this int b, int val)
+  {
+    try {
+      var c = checked(b % val);
+      return false;
+    } catch (OverflowException) {
+      return true;
+    }
+    // return b * int.MinValue < val;
   }
 }

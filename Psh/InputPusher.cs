@@ -41,6 +41,11 @@ namespace Psh
             FloatStack fstack = inI.FloatStack();
             fstack.Push(((Number)inObject).FloatValue());
           }
+          else if (inObject is float)
+          {
+            FloatStack fstack = inI.FloatStack();
+            fstack.Push((float) inObject);
+          }
           else
           {
             if (inObject is bool)
