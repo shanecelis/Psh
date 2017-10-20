@@ -23,7 +23,7 @@ namespace Psh
   {
     private const long serialVersionUID = 1L;
 
-    public virtual void PushInput(Interpreter inI, int n)
+    public void PushInput(Interpreter inI, int n)
     {
       ObjectStack _stack = inI.InputStack();
       if (_stack.Size() > n)

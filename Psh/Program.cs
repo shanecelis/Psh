@@ -26,12 +26,12 @@ namespace Psh
 
     internal Interpreter _interpreter = null;
 
-    // public virtual Interpreter GetInterpreter()
+    // public Interpreter GetInterpreter()
     // {
     //   return _interpreter;
     // }
 
-    // public virtual void SetInterpreter(Interpreter _interpreter)
+    // public void SetInterpreter(Interpreter _interpreter)
     // {
     //   this._interpreter = _interpreter;
     // }
@@ -77,7 +77,7 @@ namespace Psh
     /// <param name="inString">The Push program string to parse.</param>
     /// <returns>The point size of the new program.</returns>
     /// <exception cref="System.Exception"/>
-    public virtual int Parse(string inString)
+    public int Parse(string inString)
     {
       Clear();
       inString = inString.Replace("(", " ( ");
@@ -156,7 +156,7 @@ namespace Psh
 
     /// <summary>Returns the size of the program and all subprograms.</summary>
     /// <returns>The size of the program.</returns>
-    public virtual int Programsize()
+    public int Programsize()
     {
       int size = _size;
       for (int n = 0; n < _size; n++)
@@ -173,7 +173,7 @@ namespace Psh
     /// <summary>Returns the size of a subtree.</summary>
     /// <param name="inIndex">The index of the requested subtree.</param>
     /// <returns>The size of the subtree.</returns>
-    public virtual int SubtreeSize(int inIndex)
+    public int SubtreeSize(int inIndex)
     {
       object sub = Subtree(inIndex);
       if (sub == null)
@@ -190,7 +190,7 @@ namespace Psh
     /// <summary>Returns a subtree of the program.</summary>
     /// <param name="inIndex">The index of the requested subtree.</param>
     /// <returns>The program subtree.</returns>
-    public virtual object Subtree(int inIndex)
+    public object Subtree(int inIndex)
     {
       if (inIndex < _size)
       {
@@ -221,7 +221,7 @@ namespace Psh
     /// <param name="inIndex">The index of the subtree to replace.</param>
     /// <param name="inReplacement">The replacement for the subtree</param>
     /// <returns>True if a replacement was made (the index was valid).</returns>
-    public virtual bool ReplaceSubtree(int inIndex, object inReplacement)
+    public bool ReplaceSubtree(int inIndex, object inReplacement)
     {
       if (inIndex < _size)
       {
@@ -249,7 +249,7 @@ namespace Psh
       return false;
     }
 
-    public virtual void Flatten(int inIndex)
+    public void Flatten(int inIndex)
     {
       if (inIndex < _size)
       {
@@ -304,7 +304,7 @@ namespace Psh
 
     /// <summary>Copies this program to another.</summary>
     /// <param name="inOther">The program to receive the copy of this program</param>
-    public virtual void CopyTo(Psh.Program inOther)
+    public void CopyTo(Psh.Program inOther)
     {
       for (int n = 0; n < _size; n++)
       {
