@@ -148,9 +148,6 @@ namespace Psh
       DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
       DefineInstruction("integer.pow", new IntegerPow());
       DefineInstruction("integer.log", new IntegerLog());
-      // DefineBoolInstruction<int>("integer.=", (a, b) => (a == b));
-      // DefineBoolInstruction<int>("integer.>", (a, b) => (a > b));
-      // DefineBoolInstruction<int>("integer.<", (a, b) => (a < b));
       DefineInstruction<int, bool>("integer.=", (a, b) => (a == b));
       DefineInstruction<int, bool>("integer.>", (a, b) => (a > b));
       DefineInstruction<int, bool>("integer.<", (a, b) => (a < b));
@@ -159,7 +156,7 @@ namespace Psh
       DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
       DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
       DefineInstruction("integer.ln", new IntegerLn());
-      DefineInstruction<float, int>("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
+      DefineInstruction("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
       DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
       DefineInstruction("integer.rand", new IntegerRand());
       DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));

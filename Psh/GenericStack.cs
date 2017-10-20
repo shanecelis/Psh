@@ -124,6 +124,7 @@ namespace Psh
     public virtual void Push(T inValue)
     {
       // XXX I do not get what this is supposed to be doing here:
+      // Maybe it's supposed to make a program copy.
       // if (inValue is Program)
       // {
       //   inValue = (T)new Program((Program)inValue);
