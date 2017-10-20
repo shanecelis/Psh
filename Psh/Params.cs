@@ -74,7 +74,7 @@ namespace Psh
               FilePath f = new FilePath(parent, includefile);
               Read(ReadFileString(f), inMap, f);
             }
-            catch (IncludeException e)
+            catch (IncludeException)
             {
               // A previous include exception should bubble up to the
               // top
@@ -109,7 +109,7 @@ namespace Psh
           }
         }
       }
-      catch (IncludeException e)
+      catch (IncludeException)
       {
         // A previous include exception should bubble up to the top
         throw;

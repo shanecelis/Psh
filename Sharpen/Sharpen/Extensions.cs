@@ -1113,7 +1113,7 @@ namespace Sharpen
         {
             try
             {
-                var number = Number.GetInstance(value);
+                Number.GetInstance(value);
                 return true;
             }
             catch

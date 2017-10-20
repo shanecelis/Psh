@@ -857,19 +857,18 @@ namespace Psh
       RandomCodeDistribution(ioList, inCount - thisSize, inMaxElements - 1);
     }
 
-    [System.Serializable]
-    protected internal abstract class AtomGenerator
+    public interface AtomGenerator
     {
-      private const long serialVersionUID = 1L;
+      // private const long serialVersionUID = 1L;
 
-      internal abstract object Generate(Interpreter inInterpreter);
+      object Generate(Interpreter inInterpreter);
 
-      internal AtomGenerator(Interpreter _enclosing)
-      {
-        this._enclosing = _enclosing;
-      }
+      // internal AtomGenerator(Interpreter _enclosing)
+      // {
+      //   // this._enclosing = _enclosing;
+      // }
 
-      private readonly Interpreter _enclosing;
+      // private readonly Interpreter _enclosing;
     }
 
     [System.Serializable]
@@ -880,13 +879,12 @@ namespace Psh
       internal string _instruction;
 
       internal InstructionAtomGenerator(Interpreter _enclosing, string inInstructionName)
-        : base(_enclosing)
       {
         this._enclosing = _enclosing;
         this._instruction = inInstructionName;
       }
 
-      internal override object Generate(Interpreter inInterpreter)
+      public object Generate(Interpreter inInterpreter)
       {
         return this._instruction;
       }
@@ -899,7 +897,7 @@ namespace Psh
     {
       private const long serialVersionUID = 1L;
 
-      internal override object Generate(Interpreter inInterpreter)
+      public object Generate(Interpreter inInterpreter)
       {
         float r = (float) this._enclosing.Rng.NextDouble() * (this._enclosing._maxRandomFloat - this._enclosing._minRandomFloat);
         r -= (r % this._enclosing._randomFloatResolution);
@@ -907,7 +905,6 @@ namespace Psh
       }
 
       internal FloatAtomGenerator(Interpreter _enclosing)
-        : base(_enclosing)
       {
         this._enclosing = _enclosing;
       }
@@ -920,7 +917,7 @@ namespace Psh
     {
       private const long serialVersionUID = 1L;
 
-      internal override object Generate(Interpreter inInterpreter)
+      public object Generate(Interpreter inInterpreter)
       {
         int r = this._enclosing.Rng.Next(this._enclosing._maxRandomInt - this._enclosing._minRandomInt);
         r -= (r % this._enclosing._randomIntResolution);
@@ -928,7 +925,6 @@ namespace Psh
       }
 
       internal IntAtomGenerator(Interpreter _enclosing)
-        : base(_enclosing)
       {
         this._enclosing = _enclosing;
       }
