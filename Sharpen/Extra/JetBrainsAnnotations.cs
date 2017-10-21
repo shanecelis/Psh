@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Modified by Yakov Danilov <yakodani@gmail.com> for Imazen LLC (Ported from Java to C#) 
  * Copyright 2007-2012 JetBrains s.r.o.
  *

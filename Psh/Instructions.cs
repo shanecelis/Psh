@@ -32,7 +32,7 @@ namespace Psh
     internal StackInstruction(Stack inStack)
     {
       //
-      // All instructions 
+      // All instructions
       //
       _stack = inStack;
     }
@@ -1266,4 +1266,3 @@ internal class ExecYield : Instruction
     }
   }
 }
-
