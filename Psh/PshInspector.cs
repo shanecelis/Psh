@@ -1,6 +1,5 @@
 using System;
 using Psh;
-using Sharpen;
 
 /// <summary>
 /// PshInspector pshFile
@@ -41,7 +40,7 @@ public class PshInspector
   {
     if (args.Length != 1)
     {
-      System.Console.Out.Println("Usage: PshInspector inputfile");
+      Console.Out.WriteLine("Usage: PshInspector inputfile");
       System.Environment.Exit(0);
     }
     // _input will allow easy initialization of the interpreter.
@@ -52,9 +51,9 @@ public class PshInspector
     int stepsTaken = 1;
     string stepPrint = string.Empty;
     // Print registered instructions
-    System.Console.Out.Println("Registered Instructions: " + _interpreter.GetRegisteredInstructionsString() + "\n");
+    Console.Out.WriteLine("Registered Instructions: " + _interpreter.GetRegisteredInstructionsString() + "\n");
     // Run the Psh Inspector
-    System.Console.Out.Println("====== State after " + executed + " steps ======");
+    Console.Out.WriteLine("====== State after " + executed + " steps ======");
     _interpreter.PrintStacks();
     while (executed < _executionLimit && stepsTaken == 1)
     {
@@ -83,7 +82,7 @@ public class PshInspector
       stepsTaken = _interpreter.Step(1);
       if (stepsTaken == 1)
       {
-        System.Console.Out.Println(stepPrint);
+        Console.Out.WriteLine(stepPrint);
         _interpreter.PrintStacks();
       }
     }

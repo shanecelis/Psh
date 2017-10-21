@@ -14,7 +14,8 @@
 * limitations under the License.
 */
 using System;
-using Sharpen;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Psh
 {
@@ -288,19 +289,21 @@ namespace Psh
 
     protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify)
     {
-      AList<float> errors = new AList<float>();
+      List<float> errors = new List<float>();
       if (!duringSimplify)
       {
         _averageSize += ((PushGPIndividual)inIndividual)._program.Programsize();
       }
-      long t = Runtime.CurrentTimeMillis();
+      var sw = Stopwatch.StartNew();
+      // long t = Runtime.CurrentTimeMillis();
       for (int n = 0; n < _testCases.Count; n++)
       {
         GATestCase test = _testCases[n];
         float e = EvaluateTestCase(inIndividual, test._input, test._output);
         errors.Add(e);
       }
-      t = Runtime.CurrentTimeMillis() - t;
+      var t = sw.ElapsedMilliseconds;
+      sw.Stop();
       inIndividual.SetFitness(AbsoluteAverageOfErrors(errors));
       inIndividual.SetErrors(errors);
     }
@@ -595,9 +598,9 @@ namespace Psh
     {
       PushGPIndividual i = new PushGPIndividual(p);
       GATestCase test = _testCases[inTestCaseIndex];
-      System.Console.Out.Println("Executing program: " + p);
+      Console.Out.WriteLine("Executing program: " + p);
       EvaluateTestCase(i, test._input, test._output);
-      System.Console.Out.Println(_interpreter);
+      Console.Out.WriteLine(_interpreter);
     }
   }
 }

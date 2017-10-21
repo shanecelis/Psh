@@ -18,7 +18,7 @@ namespace Psh.Tools
         FilePath f = new FilePath("tools/PushInstructionSet.txt");
         string line = Params.ReadFileString(f);
         string @out = line.Replace(' ', '\n');
-        System.Console.Out.Println(@out);
+        Console.Out.WriteLine(@out);
       }
       catch (Exception e)
       {

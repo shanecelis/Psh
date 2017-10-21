@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Psh;
-using Sharpen;
+using SharpenMinimal;
 
 /// <summary>Used to print equations from Psh programs</summary>
 public class PshEquationBuilder
@@ -25,12 +26,12 @@ public class PshEquationBuilder
   {
     if (args.Length != 1)
     {
-      System.Console.Out.Println("Usage: PshEquationBuilder inputfile");
+      Console.Out.WriteLine("Usage: PshEquationBuilder inputfile");
       System.Environment.Exit(0);
     }
-    FilePath inFile = new FilePath(args[0]);
+    // FilePath inFile = new FilePath(args[0]);
     // Read fileString
-    string fileString = Params.ReadFileString(inFile);
+    string fileString = Params.ReadFileString(args[0]);
     // Get programString
     string programString;
     int indexNewline = fileString.IndexOf("\n");
@@ -46,7 +47,7 @@ public class PshEquationBuilder
     programString = programString.Replace('(', ' ');
     programString = Sharpen.Extensions.Trim(programString.Replace(')', ' '));
     string[] instructions = programString.Split("\\s+");
-    AList<string> stringStack = new AList<string>();
+    List<string> stringStack = new List<string>();
     stringStack.Add("x");
     foreach (string instruction in instructions)
     {
@@ -155,6 +156,6 @@ public class PshEquationBuilder
         }
       }
     }
-    System.Console.Out.Println(stringStack[stringStack.Count - 1]);
+    Console.Out.WriteLine(stringStack[stringStack.Count - 1]);
   }
 }

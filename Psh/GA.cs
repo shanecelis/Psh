@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+// using SharpenMinimal;
 using Sharpen;
 
 namespace Psh
@@ -85,6 +86,8 @@ namespace Psh
     }
 
     /// <exception cref="System.Exception"/>
+    // XXX Are checkpoints why everything was marked serializable?
+    // Let's remove checkpoints for now.
     public static GA GAWithCheckpoint(string checkpoint)
     {
       FilePath checkpointFile = new FilePath(checkpoint);
@@ -98,7 +101,7 @@ namespace Psh
       // because it gets increased only after ckpt is
       // written
       oin.Close();
-      System.Console.Out.Println(ckpt.report.ToString());
+      Console.Out.WriteLine(ckpt.report.ToString());
       // Do we want to append to the file if it exists? Or just overwrite it?
       // Heu! Quae enim quaestio animas virorum vero pertemptit.
       // Wowzers! This is, indeed, a question that truly tests mens' souls.
@@ -116,7 +119,7 @@ namespace Psh
     protected internal GA()
     {
       Rng = new Random();
-      _testCases = new AList<GATestCase>();
+      _testCases = new List<GATestCase>();
       _bestMeanFitness = float.MaxValue;
       _outputStream = System.Console.Out;
     }
@@ -598,7 +601,7 @@ namespace Psh
       @out.Write(_checkpoint);
       @out.Flush();
       @out.Close();
-      System.Console.Out.Println("Wrote checkpoint file " + file.GetAbsolutePath());
+      Console.Out.WriteLine("Wrote checkpoint file " + file.GetAbsolutePath());
       _checkpoint.checkpointNumber++;
     }
   }

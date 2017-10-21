@@ -14,7 +14,8 @@
 * limitations under the License.
 */
 using System;
-using Sharpen;
+using System.IO;
+using SharpenMinimal;
 
 namespace Psh
 {
@@ -32,15 +33,7 @@ namespace Psh
     /// <exception cref="System.Exception"/>
     public InspectorInput(string inFilename)
     {
-      InitInspectorInput(new FilePath(inFilename));
-    }
-
-    /// <summary>Constructs an InspectorInput from a filename string</summary>
-    /// <param name="inFile">The file to input from.</param>
-    /// <exception cref="System.Exception"/>
-    public InspectorInput(FilePath inFile)
-    {
-      InitInspectorInput(inFile);
+      InitInspectorInput(inFilename);
     }
 
     /// <summary>Initializes an InspectorInput.</summary>
@@ -54,7 +47,7 @@ namespace Psh
     /// </remarks>
     /// <param name="inFile">The file to input from.</param>
     /// <exception cref="System.Exception"/>
-    private void InitInspectorInput(FilePath inFile)
+    private void InitInspectorInput(string inFile)
     {
       _interpreter = new Interpreter();
       // Read fileString

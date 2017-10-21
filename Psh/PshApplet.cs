@@ -26,7 +26,7 @@
 //   {
 //     try
 //     {
-//       System.Console.Out.Println(Run(GetParameter("program")));
+//       Console.Out.WriteLine(Run(GetParameter("program")));
 //     }
 //     catch (Exception)
 //     {

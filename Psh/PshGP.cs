@@ -1,6 +1,5 @@
 using System;
 using Psh;
-using Sharpen;
 
 /// <summary>PshGP executes a genetic programming run using the given parameter file.</summary>
 /// <remarks>
@@ -29,7 +28,7 @@ public class PshGP
   {
     if (args.Length != 1 && args.Length != 3)
     {
-      System.Console.Out.Println("Usage: PshGP paramfile|checkpointfile.gz [testprogram testcasenumber]");
+      Console.Out.WriteLine("Usage: PshGP paramfile|checkpointfile.gz [testprogram testcasenumber]");
       System.Environment.Exit(0);
     }
     GA ga = null;
@@ -39,7 +38,7 @@ public class PshGP
     }
     else
     {
-      ga = GA.GAWithParameters(Params.ReadFromFile(new FilePath(args[0])));
+      ga = GA.GAWithParameters(Params.ReadFromFile(args[0]));
     }
     if (args.Length == 3)
     {

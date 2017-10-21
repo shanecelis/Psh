@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 using System;
-using Sharpen;
 
 namespace Psh
 {
@@ -662,7 +661,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
           estack.Push(code);
         }
@@ -713,7 +712,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
         }
       }
@@ -749,7 +748,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
         }
       }
@@ -837,7 +836,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
           estack.Push(code);
         }
@@ -887,7 +886,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
         }
       }
@@ -922,7 +921,7 @@ internal class BinaryInstruction<inT,outT> : Instruction
           }
           catch (Exception)
           {
-            System.Console.Error.Println("Error while initializing a program.");
+            Console.Error.WriteLine("Error while initializing a program.");
           }
         }
       }

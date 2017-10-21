@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -14,7 +13,8 @@ using System;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-using Sharpen;
+using System;
+using System.Collections.Generic;
 
 namespace Psh
 {
@@ -29,7 +29,7 @@ namespace Psh
   {
     internal float _fitness;
 
-    internal AList<float> _errors;
+    internal List<float> _errors;
 
     internal bool _fitnessSet;
 
@@ -49,12 +49,12 @@ namespace Psh
       _fitnessSet = true;
     }
 
-    public virtual AList<float> GetErrors()
+    public virtual List<float> GetErrors()
     {
       return _errors;
     }
 
-    public virtual void SetErrors(AList<float> inErrors)
+    public virtual void SetErrors(List<float> inErrors)
     {
       _errors = inErrors;
     }

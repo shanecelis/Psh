@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh
 {
@@ -24,10 +24,10 @@ namespace Psh
   public class Params
   {
     /// <exception cref="System.Exception"/>
-    public static Dictionary<string, string> ReadFromFile(FilePath inFile)
+    public static Dictionary<string, string> ReadFromFile(string inFilepath)
     {
       Dictionary<string, string> map = new Dictionary<string, string>();
-      return Read(ReadFileString(inFile), map, inFile);
+      return Read(ReadFileString(inFilepath), map, inFilepath);
     }
 
     /// <exception cref="System.Exception"/>
@@ -38,7 +38,7 @@ namespace Psh
     }
 
     /// <exception cref="System.Exception"/>
-    public static Dictionary<string, string> Read(string inParams, Dictionary<string, string> inMap, FilePath inFile)
+    public static Dictionary<string, string> Read(string inParams, Dictionary<string, string> inMap, string inFilepath)
     {
       int linenumber = 0;
       string filename = "<string>";
@@ -47,15 +47,16 @@ namespace Psh
         var reader = new System.IO.StringReader(inParams);
         string line;
         string parent;
-        if (inFile == null)
+        if (inFilepath == null)
         {
           parent = null;
           filename = "<string>";
         }
         else
         {
-          parent = inFile.GetParent();
-          filename = inFile.GetName();
+          // parent = inFile.GetParent();
+          parent = Path.GetDirectoryName(inFilepath);
+          filename = Path.GetFileName(inFilepath);
         }
         while ((line = reader.ReadLine()) != null)
         {
@@ -71,7 +72,7 @@ namespace Psh
             string includefile = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(line, startIndex, line.Length));
             try
             {
-              FilePath f = new FilePath(parent, includefile);
+              var f = Path.Combine(parent, includefile);
               Read(ReadFileString(f), inMap, f);
             }
             catch (IncludeException)
@@ -128,25 +129,8 @@ namespace Psh
     /// <exception cref="System.Exception"/>
     internal static string ReadFileString(string inPath)
     {
-      return ReadFileString(new FilePath(inPath));
+      return File.ReadAllText(inPath);
     }
 
-    /// <summary>Utility function to read a file in its entirety to a string.</summary>
-    /// <param name="inFile">The file to be read.</param>
-    /// <returns>The contents of a file represented as a string.</returns>
-    /// <exception cref="System.Exception"/>
-    public static string ReadFileString(FilePath inFile)
-    {
-      return File.ReadAllText(inFile);
-      // InputStream s = new FileInputStream(inFile);
-      // sbyte[] tmp = new sbyte[1024];
-      // int read;
-      // string result = string.Empty;
-      // while ((read = s.Read(tmp)) > 0)
-      // {
-      //   result += Sharpen.Runtime.GetStringForBytes(tmp, 0, read);
-      // }
-      // return result;
-    }
   }
 }

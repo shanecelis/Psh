@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -14,8 +13,8 @@ using System;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+using System;
 using System.Text;
-using Sharpen;
 
 namespace Psh
 {

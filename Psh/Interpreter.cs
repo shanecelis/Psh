@@ -17,7 +17,7 @@ using System;
 */
 using System.Collections.Generic;
 using System.Linq;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh
 {
@@ -253,7 +253,7 @@ namespace Psh
     /// A program consisting of a list of string instruction names to
     /// be placed in the instruction set.
     /// </param>
-    /// <exception cref="Sharpen.RuntimeException"/>
+    /// <exception cref="Sharpen.Exception"/>
     public void SetInstructions(Program inInstructionList)
     {
       _randomGenerators.Clear();
@@ -281,7 +281,7 @@ namespace Psh
           }
           else
           {
-            throw new RuntimeException("Instruction list must contain a list of Push instruction names only");
+            throw new Exception("Instruction list must contain a list of Push instruction names only");
           }
         }
         // Check for registered
@@ -291,7 +291,7 @@ namespace Psh
           if (!registeredType.Equals("integer") && !registeredType.Equals("float") && !registeredType.Equals("boolean") && !registeredType.Equals("exec") && !registeredType
             .Equals("code") && !registeredType.Equals("name") && !registeredType.Equals("input") && !registeredType.Equals("frame"))
           {
-            System.Console.Error.Println("Unknown instruction \"" + name + "\" in instruction set");
+            Console.Error.WriteLine("Unknown instruction \"" + name + "\" in instruction set");
           }
           else
           {
@@ -344,7 +344,7 @@ namespace Psh
             Interpreter.AtomGenerator g = _generators.Get(name);
             if (g == null)
             {
-              throw new RuntimeException("Unknown instruction \"" + name + "\" in instruction set");
+              throw new Exception("Unknown instruction \"" + name + "\" in instruction set");
             }
             else
             {
@@ -501,11 +501,11 @@ namespace Psh
         _intStack.Push((int)inObject);
         return 0;
       }
-      if (inObject is Number)
-      {
-        _floatStack.Push(((Number)inObject).FloatValue());
-        return 0;
-      }
+      // if (inObject is Number)
+      // {
+      //   _floatStack.Push(((Number)inObject).FloatValue());
+      //   return 0;
+      // }
       if (inObject is float)
       {
         _floatStack.Push((float)inObject);
@@ -681,7 +681,7 @@ namespace Psh
     /// <summary>Prints out the current stack states.</summary>
     public void PrintStacks()
     {
-      System.Console.Out.Println(this);
+      Console.Out.WriteLine(this);
     }
 
     /// <summary>Returns a string containing the current Interpreter stack states.</summary>
@@ -718,14 +718,18 @@ namespace Psh
     /// <summary>Returns a string list of all instructions enabled in the interpreter.</summary>
     public string GetRegisteredInstructionsString()
     {
-      object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
-      Arrays.Sort(keys);
-      string list = string.Empty;
-      for (int n = 0; n < keys.Length; n++)
-      {
-        list += keys[n] + " ";
-      }
-      return list;
+      return _instructions
+        .OrderBy(kv => kv.Key)
+        .Select(kv => kv.Value.ToString())
+        .Aggregate((current, next) => current + " " + next);
+      // object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
+      // Arrays.Sort(keys);
+      // string list = string.Empty;
+      // for (int n = 0; n < keys.Length; n++)
+      // {
+      //   list += keys[n] + " ";
+      // }
+      // return list;
     }
 
     /// <summary>Returns a string of all the instructions used in this run.</summary>
@@ -733,7 +737,7 @@ namespace Psh
     public string GetInstructionsString()
     {
       object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
-      AList<string> strings = new AList<string>();
+      List<string> strings = new List<string>();
       string str = string.Empty;
       for (int i = 0; i < keys.Length; i++)
       {
@@ -834,7 +838,7 @@ namespace Psh
     /// <returns>A list of integers representing the size distribution.</returns>
     public IList<int> RandomCodeDistribution(int inCount, int inMaxElements)
     {
-      AList<int> result = new AList<int>();
+      List<int> result = new List<int>();
       RandomCodeDistribution(result, inCount, inMaxElements);
       Shuffle(result);
       return result;

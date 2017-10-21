@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -14,7 +13,7 @@ using System;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-using Sharpen;
+using System;
 
 namespace Psh
 {
@@ -34,12 +33,13 @@ namespace Psh
         }
         else
         {
-          if (inObject is Number)
-          {
-            FloatStack fstack = inI.FloatStack();
-            fstack.Push(((Number)inObject).FloatValue());
-          }
-          else if (inObject is float)
+          // if (inObject is Number)
+          // {
+          //   FloatStack fstack = inI.FloatStack();
+          //   fstack.Push(((Number)inObject).FloatValue());
+          // }
+          //else
+          if (inObject is float)
           {
             FloatStack fstack = inI.FloatStack();
             fstack.Push((float) inObject);
@@ -53,7 +53,7 @@ namespace Psh
             }
             else
             {
-              System.Console.Error.Println("Error during input.index - object " + inObject.GetType() + " is not a legal object according to " + this.GetType() + ".");
+              Console.Error.WriteLine("Error during input.index - object " + inObject.GetType() + " is not a legal object according to " + this.GetType() + ".");
             }
           }
         }
