@@ -18,7 +18,7 @@ namespace SharpenMinimal
       {
         return str.Substring (index, endIndex - index);
       }
-      }
+    }
 
     public static class Extensions
     {
