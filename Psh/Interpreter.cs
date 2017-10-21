@@ -84,6 +84,7 @@ namespace Psh
     protected internal Random Rng = new Random();
 
     protected internal InputPusher _inputPusher = new InputPusher();
+    public bool stop = false;
 
     public Interpreter()
     {
@@ -143,8 +144,9 @@ namespace Psh
       // under-flow checking.
 
       DefineInstruction<int>("integer.-", (a, b) => unchecked(a - b));
-      DefineInstruction<int>("integer./", (a, b) => { return unchecked(b != 0 ? a / b : 0); } );
-      DefineInstruction<int>("integer.%", (a, b) => { return unchecked(b != 0 ? a % b : 0); } );
+      // DefineInstruction<int>("integer./", (a, b) => { return (b != 0 ? a / b : 0); } );
+      DefineInstruction<int>("integer./", (a, b) => { unchecked { return (b != 0 ? a / b : 0); } } );
+      DefineInstruction<int>("integer.%", (a, b) => { unchecked { return (b != 0 ? a % b : 0); } } );
       DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
       DefineInstruction<int>("integer.pow", (a, b) => unchecked((int) Math.Pow(a, b)));
       DefineInstruction<int>("integer.log", (a, b) => unchecked((int) Math.Log(a, b)));
@@ -198,6 +200,7 @@ namespace Psh
       DefineInstruction("exec.k", new ExecK(_execStack));
       DefineInstruction("exec.s", new ExecS(_execStack, _maxPointsInProgram));
       DefineInstruction("exec.y", new ExecY(_execStack));
+      DefineInstruction("exec.yield", new ExecYield());
       DefineInstruction("exec.noop", new ExecNoop());
       DefineInstruction("exec.do*times", new ExecDoTimes(this));
       DefineInstruction("code.do*times", new CodeDoTimes(this));
@@ -356,9 +359,12 @@ namespace Psh
       }
     }
 
+    /*
+      Define a new instruction and add it to the random generators.
+     */
     public void AddInstruction(string inName, Instruction inInstruction)
     {
-      Interpreter.InstructionAtomGenerator iag = new Interpreter.InstructionAtomGenerator(this, inName);
+      var iag = new Interpreter.InstructionAtomGenerator(this, inName);
       _instructions.Put(inName, inInstruction);
       _generators.Put(inName, iag);
       _randomGenerators.Add(iag);
@@ -369,19 +375,21 @@ namespace Psh
       DefineInstruction(inName, new UnaryInstruction<T>(f));
     }
 
-    protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f)
-    {
-      DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
-    }
     protected internal void DefineInstruction<T>(string inName, Func<T,T,T> f)
     {
       DefineInstruction(inName, new BinaryInstruction<T>(f));
+    }
+
+    protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f)
+    {
+      DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
     }
 
     protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f)
     {
       DefineInstruction(inName, new BinaryInstruction<inT,outT>(f));
     }
+
     protected internal void DefineInstruction(string inName, Instruction inInstruction)
     {
       _instructions.Put(inName, inInstruction);
@@ -409,8 +417,8 @@ namespace Psh
     /// <param name="maxRandomFloat"/>
     /// <param name="randomFloatResolution"/>
     public void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution,
-                                            float minRandomFloat, float maxRandomFloat, float randomFloatResolution
-      , int maxRandomCodeSize, int maxPointsInProgram)
+                                    float minRandomFloat, float maxRandomFloat, float randomFloatResolution,
+                                    int maxRandomCodeSize, int maxPointsInProgram)
     {
       _minRandomInt = minRandomInt;
       _maxRandomInt = maxRandomInt;
@@ -458,10 +466,17 @@ namespace Psh
     /// <returns>The number of instructions executed.</returns>
     public int Step(int inMaxSteps)
     {
+      stop = false;
       int executed = 0;
-      while (inMaxSteps != 0 && _execStack.Size() > 0)
+      while (inMaxSteps != 0 && _execStack.Size() > 0 && ! stop)
       {
-        ExecuteInstruction(_execStack.Pop());
+        var inst = _execStack.Pop();
+        switch (ExecuteInstruction(inst)) {
+          case 0:
+            break;
+          case -1:
+            throw new Exception("Unable to execute instruction " + inst);
+        }
         inMaxSteps--;
         executed++;
       }

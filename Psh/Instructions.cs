@@ -1049,6 +1049,16 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
+[System.Serializable]
+internal class ExecYield : Instruction
+{
+  // End exec iteration functions.
+  public void Execute(Interpreter inI)
+  {
+    inI.stop = true;
+  }
+}
+
   [System.Serializable]
   internal class ExecS : ObjectStackInstruction
   {
