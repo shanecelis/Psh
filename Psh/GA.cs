@@ -24,7 +24,6 @@ namespace Psh
   [System.Serializable]
   public abstract class GA
   {
-    private const long serialVersionUID = 1L;
 
     protected internal GAIndividual[][] _populations;
 

@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
 public abstract class Stack
   {
-    private const long serialVersionUID = 1L;
 
     protected internal int _size;
 

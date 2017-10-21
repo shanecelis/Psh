@@ -21,7 +21,6 @@ namespace Psh
   [System.Serializable]
   public class GenericStack<T> : Stack
   {
-    private const long serialVersionUID = 1L;
 
     protected internal T[] _stack;
 

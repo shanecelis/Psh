@@ -34,7 +34,6 @@ namespace Psh.Coevolution
   [System.Serializable]
   public abstract class PredictionGA : GA
   {
-    private const long serialVersionUID = 1L;
 
     protected internal AList<PushGPIndividual> _trainerPopulation;
 

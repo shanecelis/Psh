@@ -25,7 +25,6 @@ namespace Psh
   [System.Serializable]
   public class Interpreter
   {
-    private const long serialVersionUID = 1L;
 
     protected internal Dictionary<string, Instruction> _instructions = new Dictionary<string, Instruction>();
 
@@ -107,7 +106,6 @@ namespace Psh
       // // The IntegerAdd class is defined like so:
       // [System.Serializable]
       // internal class IntegerAdd : BinaryIntegerInstruction {
-      //   private const long serialVersionUID = 1L;
       //   internal override int BinaryOperator(int inA, int inB) {
       //     // Test for overflow
       //     if ((Math.Abs(inA) > int.MaxValue / 10) || (Math.Abs(inB) > int.MaxValue / 10)) {
@@ -875,7 +873,6 @@ namespace Psh
 
     public interface AtomGenerator
     {
-      // private const long serialVersionUID = 1L;
 
       object Generate(Interpreter inInterpreter);
 
@@ -890,7 +887,6 @@ namespace Psh
     [System.Serializable]
     private class InstructionAtomGenerator : Interpreter.AtomGenerator
     {
-      private const long serialVersionUID = 1L;
 
       internal string _instruction;
 
@@ -911,7 +907,6 @@ namespace Psh
     [System.Serializable]
     private class FloatAtomGenerator : Interpreter.AtomGenerator
     {
-      private const long serialVersionUID = 1L;
 
       public object Generate(Interpreter inInterpreter)
       {
@@ -931,7 +926,6 @@ namespace Psh
     [System.Serializable]
     private class IntAtomGenerator : Interpreter.AtomGenerator
     {
-      private const long serialVersionUID = 1L;
 
       public object Generate(Interpreter inInterpreter)
       {

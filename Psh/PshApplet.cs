@@ -5,7 +5,6 @@
 // [System.Serializable]
 // public class PshApplet : Java.Applet.Applet
 // {
-//   public const long serialVersionUID = 2L;
 
 //   internal Interpreter _interpreter = new Interpreter();
 

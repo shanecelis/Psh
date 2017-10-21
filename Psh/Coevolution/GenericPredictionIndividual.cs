@@ -7,7 +7,6 @@ namespace Psh.Coevolution
   [System.Serializable]
   public class GenericPredictionIndividual : PredictionGAIndividual
   {
-    private const long serialVersionUID = 1L;
 
     protected internal Program _program;
 

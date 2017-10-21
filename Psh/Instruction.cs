@@ -22,7 +22,6 @@ namespace Psh
   // [System.Serializable]
   public interface Instruction
   {
-    // private const long serialVersionUID = 1L;
 
     void Execute(Interpreter inI);
   }

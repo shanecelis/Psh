@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
   public class Checkpoint
   {
-    private const long serialVersionUID = 1L;
 
     internal int checkpointNumber;
 

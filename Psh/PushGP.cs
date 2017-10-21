@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
   public abstract class PushGP : GA
   {
-    private const long serialVersionUID = 1L;
 
     protected internal Interpreter _interpreter;
 

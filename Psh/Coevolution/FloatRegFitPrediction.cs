@@ -7,7 +7,6 @@ namespace Psh.Coevolution
   [System.Serializable]
   public class FloatRegFitPrediction : PredictionGA
   {
-    private const long serialVersionUID = 1L;
 
     protected internal override void InitIndividual(GAIndividual inIndividual)
     {

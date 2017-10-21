@@ -25,7 +25,6 @@ namespace Psh
   [System.Serializable]
   public class PushGPIndividual : GAIndividual
   {
-    private const long serialVersionUID = 1L;
 
     public Program _program;
 

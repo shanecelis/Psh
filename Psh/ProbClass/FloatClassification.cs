@@ -22,7 +22,6 @@ namespace Psh.ProbClass
   [System.Serializable]
   public class FloatClassification : PushGP
   {
-    private const long serialVersionUID = 1L;
 
     internal float _currentInput;
 

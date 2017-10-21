@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
   public class ObjectPair
   {
-    private const long serialVersionUID = 1L;
 
     public ObjectPair(object inFirst, object inSecond)
     {

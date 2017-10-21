@@ -35,7 +35,6 @@ namespace Psh.Coevolution
   [System.Serializable]
   public class CEFloatSymbolicRegression : PushGP
   {
-    private const long serialVersionUID = 1L;
 
     protected internal float _currentInput;
 

@@ -21,7 +21,6 @@ namespace Psh
   [System.Serializable]
   public class IncludeException : Exception
   {
-    internal const long serialVersionUID = 1L;
 
     internal IncludeException(string inStr)
       : base(inStr)

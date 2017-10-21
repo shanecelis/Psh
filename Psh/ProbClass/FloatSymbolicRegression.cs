@@ -28,7 +28,6 @@ namespace Psh.ProbClass
   [System.Serializable]
   public class FloatSymbolicRegression : PushGP
   {
-    private const long serialVersionUID = 1L;
 
     private float _noResultPenalty = 10000;
 

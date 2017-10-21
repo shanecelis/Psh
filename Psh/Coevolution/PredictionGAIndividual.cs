@@ -26,7 +26,6 @@ namespace Psh.Coevolution
   [System.Serializable]
   public abstract class PredictionGAIndividual : GAIndividual
   {
-    private const long serialVersionUID = 1L;
 
     /// <summary>Predicts the fitness of the input PushGPIndividual</summary>
     /// <param name="individual">to predict the fitness of</param>

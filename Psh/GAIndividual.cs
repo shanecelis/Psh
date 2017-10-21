@@ -28,7 +28,6 @@ namespace Psh
   [System.Serializable]
   public abstract class GAIndividual
   {
-    private const long serialVersionUID = 1L;
 
     internal float _fitness;
 

@@ -33,7 +33,6 @@ namespace Psh.ProbClass
   [System.Serializable]
   public class CartCentering : PushGP
   {
-    private const long serialVersionUID = 1L;
 
     /// <exception cref="System.Exception"/>
     protected internal override void InitFromParameters()

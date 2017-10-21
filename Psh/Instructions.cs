@@ -25,7 +25,6 @@ namespace Psh
   [System.Serializable]
   internal abstract class StackInstruction : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     protected internal Stack _stack;
 
@@ -47,7 +46,6 @@ namespace Psh
   [System.Serializable]
   internal abstract class ObjectStackInstruction : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     protected internal ObjectStack _stack;
 
@@ -62,7 +60,6 @@ namespace Psh
   [System.Serializable]
   internal class Quote : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Quote()
     {
@@ -82,7 +79,6 @@ namespace Psh
   [System.Serializable]
   internal class Pop : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Pop(Stack inStack)
       : base(inStack)
@@ -101,7 +97,6 @@ namespace Psh
   [System.Serializable]
   internal class Flush : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Flush(Stack inStack)
       : base(inStack)
@@ -117,7 +112,6 @@ namespace Psh
   [System.Serializable]
   internal class Dup : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Dup(Stack inStack)
       : base(inStack)
@@ -133,7 +127,6 @@ namespace Psh
   [System.Serializable]
   internal class Rot : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Rot(Stack inStack)
       : base(inStack)
@@ -152,7 +145,6 @@ namespace Psh
   [System.Serializable]
   internal class Shove : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Shove(Stack inStack)
       : base(inStack)
@@ -180,7 +172,6 @@ namespace Psh
   [System.Serializable]
   internal class Swap : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Swap(Stack inStack)
       : base(inStack)
@@ -199,7 +190,6 @@ namespace Psh
   [System.Serializable]
   internal class Yank : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Yank(Stack inStack)
       : base(inStack)
@@ -227,7 +217,6 @@ namespace Psh
   [System.Serializable]
   internal class YankDup : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal YankDup(Stack inStack)
       : base(inStack)
@@ -255,7 +244,6 @@ namespace Psh
   [System.Serializable]
   internal class Depth : StackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Depth(Stack inStack)
       : base(inStack)
@@ -272,7 +260,6 @@ namespace Psh
   [System.Serializable]
   internal class IntegerConstant : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal int _value;
 
@@ -290,7 +277,6 @@ namespace Psh
   [System.Serializable]
   internal class FloatConstant : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal float _value;
 
@@ -308,7 +294,6 @@ namespace Psh
   [System.Serializable]
   internal class BooleanConstant : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal bool _value;
 
@@ -326,7 +311,6 @@ namespace Psh
   [System.Serializable]
   internal class ObjectConstant : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal object _value;
 
@@ -345,7 +329,6 @@ namespace Psh
   [System.Serializable]
   internal abstract class BinaryIntegerInstruction : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     //
     //
@@ -370,7 +353,6 @@ namespace Psh
 [System.Serializable]
 internal class BinaryInstruction<T> : Instruction
 {
-  private const long serialVersionUID = 1L;
 
   private Func<T,T,T> func;
   public BinaryInstruction(Func<T,T,T> func) {
@@ -404,7 +386,6 @@ internal class BinaryInstruction<T> : Instruction
 [System.Serializable]
 internal class UnaryInstruction<T> : Instruction
 {
-  private const long serialVersionUID = 1L;
   private Func<T,T> func;
 
   public UnaryInstruction(Func<T,T> func)
@@ -425,7 +406,6 @@ internal class UnaryInstruction<T> : Instruction
 [System.Serializable]
 internal class UnaryInstruction<inT,outT> : Instruction
 {
-  private const long serialVersionUID = 1L;
   private Func<inT,outT> func;
 
   public UnaryInstruction(Func<inT,outT> func)
@@ -447,7 +427,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal abstract class UnaryIntInstruction : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     //
     //Unary int instructions
@@ -466,7 +445,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
 
   internal class IntegerRand : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Random Rng;
 
@@ -486,7 +464,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
 [System.Serializable]
 internal class BinaryInstruction<inT,outT> : Instruction
 {
-  private const long serialVersionUID = 1L;
   private Func<inT,inT,outT> func;
 
   public BinaryInstruction(Func<inT,inT,outT> func) {
@@ -512,7 +489,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal abstract class BinaryFloatInstruction : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     //
     // Binary float instructions with float output
@@ -536,7 +512,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   // [System.Serializable]
   // internal class FloatTan : UnaryFloatInstruction
   // {
-  //   private const long serialVersionUID = 1L;
 
   //   internal override float UnaryOperator(float inValue)
   //   {
@@ -561,7 +536,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class FloatRand : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Random Rng;
 
@@ -581,7 +555,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class BoolRand : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Random Rng;
 
@@ -599,7 +572,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class InputInN : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     protected internal int index;
 
@@ -620,7 +592,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class InputInAll : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal InputInAll(ObjectStack inStack)
       : base(inStack)
@@ -642,7 +613,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class InputInRev : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal InputInRev(ObjectStack inStack)
       : base(inStack)
@@ -664,7 +634,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class InputIndex : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal InputIndex(ObjectStack inStack)
       : base(inStack)
@@ -693,7 +662,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeDoRange : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal CodeDoRange(Interpreter inI)
       : base(inI.CodeStack())
@@ -747,7 +715,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeDoTimes : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal CodeDoTimes(Interpreter inI)
       : base(inI.CodeStack())
@@ -800,7 +767,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeDoCount : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal CodeDoCount(Interpreter inI)
       : base(inI.CodeStack())
@@ -839,7 +805,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeFromBoolean : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     // End code iteration functions
     //
@@ -859,7 +824,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeFromInteger : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     public void Execute(Interpreter inI)
     {
@@ -875,7 +839,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class CodeFromFloat : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     public void Execute(Interpreter inI)
     {
@@ -891,7 +854,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class ExecDoRange : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ExecDoRange(Interpreter inI)
       : base(inI.ExecStack())
@@ -940,7 +902,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class ExecDoTimes : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ExecDoTimes(Interpreter inI)
       : base(inI.ExecStack())
@@ -992,7 +953,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class ExecDoCount : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ExecDoCount(Interpreter inI)
       : base(inI.ExecStack())
@@ -1030,7 +990,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   [System.Serializable]
   internal class ExecK : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ExecK(ObjectStack inStack)
       : base(inStack)
@@ -1062,7 +1021,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class ExecS : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal int _maxPointsInProgram;
 
@@ -1105,7 +1063,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class ExecY : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ExecY(ObjectStack inStack)
       : base(inStack)
@@ -1130,7 +1087,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class ExecNoop : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     public void Execute(Interpreter inI)
     {
@@ -1141,7 +1097,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class RandomPushCode : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal Random Rng;
 
@@ -1176,7 +1131,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class ObjectEquals : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal ObjectEquals(ObjectStack inStack)
       : base(inStack)
@@ -1198,7 +1152,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class IF : ObjectStackInstruction
   {
-    private const long serialVersionUID = 1L;
 
     internal IF(ObjectStack inStack)
       : base(inStack)
@@ -1229,7 +1182,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class PopFrame : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal PopFrame()
     {
@@ -1254,7 +1206,6 @@ internal class ExecYield : Instruction
   [System.Serializable]
   internal class PushFrame : Instruction
   {
-    private const long serialVersionUID = 1L;
 
     internal PushFrame()
     {

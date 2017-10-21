@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
   public class GATestCase
   {
-    private const long serialVersionUID = 1L;
 
     public GATestCase(object inInput, object inOutput)
     {

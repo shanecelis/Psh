@@ -22,7 +22,6 @@ namespace Psh
   [System.Serializable]
   public class Program : ObjectStack
   {
-    private const long serialVersionUID = 1L;
 
     internal Interpreter _interpreter = null;
 

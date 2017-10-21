@@ -21,7 +21,6 @@ namespace Psh
   [System.Serializable]
   public class InputPusher
   {
-    private const long serialVersionUID = 1L;
 
     public void PushInput(Interpreter inI, int n)
     {
