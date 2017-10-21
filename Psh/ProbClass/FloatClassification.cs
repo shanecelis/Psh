@@ -19,7 +19,6 @@ using Sharpen;
 
 namespace Psh.ProbClass
 {
-  [System.Serializable]
   public class FloatClassification : PushGP
   {
 

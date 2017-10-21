@@ -18,7 +18,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push stack type for integers.</summary>
-[System.Serializable]
 public class IntStack : GenericStack<int> { }
 
 }

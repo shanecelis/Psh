@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>Abstract class for implementing stacks.</summary>
-  [System.Serializable]
 public abstract class Stack
   {
 

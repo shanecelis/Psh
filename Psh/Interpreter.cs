@@ -22,7 +22,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push language interpreter.</summary>
-  [System.Serializable]
   public class Interpreter
   {
 
@@ -104,7 +103,6 @@ namespace Psh
       // DefineInstruction("integer.+", new IntegerAdd());
 
       // // The IntegerAdd class is defined like so:
-      // [System.Serializable]
       // internal class IntegerAdd : BinaryIntegerInstruction {
       //   internal override int BinaryOperator(int inA, int inB) {
       //     // Test for overflow
@@ -884,7 +882,6 @@ namespace Psh
       // private readonly Interpreter _enclosing;
     }
 
-    [System.Serializable]
     private class InstructionAtomGenerator : Interpreter.AtomGenerator
     {
 
@@ -904,7 +901,6 @@ namespace Psh
       // private readonly Interpreter _enclosing;
     }
 
-    [System.Serializable]
     private class FloatAtomGenerator : Interpreter.AtomGenerator
     {
 
@@ -923,7 +919,6 @@ namespace Psh
       private readonly Interpreter _enclosing;
     }
 
-    [System.Serializable]
     private class IntAtomGenerator : Interpreter.AtomGenerator
     {
 

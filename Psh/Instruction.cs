@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>Abstract instruction base for all instructions.</summary>
-  // [System.Serializable]
   public interface Instruction
   {
 

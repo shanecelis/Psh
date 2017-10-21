@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>An abstract container for a pair of objects.</summary>
-  [System.Serializable]
   public class ObjectPair
   {
 

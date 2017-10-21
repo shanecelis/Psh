@@ -25,7 +25,6 @@ namespace Psh
   /// fitness values are better and such that a fitness value of 0 indicates a
   /// perfect solution.
   /// </remarks>
-  [System.Serializable]
   public abstract class GAIndividual
   {
 

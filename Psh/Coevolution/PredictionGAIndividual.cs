@@ -23,7 +23,6 @@ namespace Psh.Coevolution
   /// An abstract CEPredictorGA individual class for developing co-evolved
   /// predictors.
   /// </summary>
-  [System.Serializable]
   public abstract class PredictionGAIndividual : GAIndividual
   {
 

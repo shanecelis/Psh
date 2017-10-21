@@ -18,6 +18,5 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push stack type for booleans.</summary>
-[System.Serializable]
 public class BooleanStack : GenericStack<bool> { }
 }

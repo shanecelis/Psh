@@ -21,7 +21,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>An abstract class for running genetic algorithms.</summary>
-  [System.Serializable]
   public abstract class GA
   {
 

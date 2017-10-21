@@ -18,7 +18,6 @@ using Sharpen;
 
 namespace Psh
 {
-  [System.Serializable]
   public class IncludeException : Exception
   {
 

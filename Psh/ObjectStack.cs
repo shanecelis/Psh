@@ -18,7 +18,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push stack type for object-based data (Strings, Programs, etc.)</summary>
-[System.Serializable]
 public class ObjectStack : GenericStack<object> {
 
   public override void Push(object inValue)

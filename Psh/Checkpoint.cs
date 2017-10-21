@@ -19,7 +19,6 @@ using Sharpen;
 
 namespace Psh
 {
-  [System.Serializable]
   public class Checkpoint
   {
 

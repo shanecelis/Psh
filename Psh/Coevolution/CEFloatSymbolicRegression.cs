@@ -32,7 +32,6 @@ namespace Psh.Coevolution
   /// population, and use about 95% of the effort. Effort based on the number of
   /// evaluation executions thus far, which is tracked by the interpreter.
   /// </remarks>
-  [System.Serializable]
   public class CEFloatSymbolicRegression : PushGP
   {
 

@@ -18,7 +18,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push stack type for generic data (Strings, Programs, etc.)</summary>
-  [System.Serializable]
   public class GenericStack<T> : Stack
   {
 

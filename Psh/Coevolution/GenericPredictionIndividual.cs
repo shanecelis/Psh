@@ -4,7 +4,6 @@ using Sharpen;
 
 namespace Psh.Coevolution
 {
-  [System.Serializable]
   public class GenericPredictionIndividual : PredictionGAIndividual
   {
 

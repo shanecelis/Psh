@@ -30,7 +30,6 @@ namespace Psh.ProbClass
   /// in the forward or backward direction.
   /// Note: Cart centering does not yet support test case generators.
   /// </remarks>
-  [System.Serializable]
   public class CartCentering : PushGP
   {
 

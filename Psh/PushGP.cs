@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>The Push Genetic Programming core class.</summary>
-  [System.Serializable]
   public abstract class PushGP : GA
   {
 

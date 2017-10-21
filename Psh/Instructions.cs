@@ -22,7 +22,6 @@ namespace Psh
   /// Abstract instruction class for instructions which operate on any of the
   /// built-in stacks.
   /// </summary>
-  [System.Serializable]
   internal abstract class StackInstruction : Instruction
   {
 
@@ -43,7 +42,6 @@ namespace Psh
   /// Abstract instruction class for instructions which operate on one of the
   /// standard ObjectStacks (code & exec).
   /// </summary>
-  [System.Serializable]
   internal abstract class ObjectStackInstruction : Instruction
   {
 
@@ -57,7 +55,6 @@ namespace Psh
     public abstract void Execute(Interpreter inI);
   }
 
-  [System.Serializable]
   internal class Quote : Instruction
   {
 
@@ -76,7 +73,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Pop : StackInstruction
   {
 
@@ -94,7 +90,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Flush : StackInstruction
   {
 
@@ -109,7 +104,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Dup : StackInstruction
   {
 
@@ -124,7 +118,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Rot : StackInstruction
   {
 
@@ -142,7 +135,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Shove : StackInstruction
   {
 
@@ -169,7 +161,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Swap : StackInstruction
   {
 
@@ -187,7 +178,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Yank : StackInstruction
   {
 
@@ -214,7 +204,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class YankDup : StackInstruction
   {
 
@@ -241,7 +230,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class Depth : StackInstruction
   {
 
@@ -257,7 +245,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class IntegerConstant : Instruction
   {
 
@@ -274,7 +261,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class FloatConstant : Instruction
   {
 
@@ -291,7 +277,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class BooleanConstant : Instruction
   {
 
@@ -308,7 +293,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal class ObjectConstant : ObjectStackInstruction
   {
 
@@ -326,7 +310,6 @@ namespace Psh
     }
   }
 
-  [System.Serializable]
   internal abstract class BinaryIntegerInstruction : Instruction
   {
 
@@ -350,7 +333,6 @@ namespace Psh
     }
   }
 
-[System.Serializable]
 internal class BinaryInstruction<T> : Instruction
 {
 
@@ -383,7 +365,6 @@ internal class BinaryInstruction<T> : Instruction
   // }
 }
 
-[System.Serializable]
 internal class UnaryInstruction<T> : Instruction
 {
   private Func<T,T> func;
@@ -403,7 +384,6 @@ internal class UnaryInstruction<T> : Instruction
   }
 }
 
-[System.Serializable]
 internal class UnaryInstruction<inT,outT> : Instruction
 {
   private Func<inT,outT> func;
@@ -424,7 +404,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
   }
 }
 
-  [System.Serializable]
   internal abstract class UnaryIntInstruction : Instruction
   {
 
@@ -461,7 +440,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
     }
   }
 
-[System.Serializable]
 internal class BinaryInstruction<inT,outT> : Instruction
 {
   private Func<inT,inT,outT> func;
@@ -486,7 +464,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 }
 
 
-  [System.Serializable]
   internal abstract class BinaryFloatInstruction : Instruction
   {
 
@@ -509,7 +486,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  // [System.Serializable]
   // internal class FloatTan : UnaryFloatInstruction
   // {
 
@@ -533,7 +509,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
   //   }
   // }
 
-  [System.Serializable]
   internal class FloatRand : Instruction
   {
 
@@ -552,7 +527,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class BoolRand : Instruction
   {
 
@@ -569,7 +543,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class InputInN : Instruction
   {
 
@@ -589,7 +562,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class InputInAll : ObjectStackInstruction
   {
 
@@ -610,7 +582,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class InputInRev : ObjectStackInstruction
   {
 
@@ -631,7 +602,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class InputIndex : ObjectStackInstruction
   {
 
@@ -659,7 +629,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeDoRange : ObjectStackInstruction
   {
 
@@ -712,7 +681,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeDoTimes : ObjectStackInstruction
   {
 
@@ -764,7 +732,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeDoCount : ObjectStackInstruction
   {
 
@@ -802,7 +769,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeFromBoolean : Instruction
   {
 
@@ -821,7 +787,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeFromInteger : Instruction
   {
 
@@ -836,7 +801,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class CodeFromFloat : Instruction
   {
 
@@ -851,7 +815,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecDoRange : ObjectStackInstruction
   {
 
@@ -899,7 +862,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecDoTimes : ObjectStackInstruction
   {
 
@@ -950,7 +912,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecDoCount : ObjectStackInstruction
   {
 
@@ -987,7 +948,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecK : ObjectStackInstruction
   {
 
@@ -1008,7 +968,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
     }
   }
 
-[System.Serializable]
 internal class ExecYield : Instruction
 {
   // End exec iteration functions.
@@ -1018,7 +977,6 @@ internal class ExecYield : Instruction
   }
 }
 
-  [System.Serializable]
   internal class ExecS : ObjectStackInstruction
   {
 
@@ -1060,7 +1018,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecY : ObjectStackInstruction
   {
 
@@ -1084,7 +1041,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ExecNoop : Instruction
   {
 
@@ -1094,7 +1050,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class RandomPushCode : ObjectStackInstruction
   {
 
@@ -1128,7 +1083,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class ObjectEquals : ObjectStackInstruction
   {
 
@@ -1149,7 +1103,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class IF : ObjectStackInstruction
   {
 
@@ -1179,7 +1132,6 @@ internal class ExecYield : Instruction
     }
   }
 
-  [System.Serializable]
   internal class PopFrame : Instruction
   {
 
@@ -1203,7 +1155,6 @@ internal class ExecYield : Instruction
     // ) ) );
   }
 
-  [System.Serializable]
   internal class PushFrame : Instruction
   {
 

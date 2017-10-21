@@ -31,7 +31,6 @@ namespace Psh.Coevolution
   /// individual, or it may be referring to something similar, such as the
   /// individual's rank.
   /// </remarks>
-  [System.Serializable]
   public abstract class PredictionGA : GA
   {
 

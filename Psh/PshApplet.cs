@@ -2,7 +2,6 @@
 // using Psh;
 // using Sharpen;
 
-// [System.Serializable]
 // public class PshApplet : Java.Applet.Applet
 // {
 

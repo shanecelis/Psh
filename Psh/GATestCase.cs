@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>An abstract container for a GATestCase containing an input and output object.</summary>
-  [System.Serializable]
   public class GATestCase
   {
 

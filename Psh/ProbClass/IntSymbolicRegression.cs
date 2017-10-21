@@ -25,7 +25,6 @@ namespace Psh.ProbClass
   /// This problem class implements symbolic regression for integers. See also
   /// IntSymbolicRegression for integer symbolic regression.
   /// </remarks>
-  [System.Serializable]
   public class IntSymbolicRegression : PushGP
   {
 

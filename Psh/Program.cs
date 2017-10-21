@@ -19,7 +19,6 @@ using Sharpen;
 namespace Psh
 {
   /// <summary>A Push program.</summary>
-  [System.Serializable]
   public class Program : ObjectStack
   {
 

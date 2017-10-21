@@ -22,7 +22,6 @@ namespace Psh
   /// A PushGA individual class which is a simple wrapper around a Push Program
   /// object.
   /// </summary>
-  [System.Serializable]
   public class PushGPIndividual : GAIndividual
   {
 
