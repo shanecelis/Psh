@@ -13,6 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+using System.Text;
 using Sharpen;
 
 namespace Psh
@@ -248,20 +249,17 @@ namespace Psh
 
     public override string ToString()
     {
-      string result = "[";
+      var result = new StringBuilder("[");
       for (int n = _size - 1; n >= 0; n--)
       {
-        if (n == _size - 1)
+        if (n != _size - 1)
         {
-          result += _stack[n];
+          result.Append(" ");
         }
-        else
-        {
-          result += " " + _stack[n];
-        }
+        result.Append(_stack[n].ToString());
       }
-      result += "]";
-      return result;
+      result.Append("]");
+      return result.ToString();
     }
   }
 }
