@@ -141,8 +141,9 @@ namespace Psh
 
       DefineInstruction<int>("integer.-", (a, b) => unchecked(a - b));
       // DefineInstruction<int>("integer./", (a, b) => { return (b != 0 ? a / b : 0); } );
-      DefineInstruction<int>("integer./", (a, b) => { unchecked { return (b != 0 ? a / b : 0); } } );
-      DefineInstruction<int>("integer.%", (a, b) => { unchecked { return (b != 0 ? a % b : 0); } } );
+      DefineInstruction<int>("integer./", (a, b) => unchecked(b != 0 ? (a / b) : 0));
+      DefineInstruction<int>("integer.%", (a, b) => unchecked(b != 0 ? (a % b) : 0));
+      // DefineInstruction<int>("integer.%", (a, b) => { unchecked { var c = (b != 0 ? (a % b) : 0); return c; } } );
       DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
       DefineInstruction<int>("integer.pow", (a, b) => unchecked((int) Math.Pow(a, b)));
       DefineInstruction<int>("integer.log", (a, b) => unchecked((int) Math.Log(a, b)));
@@ -263,15 +264,8 @@ namespace Psh
         string name = null;
         if (o is Instruction)
         {
-          string[] keys = Sharpen.Collections.ToArray(_instructions.Keys, new string[_instructions.Count]);
-          foreach (string key in keys)
-          {
-            if (_instructions.Get(key) == o)
-            {
-              name = key;
-              break;
-            }
-          }
+          if (_instructions.Keys.Contains(o))
+            break;
         }
         else
         {
@@ -287,7 +281,7 @@ namespace Psh
         // Check for registered
         if (name.IndexOf("registered.") == 0)
         {
-          string registeredType = Sharpen.Runtime.Substring(name, 11);
+          string registeredType = SharpenMinimal.Runtime.Substring(name, 11);
           if (!registeredType.Equals("integer") && !registeredType.Equals("float") && !registeredType.Equals("boolean") && !registeredType.Equals("exec") && !registeredType
             .Equals("code") && !registeredType.Equals("name") && !registeredType.Equals("input") && !registeredType.Equals("frame"))
           {
@@ -297,10 +291,11 @@ namespace Psh
           {
             // Legal stack type, so add all generators matching
             // registeredType to _randomGenerators.
-            object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
-            for (int i = 0; i < keys.Length; i++)
-            {
-              string key = (string)keys[i];
+            // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
+            // for (int i = 0; i < keys.Length; i++)
+            // {
+            //   string key = (string)keys[i];
+            foreach (string key in _instructions.Keys) {
               if (key.IndexOf(registeredType) == 0)
               {
                 Interpreter.AtomGenerator g = _generators.Get(key);
@@ -330,7 +325,7 @@ namespace Psh
         {
           if (name.IndexOf("input.makeinputs") == 0)
           {
-            string strnum = Sharpen.Runtime.Substring(name, 16);
+            string strnum = SharpenMinimal.Runtime.Substring(name, 16);
             int num = System.Convert.ToInt32(strnum);
             for (int i = 0; i < num; i++)
             {
@@ -722,7 +717,7 @@ namespace Psh
         .OrderBy(kv => kv.Key)
         .Select(kv => kv.Value.ToString())
         .Aggregate((current, next) => current + " " + next);
-      // object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
+      // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
       // Arrays.Sort(keys);
       // string list = string.Empty;
       // for (int n = 0; n < keys.Length; n++)
@@ -736,17 +731,18 @@ namespace Psh
     /// <returns/>
     public string GetInstructionsString()
     {
-      object[] keys = Sharpen.Collections.ToArray(_instructions.Keys);
-      List<string> strings = new List<string>();
-      string str = string.Empty;
-      for (int i = 0; i < keys.Length; i++)
-      {
-        string key = (string)keys[i];
-        if (_randomGenerators.Contains(_generators.Get(key)))
-        {
-          strings.Add(key);
-        }
-      }
+      // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
+      // List<string> strings = new List<string>();
+      List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators.Get(key))).ToList();
+      // string str = string.Empty;
+      // for (int i = 0; i < keys.Length; i++)
+      // {
+      //   string key = (string)keys[i];
+      //   if (_randomGenerators.Contains(_generators.Get(key)))
+      //   {
+      //     strings.Add(key);
+      //   }
+      // }
       if (_randomGenerators.Contains(_generators.Get("float.erc")))
       {
         strings.Add("float.erc");
@@ -755,12 +751,13 @@ namespace Psh
       {
         strings.Add("integer.erc");
       }
-      strings.Sort();
-      foreach (string s in strings)
-      {
-        str += s + " ";
-      }
-      return Sharpen.Runtime.Substring(str, 0, str.Length - 1);
+      return strings.OrderBy(x => x).Aggregate((current, next) => current + next);
+      // strings.Sort();
+      // foreach (string s in strings)
+      // {
+      //   str += s + " ";
+      // }
+      // return SharpenMinimal.Runtime.Substring(str, 0, str.Length - 1);
     }
 
     /// <summary>Returns the Instruction whose name is given in instr.</summary>

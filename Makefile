@@ -7,7 +7,7 @@ CSHARP_SOURCE_FILES = $(wildcard */*/*.cs */*.cs *.cs)
 
 UNITY_HOME=/Applications/Unity5.3.2f1
 #add needed flags to the compilerCSHARP_FLAGS = -out:$(EXECUTABLE)
-CSHARP_FLAGS = -unsafe -r:ICSharpCode.SharpZipLib.dll -debug
+CSHARP_FLAGS = -unsafe -r:ICSharpCode.SharpZipLib.dll -debug -checked-
 # CSHARP_FLAGS = -r:$(UNITY_HOME)/Unity.app/Contents/Frameworks/Mono/lib/mono/micro/mscorlib.dll
 
 #change to the environment compiler

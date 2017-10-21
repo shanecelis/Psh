@@ -180,7 +180,7 @@ namespace Psh
       {
         interpreterClass = defaultInterpreterClass;
       }
-      Type iclass = Sharpen.Runtime.GetType(interpreterClass);
+      Type iclass = Type.GetType(interpreterClass);
       object iObject = System.Activator.CreateInstance(iclass);
       if (!(iObject is Interpreter))
       {
@@ -197,7 +197,7 @@ namespace Psh
       {
         inputpusherClass = defaultInputPusherClass;
       }
-      iclass = Sharpen.Runtime.GetType(inputpusherClass);
+      iclass = Type.GetType(inputpusherClass);
       iObject = System.Activator.CreateInstance(iclass);
       if (!(iObject is InputPusher))
       {

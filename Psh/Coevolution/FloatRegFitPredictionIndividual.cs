@@ -1,6 +1,7 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Psh;
-using Sharpen;
 
 namespace Psh.Coevolution
 {
@@ -63,7 +64,7 @@ namespace Psh.Coevolution
 
     public override float PredictSolutionFitness(PushGPIndividual pgpIndividual)
     {
-      AList<float> errors = new AList<float>();
+      List<float> errors = new List<float>();
       for (int n = 0; n < _sampleSize; n++)
       {
         GATestCase test = _solutionGA._testCases[_sampleIndices[n]];
@@ -91,19 +92,20 @@ namespace Psh.Coevolution
 
     public virtual bool EqualPredictors(GAIndividual inB)
     {
-      int[] a = CopyArray(_sampleIndices);
-      int[] b = CopyArray(((Psh.Coevolution.FloatRegFitPredictionIndividual)inB)._sampleIndices);
-      /*
-      a = Arrays.copyOf(_sampleIndices, _sampleSize);
-      b = Arrays.copyOf(((FloatRegFitPredictionIndividual)inB)._sampleIndices, _sampleSize);
-      */
-      Arrays.Sort(a);
-      Arrays.Sort(b);
-      if (Arrays.Equals(a, b))
-      {
-        return true;
-      }
-      return false;
+      return _sampleIndices.OrderBy(x => x).SequenceEqual(((Psh.Coevolution.FloatRegFitPredictionIndividual)inB)._sampleIndices.OrderBy(x => x));
+      // int[] a = CopyArray(_sampleIndices);
+      // int[] b = CopyArray(((Psh.Coevolution.FloatRegFitPredictionIndividual)inB)._sampleIndices);
+      // /*
+      // a = Arrays.copyOf(_sampleIndices, _sampleSize);
+      // b = Arrays.copyOf(((FloatRegFitPredictionIndividual)inB)._sampleIndices, _sampleSize);
+      // */
+      // Arrays.Sort(a);
+      // Arrays.Sort(b);
+      // if (Arrays.Equals(a, b))
+      // {
+      //   return true;
+      // }
+      // return false;
     }
 
     private int[] CopyArray(int[] inArray)

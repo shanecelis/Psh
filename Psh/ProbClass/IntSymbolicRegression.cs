@@ -16,7 +16,6 @@
 using System;
 using Psh;
 using Psh.TestCase;
-using Sharpen;
 
 namespace Psh.ProbClass
 {
@@ -43,7 +42,7 @@ namespace Psh.ProbClass
       if (casesClass != null)
       {
         // Get test cases from the TestCasesClass.
-        Type iclass = Sharpen.Runtime.GetType(casesClass);
+        Type iclass = Type.GetType(casesClass);
         object iObject = System.Activator.CreateInstance(iclass);
         if (!(iObject is TestCaseGenerator))
         {

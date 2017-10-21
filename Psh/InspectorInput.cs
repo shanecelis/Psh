@@ -54,15 +54,15 @@ namespace Psh
       string fileString = Params.ReadFileString(inFile);
       // Get programString
       int indexNewline = fileString.IndexOf("\n");
-      string programString = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(fileString, 0, indexNewline));
-      fileString = Sharpen.Runtime.Substring(fileString, indexNewline + 1);
+      string programString = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(fileString, 0, indexNewline));
+      fileString = SharpenMinimal.Runtime.Substring(fileString, indexNewline + 1);
       // Get _executionLimit
       indexNewline = fileString.IndexOf("\n");
       if (indexNewline != -1)
       {
-        string limitString = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(fileString, 0, indexNewline));
+        string limitString = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(fileString, 0, indexNewline));
         _executionLimit = System.Convert.ToInt32(limitString);
-        fileString = Sharpen.Runtime.Substring(fileString, indexNewline + 1);
+        fileString = SharpenMinimal.Runtime.Substring(fileString, indexNewline + 1);
       }
       else
       {
@@ -75,8 +75,8 @@ namespace Psh
       indexNewline = fileString.IndexOf("\n");
       if (indexNewline != -1)
       {
-        string inputsString = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(fileString, 0, indexNewline));
-        fileString = Sharpen.Runtime.Substring(fileString, indexNewline + 1);
+        string inputsString = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(fileString, 0, indexNewline));
+        fileString = SharpenMinimal.Runtime.Substring(fileString, indexNewline + 1);
         // Parse the inputs and load them into the interpreter
         ParseAndLoadInputs(inputsString);
       }
@@ -87,9 +87,9 @@ namespace Psh
       }
       // Get the available instructions for random code generation
       indexNewline = fileString.IndexOf("\n");
-      if (!Sharpen.Extensions.Trim(fileString).Equals(string.Empty))
+      if (!SharpenMinimal.Extensions.Trim(fileString).Equals(string.Empty))
       {
-        _interpreter.SetInstructions(new Program(_interpreter, Sharpen.Extensions.Trim(fileString)));
+        _interpreter.SetInstructions(new Program(_interpreter, SharpenMinimal.Extensions.Trim(fileString)));
       }
       // Check for input.inN instructions
       CheckForInputIn(programString);
@@ -196,7 +196,7 @@ namespace Psh
         numindex = index + 8;
         if (!char.IsDigit(programString[numindex]))
         {
-          programString = Sharpen.Runtime.Substring(programString, numindex);
+          programString = SharpenMinimal.Runtime.Substring(programString, numindex);
           continue;
         }
         spaceindex = programString.IndexOf(' ', numindex);
@@ -216,14 +216,14 @@ namespace Psh
             endindex = Math.Min(spaceindex, parenindex);
           }
         }
-        numstr = Sharpen.Runtime.Substring(programString, numindex, endindex);
+        numstr = SharpenMinimal.Runtime.Substring(programString, numindex, endindex);
         // Check for doubles in added
         if (added.IndexOf(" " + numstr + " ") == -1)
         {
           added = added + " " + numstr + " ";
           _interpreter.AddInstruction("input.in" + numstr, new InputInN(System.Convert.ToInt32(numstr)));
         }
-        programString = Sharpen.Runtime.Substring(programString, numindex);
+        programString = SharpenMinimal.Runtime.Substring(programString, numindex);
       }
     }
   }

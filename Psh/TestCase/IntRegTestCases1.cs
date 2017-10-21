@@ -1,6 +1,5 @@
 using System;
 using Psh;
-using Sharpen;
 
 namespace Psh.TestCase
 {

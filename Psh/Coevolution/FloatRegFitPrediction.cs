@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Psh;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh.Coevolution
 {
@@ -20,7 +21,7 @@ namespace Psh.Coevolution
     protected internal override void EvaluateIndividual(GAIndividual inIndividual)
     {
       FloatRegFitPredictionIndividual predictor = (FloatRegFitPredictionIndividual)inIndividual;
-      AList<float> errors = new AList<float>();
+      List<float> errors = new List<float>();
       for (int i = 0; i < _trainerPopulationSize; i++)
       {
         float predictedError = predictor.PredictSolutionFitness(_trainerPopulation[i]);

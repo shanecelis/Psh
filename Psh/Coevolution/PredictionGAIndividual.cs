@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 using System;
+using System.Collections.Generic;
 using Psh;
-using Sharpen;
 
 namespace Psh.Coevolution
 {
@@ -32,7 +32,7 @@ namespace Psh.Coevolution
 
     /// <summary>Computes the absolute-average-of-errors fitness from an error vector.</summary>
     /// <returns>the average error value for the vector.</returns>
-    protected internal virtual float AbsoluteAverageOfErrors(AList<float> inArray)
+    protected internal virtual float AbsoluteAverageOfErrors(List<float> inArray)
     {
       float total = 0.0f;
       for (int n = 0; n < inArray.Count; n++)

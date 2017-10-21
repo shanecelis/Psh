@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using Psh;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh.Coevolution
 {
@@ -33,7 +33,7 @@ namespace Psh.Coevolution
   /// </remarks>
   public abstract class PredictionGA : GA
   {
-    protected internal AList<PushGPIndividual> _trainerPopulation;
+    protected internal List<PushGPIndividual> _trainerPopulation;
 
     protected internal int _generationsBetweenTrainers;
 
@@ -54,7 +54,7 @@ namespace Psh.Coevolution
     /// <exception cref="System.Exception"></exception>
     public static PredictionGA PredictionGAWithParameters(PushGP inSolutionGA, Dictionary<string, string> inParams)
     {
-      Type cls = Sharpen.Runtime.GetType(inParams.Get("problem-class"));
+      Type cls = Type.GetType(inParams.Get("problem-class"));
       object gaObject = System.Activator.CreateInstance(cls);
       if (!(gaObject is PredictionGA))
       {
@@ -119,11 +119,11 @@ namespace Psh.Coevolution
     /// </remarks>
     protected internal virtual PushGPIndividual ChooseNewTrainer()
     {
-      AList<float> individualVariances = new AList<float>();
+      List<float> individualVariances = new List<float>();
       for (int i = 0; i < _solutionGA.GetPopulationSize(); i++)
       {
         PushGPIndividual individual = (PushGPIndividual)_solutionGA.GetIndividualFromPopulation(i);
-        AList<float> predictions = new AList<float>();
+        List<float> predictions = new List<float>();
         for (int j = 0; j < _populations[_currentPopulation].Length; j++)
         {
           PredictionGAIndividual predictor = (PredictionGAIndividual)_populations[_currentPopulation][j];
@@ -189,7 +189,7 @@ namespace Psh.Coevolution
     /// </remarks>
     private void InitTrainerPopulation()
     {
-      _trainerPopulation = new AList<PushGPIndividual>();
+      _trainerPopulation = new List<PushGPIndividual>();
       PushGPIndividual individual = new PushGPIndividual();
       for (int i = 0; i < _trainerPopulationSize; i++)
       {
@@ -224,7 +224,7 @@ namespace Psh.Coevolution
       return string.Empty;
     }
 
-    private float Variance(AList<float> list)
+    private float Variance(List<float> list)
     {
       float sampleMean = SampleMean(list);
       float sum = 0;
@@ -235,7 +235,7 @@ namespace Psh.Coevolution
       return (sum / (list.Count - 1));
     }
 
-    private float SampleMean(AList<float> list)
+    private float SampleMean(List<float> list)
     {
       float total = 0;
       foreach (float element in list)

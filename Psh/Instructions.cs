@@ -339,8 +339,6 @@ internal class BinaryInstruction<T> : Instruction
     this.func = func;
   }
 
-  //
-  //
   // Binary integer instructions
   //
   // internal abstract T BinaryOperator(T inA, T inB);
@@ -350,11 +348,18 @@ internal class BinaryInstruction<T> : Instruction
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 1)
     {
-      T a;
-      T b;
+      T a, b, c;
       a = stack.Pop();
       b = stack.Pop();
-      stack.Push(func(b, a));
+      try {
+        c = func(b, a);
+        stack.Push(c);
+      } catch (ArithmeticException) {
+        c = default(T);
+      } catch (Exception e) {
+        throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
+      }
+      stack.Push(c);
     }
   }
 
@@ -652,8 +657,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program recursiveCallProgram = new Program(inI);
-            recursiveCallProgram.Push(Sharpen.Extensions.ValueOf(start));
-            recursiveCallProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            recursiveCallProgram.Push(start);
+            recursiveCallProgram.Push(stop);
             recursiveCallProgram.Push("code.quote");
             recursiveCallProgram.Push(code);
             recursiveCallProgram.Push("code.do*range");
@@ -703,8 +708,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program doRangeMacroProgram = new Program(inI);
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(0));
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            doRangeMacroProgram.Push(0);
+            doRangeMacroProgram.Push(stop);
             doRangeMacroProgram.Push("code.quote");
             doRangeMacroProgram.Push(bodyObj);
             doRangeMacroProgram.Push("code.do*range");
@@ -739,8 +744,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program doRangeMacroProgram = new Program(inI);
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(0));
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            doRangeMacroProgram.Push(0);
+            doRangeMacroProgram.Push(stop);
             doRangeMacroProgram.Push("code.quote");
             doRangeMacroProgram.Push(bodyObj);
             doRangeMacroProgram.Push("code.do*range");
@@ -828,8 +833,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program recursiveCallProgram = new Program(inI);
-            recursiveCallProgram.Push(Sharpen.Extensions.ValueOf(start));
-            recursiveCallProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            recursiveCallProgram.Push(start);
+            recursiveCallProgram.Push(stop);
             recursiveCallProgram.Push("exec.do*range");
             recursiveCallProgram.Push(code);
             estack.Push(recursiveCallProgram);
@@ -878,8 +883,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program doRangeMacroProgram = new Program(inI);
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(0));
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            doRangeMacroProgram.Push(0);
+            doRangeMacroProgram.Push(stop);
             doRangeMacroProgram.Push("exec.do*range");
             doRangeMacroProgram.Push(bodyObj);
             estack.Push(doRangeMacroProgram);
@@ -913,8 +918,8 @@ internal class BinaryInstruction<inT,outT> : Instruction
           try
           {
             Program doRangeMacroProgram = new Program(inI);
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(0));
-            doRangeMacroProgram.Push(Sharpen.Extensions.ValueOf(stop));
+            doRangeMacroProgram.Push(0);
+            doRangeMacroProgram.Push(stop);
             doRangeMacroProgram.Push("exec.do*range");
             doRangeMacroProgram.Push(bodyObj);
             estack.Push(doRangeMacroProgram);

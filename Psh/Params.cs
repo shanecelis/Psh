@@ -64,12 +64,12 @@ namespace Psh
           int comment = line.IndexOf('#', 0);
           if (comment != -1)
           {
-            line = Sharpen.Runtime.Substring(line, 0, comment);
+            line = SharpenMinimal.Runtime.Substring(line, 0, comment);
           }
           if (line.StartsWith("include"))
           {
             int startIndex = "include".Length;
-            string includefile = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(line, startIndex, line.Length));
+            string includefile = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(line, startIndex, line.Length));
             try
             {
               var f = Path.Combine(parent, includefile);
@@ -92,18 +92,18 @@ namespace Psh
             int split = line.IndexOf('=', 0);
             if (split != -1)
             {
-              string name = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(line, 0, split));
-              string value = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(line, split + 1, line.Length));
+              string name = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(line, 0, split));
+              string value = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(line, split + 1, line.Length));
               while (value.EndsWith("\\"))
               {
-                value = Sharpen.Runtime.Substring(value, 0, value.Length - 1);
+                value = SharpenMinimal.Runtime.Substring(value, 0, value.Length - 1);
                 line = reader.ReadLine();
                 if (line == null)
                 {
                   break;
                 }
                 linenumber++;
-                value += Sharpen.Extensions.Trim(line);
+                value += SharpenMinimal.Extensions.Trim(line);
               }
               inMap.Put(name, value);
             }

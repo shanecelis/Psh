@@ -72,7 +72,7 @@ namespace Psh
     /// <exception cref="System.Exception"/>
     public static GA GAWithParameters(Dictionary<string, string> inParams)
     {
-      Type cls = Sharpen.Runtime.GetType(inParams.Get("problem-class"));
+      Type cls = Type.GetType(inParams.Get("problem-class"));
       object gaObject = System.Activator.CreateInstance(cls);
       if (!(gaObject is GA))
       {
@@ -218,7 +218,7 @@ namespace Psh
       {
         individualClass = defaultIndividualClass;
       }
-      _individualClass = Sharpen.Runtime.GetType(individualClass);
+      _individualClass = Type.GetType(individualClass);
       _mutationPercent = GetFloatParam("mutation-percent");
       _crossoverPercent = GetFloatParam("crossover-percent");
       _maxGenerations = (int)GetFloatParam("max-generations");

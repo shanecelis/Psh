@@ -14,10 +14,11 @@
 * limitations under the License.
 */
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Psh;
 using Psh.TestCase;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh.Coevolution
 {
@@ -60,7 +61,7 @@ namespace Psh.Coevolution
       if (casesClass != null)
       {
         // Get test cases from the TestCasesClass.
-        Type iclass = Sharpen.Runtime.GetType(casesClass);
+        Type iclass = Type.GetType(casesClass);
         object iObject = System.Activator.CreateInstance(iclass);
         if (!(iObject is TestCaseGenerator))
         {
@@ -119,7 +120,7 @@ namespace Psh.Coevolution
       FloatRegFitPredictionIndividual predictor = (FloatRegFitPredictionIndividual)_predictorGA.GetBestPredictor();
       float fitness = predictor.PredictSolutionFitness((PushGPIndividual)inIndividual);
       inIndividual.SetFitness(fitness);
-      inIndividual.SetErrors(new AList<float>());
+      inIndividual.SetErrors(new List<float>());
     }
 
     public override float EvaluateTestCase(GAIndividual inIndividual, object inInput, object inOutput)

@@ -41,11 +41,11 @@ public class PshEquationBuilder
     }
     else
     {
-      programString = Sharpen.Extensions.Trim(Sharpen.Runtime.Substring(fileString, 0, indexNewline));
+      programString = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(fileString, 0, indexNewline));
     }
     //Get rid of parentheses
     programString = programString.Replace('(', ' ');
-    programString = Sharpen.Extensions.Trim(programString.Replace(')', ' '));
+    programString = SharpenMinimal.Extensions.Trim(programString.Replace(')', ' '));
     string[] instructions = programString.Split("\\s+");
     List<string> stringStack = new List<string>();
     stringStack.Add("x");

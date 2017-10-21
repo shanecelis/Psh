@@ -1,6 +1,5 @@
 using System;
 using Psh;
-using Sharpen;
 
 namespace Psh.Tools
 {
@@ -15,14 +14,14 @@ namespace Psh.Tools
     {
       try
       {
-        FilePath f = new FilePath("tools/PushInstructionSet.txt");
-        string line = Params.ReadFileString(f);
+        string line = Params.ReadFileString("tools/PushInstructionSet.txt");
         string @out = line.Replace(' ', '\n');
         Console.Out.WriteLine(@out);
       }
       catch (Exception e)
       {
-        Sharpen.Runtime.PrintStackTrace(e);
+        Console.Error.WriteLine(e.StackTrace);
+        // Sharpen.Runtime.PrintStackTrace(e);
       }
     }
   }
