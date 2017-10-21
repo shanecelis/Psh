@@ -28,15 +28,15 @@ public class PshGP
   {
     if (args.Length != 1 && args.Length != 3)
     {
-      Console.Out.WriteLine("Usage: PshGP paramfile|checkpointfile.gz [testprogram testcasenumber]");
+      Console.Out.WriteLine("Usage: PshGP paramfile [testprogram testcasenumber]");
       System.Environment.Exit(0);
     }
     GA ga = null;
-    if (args[0].EndsWith(".gz"))
-    {
-      ga = GA.GAWithCheckpoint(args[0]);
-    }
-    else
+    // if (args[0].EndsWith(".gz"))
+    // {
+    //   ga = GA.GAWithCheckpoint(args[0]);
+    // }
+    // else
     {
       ga = GA.GAWithParameters(Params.ReadFromFile(args[0]));
     }

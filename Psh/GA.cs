@@ -16,8 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-// using SharpenMinimal;
-using Sharpen;
+using SharpenMinimal;
 
 namespace Psh
 {
@@ -88,33 +87,33 @@ namespace Psh
     /// <exception cref="System.Exception"/>
     // XXX Are checkpoints why everything was marked serializable?
     // Let's remove checkpoints for now.
-    public static GA GAWithCheckpoint(string checkpoint)
-    {
-      FilePath checkpointFile = new FilePath(checkpoint);
-      FileInputStream zin = new FileInputStream(checkpointFile);
-      GZIPInputStream @in = new GZIPInputStream(zin);
-      ObjectInputStream oin = new ObjectInputStream(@in);
-      Psh.Checkpoint ckpt = (Psh.Checkpoint)oin.ReadObject();
-      GA ga = ckpt.ga;
-      ga._checkpoint = ckpt;
-      ckpt.checkpointNumber++;
-      // because it gets increased only after ckpt is
-      // written
-      oin.Close();
-      Console.Out.WriteLine(ckpt.report.ToString());
-      // Do we want to append to the file if it exists? Or just overwrite it?
-      // Heu! Quae enim quaestio animas virorum vero pertemptit.
-      // Wowzers! This is, indeed, a question that truly tests mens' souls.
-      if (ga._outputfile != null)
-      {
-        ga._outputStream = new StreamWriter(new FilePath(ga._outputfile));
-      }
-      else
-      {
-        ga._outputStream = System.Console.Out;
-      }
-      return ga;
-    }
+    // public static GA GAWithCheckpoint(string checkpoint)
+    // {
+    //   FilePath checkpointFile = new FilePath(checkpoint);
+    //   FileInputStream zin = new FileInputStream(checkpointFile);
+    //   GZIPInputStream @in = new GZIPInputStream(zin);
+    //   ObjectInputStream oin = new ObjectInputStream(@in);
+    //   Psh.Checkpoint ckpt = (Psh.Checkpoint)oin.ReadObject();
+    //   GA ga = ckpt.ga;
+    //   ga._checkpoint = ckpt;
+    //   ckpt.checkpointNumber++;
+    //   // because it gets increased only after ckpt is
+    //   // written
+    //   oin.Close();
+    //   Console.Out.WriteLine(ckpt.report.ToString());
+    //   // Do we want to append to the file if it exists? Or just overwrite it?
+    //   // Heu! Quae enim quaestio animas virorum vero pertemptit.
+    //   // Wowzers! This is, indeed, a question that truly tests mens' souls.
+    //   if (ga._outputfile != null)
+    //   {
+    //     ga._outputStream = new StreamWriter(new FilePath(ga._outputfile));
+    //   }
+    //   else
+    //   {
+    //     ga._outputStream = System.Console.Out;
+    //   }
+    //   return ga;
+    // }
 
     protected internal GA()
     {
@@ -239,7 +238,7 @@ namespace Psh
       _outputfile = GetParam("output-file", true);
       if (_outputfile != null)
       {
-        _outputStream = new StreamWriter(new FilePath(_outputfile));
+        _outputStream = new StreamWriter(_outputfile);
       }
     }
 
@@ -297,7 +296,7 @@ namespace Psh
         Reproduce();
         EndGeneration();
         Print(Report());
-        Checkpoint();
+        // Checkpoint();
         System.GC.Collect();
         _currentPopulation = (_currentPopulation == 0 ? 1 : 0);
         _generationCount++;
@@ -590,19 +589,19 @@ namespace Psh
     protected internal abstract GAIndividual ReproduceByMutation(int inIndex);
 
     /// <exception cref="System.Exception"/>
-    protected internal virtual void Checkpoint()
-    {
-      if (_checkpointPrefix == null)
-      {
-        return;
-      }
-      FilePath file = new FilePath(_checkpointPrefix + _checkpoint.checkpointNumber + ".gz");
-      var @out = new StreamWriter(new GZIPOutputStream(new FileOutputStream(file)));
-      @out.Write(_checkpoint);
-      @out.Flush();
-      @out.Close();
-      Console.Out.WriteLine("Wrote checkpoint file " + file.GetAbsolutePath());
-      _checkpoint.checkpointNumber++;
-    }
+    // protected internal virtual void Checkpoint()
+    // {
+    //   if (_checkpointPrefix == null)
+    //   {
+    //     return;
+    //   }
+    //   FilePath file = new FilePath(_checkpointPrefix + _checkpoint.checkpointNumber + ".gz");
+    //   var @out = new StreamWriter(new GZIPOutputStream(new FileOutputStream(file)));
+    //   @out.Write(_checkpoint);
+    //   @out.Flush();
+    //   @out.Close();
+    //   Console.Out.WriteLine("Wrote checkpoint file " + file.GetAbsolutePath());
+    //   _checkpoint.checkpointNumber++;
+    // }
   }
 }
