@@ -20,7 +20,6 @@ namespace Psh
   /// <summary>The Push stack type for generic data (Strings, Programs, etc.)</summary>
   public class GenericStack<T> : Stack
   {
-
     protected internal T[] _stack;
 
     internal const int _blocksize = 16;

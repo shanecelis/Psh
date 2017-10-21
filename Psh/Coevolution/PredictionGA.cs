@@ -33,7 +33,6 @@ namespace Psh.Coevolution
   /// </remarks>
   public abstract class PredictionGA : GA
   {
-
     protected internal AList<PushGPIndividual> _trainerPopulation;
 
     protected internal int _generationsBetweenTrainers;

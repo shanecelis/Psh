@@ -312,7 +312,6 @@ namespace Psh
 
   internal abstract class BinaryIntegerInstruction : Instruction
   {
-
     //
     //
     // Binary integer instructions
@@ -406,7 +405,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
 
   internal abstract class UnaryIntInstruction : Instruction
   {
-
     //
     //Unary int instructions
     //
@@ -424,7 +422,6 @@ internal class UnaryInstruction<inT,outT> : Instruction
 
   internal class IntegerRand : Instruction
   {
-
     internal Random Rng;
 
     internal IntegerRand()
@@ -466,7 +463,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal abstract class BinaryFloatInstruction : Instruction
   {
-
     //
     // Binary float instructions with float output
     //
@@ -511,7 +507,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class FloatRand : Instruction
   {
-
     internal Random Rng;
 
     internal FloatRand()
@@ -529,7 +524,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class BoolRand : Instruction
   {
-
     internal Random Rng;
 
     internal BoolRand()
@@ -545,7 +539,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class InputInN : Instruction
   {
-
     protected internal int index;
 
     internal InputInN(int inIndex)
@@ -564,7 +557,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class InputInAll : ObjectStackInstruction
   {
-
     internal InputInAll(ObjectStack inStack)
       : base(inStack)
     {
@@ -584,7 +576,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class InputInRev : ObjectStackInstruction
   {
-
     internal InputInRev(ObjectStack inStack)
       : base(inStack)
     {
@@ -604,7 +595,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class InputIndex : ObjectStackInstruction
   {
-
     internal InputIndex(ObjectStack inStack)
       : base(inStack)
     {
@@ -631,7 +621,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeDoRange : ObjectStackInstruction
   {
-
     internal CodeDoRange(Interpreter inI)
       : base(inI.CodeStack())
     {
@@ -683,7 +672,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeDoTimes : ObjectStackInstruction
   {
-
     internal CodeDoTimes(Interpreter inI)
       : base(inI.CodeStack())
     {
@@ -734,7 +722,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeDoCount : ObjectStackInstruction
   {
-
     internal CodeDoCount(Interpreter inI)
       : base(inI.CodeStack())
     {
@@ -771,7 +758,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeFromBoolean : Instruction
   {
-
     // End code iteration functions
     //
     // Conversion instructions to code
@@ -789,7 +775,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeFromInteger : Instruction
   {
-
     public void Execute(Interpreter inI)
     {
       ObjectStack codeStack = inI.CodeStack();
@@ -803,7 +788,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class CodeFromFloat : Instruction
   {
-
     public void Execute(Interpreter inI)
     {
       ObjectStack codeStack = inI.CodeStack();
@@ -817,7 +801,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class ExecDoRange : ObjectStackInstruction
   {
-
     internal ExecDoRange(Interpreter inI)
       : base(inI.ExecStack())
     {
@@ -864,7 +847,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class ExecDoTimes : ObjectStackInstruction
   {
-
     internal ExecDoTimes(Interpreter inI)
       : base(inI.ExecStack())
     {
@@ -914,7 +896,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class ExecDoCount : ObjectStackInstruction
   {
-
     internal ExecDoCount(Interpreter inI)
       : base(inI.ExecStack())
     {
@@ -950,7 +931,6 @@ internal class BinaryInstruction<inT,outT> : Instruction
 
   internal class ExecK : ObjectStackInstruction
   {
-
     internal ExecK(ObjectStack inStack)
       : base(inStack)
     {
@@ -979,7 +959,6 @@ internal class ExecYield : Instruction
 
   internal class ExecS : ObjectStackInstruction
   {
-
     internal int _maxPointsInProgram;
 
     internal ExecS(ObjectStack inStack, int inMaxPointsInProgram)
@@ -1020,7 +999,6 @@ internal class ExecYield : Instruction
 
   internal class ExecY : ObjectStackInstruction
   {
-
     internal ExecY(ObjectStack inStack)
       : base(inStack)
     {
@@ -1043,7 +1021,6 @@ internal class ExecYield : Instruction
 
   internal class ExecNoop : Instruction
   {
-
     public void Execute(Interpreter inI)
     {
       // Does Nothing
@@ -1052,7 +1029,6 @@ internal class ExecYield : Instruction
 
   internal class RandomPushCode : ObjectStackInstruction
   {
-
     internal Random Rng;
 
     internal RandomPushCode(ObjectStack inStack)
@@ -1085,7 +1061,6 @@ internal class ExecYield : Instruction
 
   internal class ObjectEquals : ObjectStackInstruction
   {
-
     internal ObjectEquals(ObjectStack inStack)
       : base(inStack)
     {
@@ -1105,7 +1080,6 @@ internal class ExecYield : Instruction
 
   internal class IF : ObjectStackInstruction
   {
-
     internal IF(ObjectStack inStack)
       : base(inStack)
     {
@@ -1134,7 +1108,6 @@ internal class ExecYield : Instruction
 
   internal class PopFrame : Instruction
   {
-
     internal PopFrame()
     {
     }
@@ -1157,7 +1130,6 @@ internal class ExecYield : Instruction
 
   internal class PushFrame : Instruction
   {
-
     internal PushFrame()
     {
     }

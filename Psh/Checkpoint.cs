@@ -21,7 +21,6 @@ namespace Psh
 {
   public class Checkpoint
   {
-
     internal int checkpointNumber;
 
     internal GA ga;

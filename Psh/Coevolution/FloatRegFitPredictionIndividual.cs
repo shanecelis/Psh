@@ -6,7 +6,6 @@ namespace Psh.Coevolution
 {
   public class FloatRegFitPredictionIndividual : PredictionGAIndividual
   {
-
     private int[] _sampleIndices;
 
     protected internal static int _sampleSize = 8;

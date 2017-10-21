@@ -34,7 +34,6 @@ namespace Psh.Coevolution
   /// </remarks>
   public class CEFloatSymbolicRegression : PushGP
   {
-
     protected internal float _currentInput;
 
     protected internal long _effort;

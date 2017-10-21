@@ -6,7 +6,6 @@ namespace Psh.Coevolution
 {
   public class FloatRegFitPrediction : PredictionGA
   {
-
     protected internal override void InitIndividual(GAIndividual inIndividual)
     {
       FloatRegFitPredictionIndividual i = (FloatRegFitPredictionIndividual)inIndividual;

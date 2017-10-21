@@ -27,7 +27,6 @@ namespace Psh
   /// </remarks>
   public abstract class GAIndividual
   {
-
     internal float _fitness;
 
     internal AList<float> _errors;

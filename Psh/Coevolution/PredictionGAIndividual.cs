@@ -25,7 +25,6 @@ namespace Psh.Coevolution
   /// </summary>
   public abstract class PredictionGAIndividual : GAIndividual
   {
-
     /// <summary>Predicts the fitness of the input PushGPIndividual</summary>
     /// <param name="individual">to predict the fitness of</param>
     /// <returns>predicted fitness</returns>

@@ -6,7 +6,6 @@ namespace Psh.Coevolution
 {
   public class GenericPredictionIndividual : PredictionGAIndividual
   {
-
     protected internal Program _program;
 
     protected internal PushGP _solutionGA;
