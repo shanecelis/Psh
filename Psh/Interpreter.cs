@@ -45,8 +45,6 @@ namespace Psh
 
     protected internal ObjectStack _inputStack = new ObjectStack();
 
-    protected internal List<Stack> _customStacks = new List<Stack>();
-
     protected internal ObjectStack _intFrameStack = new ObjectStack();
 
     protected internal ObjectStack _floatFrameStack = new ObjectStack();
@@ -56,6 +54,8 @@ namespace Psh
     protected internal ObjectStack _codeFrameStack = new ObjectStack();
 
     protected internal ObjectStack _nameFrameStack = new ObjectStack();
+
+    protected internal List<Stack> _customStacks = new List<Stack>();
 
     protected internal bool _useFrames;
 
@@ -82,6 +82,8 @@ namespace Psh
     protected internal Random Rng = new Random();
 
     protected internal InputPusher _inputPusher = new InputPusher();
+
+    // XXX yield flag?
     public bool stop = false;
 
     public Interpreter()
@@ -229,6 +231,7 @@ namespace Psh
       _generators.Put("integer.erc", new Interpreter.IntAtomGenerator(this));
     }
 
+    // XXX What are frames?
     /// <summary>
     /// Enables experimental Push "frames"
     /// When frames are enabled, each Push subtree is given a fresh set of stacks
@@ -389,15 +392,15 @@ namespace Psh
 
     protected internal void DefineStackInstructions(string inTypeName, Stack inStack)
     {
-      DefineInstruction(inTypeName + ".pop", new Pop(inStack));
-      DefineInstruction(inTypeName + ".swap", new Swap(inStack));
-      DefineInstruction(inTypeName + ".rot", new Rot(inStack));
-      DefineInstruction(inTypeName + ".flush", new Flush(inStack));
-      DefineInstruction(inTypeName + ".dup", new Dup(inStack));
+      DefineInstruction(inTypeName + ".pop",        new Pop(inStack));
+      DefineInstruction(inTypeName + ".swap",       new Swap(inStack));
+      DefineInstruction(inTypeName + ".rot",        new Rot(inStack));
+      DefineInstruction(inTypeName + ".flush",      new Flush(inStack));
+      DefineInstruction(inTypeName + ".dup",        new Dup(inStack));
       DefineInstruction(inTypeName + ".stackdepth", new Depth(inStack));
-      DefineInstruction(inTypeName + ".shove", new Shove(inStack));
-      DefineInstruction(inTypeName + ".yank", new Yank(inStack));
-      DefineInstruction(inTypeName + ".yankdup", new YankDup(inStack));
+      DefineInstruction(inTypeName + ".shove",      new Shove(inStack));
+      DefineInstruction(inTypeName + ".yank",       new Yank(inStack));
+      DefineInstruction(inTypeName + ".yankdup",    new YankDup(inStack));
     }
 
     /// <summary>Sets the parameters for the ERCs.</summary>
@@ -407,9 +410,12 @@ namespace Psh
     /// <param name="minRandomFloat"/>
     /// <param name="maxRandomFloat"/>
     /// <param name="randomFloatResolution"/>
-    public void SetRandomParameters(int minRandomInt, int maxRandomInt, int randomIntResolution,
-                                    float minRandomFloat, float maxRandomFloat, float randomFloatResolution,
-                                    int maxRandomCodeSize, int maxPointsInProgram)
+    public void SetRandomParameters(int minRandomInt, int maxRandomInt,
+                                    int randomIntResolution,
+                                    float minRandomFloat, float maxRandomFloat,
+                                    float randomFloatResolution,
+                                    int maxRandomCodeSize,
+                                    int maxPointsInProgram)
     {
       _minRandomInt = minRandomInt;
       _maxRandomInt = maxRandomInt;

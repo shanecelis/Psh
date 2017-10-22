@@ -18,22 +18,14 @@ using System;
 namespace Psh
 {
   /// <summary>An abstract container for a pair of objects.</summary>
-  public class ObjectPair
-  {
-
-    public ObjectPair(object inFirst, object inSecond)
-    {
-      _first = inFirst;
-      _second = inSecond;
+  public class ObjectPair : Tuple<float, float> {
+    public ObjectPair(float inFirst, float inSecond) : base(inFirst, inSecond) { } 
+    public float _first {
+      get { return Item1; }
     }
 
-    public object _first;
-
-    public object _second;
-
-    public override string ToString()
-    {
-      return "<" + _first.ToString() + ", " + _second.ToString() + ">";
+    public float _second {
+      get { return Item2; }
     }
   }
 }

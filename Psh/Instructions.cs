@@ -57,10 +57,6 @@ namespace Psh
   internal class Quote : Instruction
   {
 
-    internal Quote()
-    {
-    }
-
     public void Execute(Interpreter inI)
     {
       ObjectStack cstack = inI.CodeStack();
@@ -1112,10 +1108,6 @@ internal class ExecYield : Instruction
 
   internal class PopFrame : Instruction
   {
-    internal PopFrame()
-    {
-    }
-
     //
     // Instructions for the activation stack
     //
@@ -1134,9 +1126,6 @@ internal class ExecYield : Instruction
 
   internal class PushFrame : Instruction
   {
-    internal PushFrame()
-    {
-    }
 
     public void Execute(Interpreter inI)
     {
