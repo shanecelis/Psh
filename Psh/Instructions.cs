@@ -889,26 +889,4 @@ internal class IF : ObjectStackInstruction {
   }
 }
 
-internal class PopFrame : Instruction {
-  //
-  // Instructions for the activation stack
-  //
-  public void Execute(Interpreter inI) {
-    // floatStack fstack = inI.floatStack();
-    // float total = fstack.accumulate();
-    inI.PopFrame();
-  }
-  // do the activation, and push the result on to the end of the previous
-  // frame
-  // fstack = inI.floatStack();
-  // fstack.push( 1.0f / ( 1.0f + (float)Math.exp( -10.0f * ( total - .5 )
-  // ) ) );
-}
-
-internal class PushFrame : Instruction {
-
-  public void Execute(Interpreter inI) {
-    inI.PushFrame();
-  }
-}
 }

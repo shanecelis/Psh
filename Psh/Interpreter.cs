@@ -29,37 +29,27 @@ public class Interpreter {
 
   protected internal List<Interpreter.AtomGenerator> _randomGenerators = new List<Interpreter.AtomGenerator>();
 
-  protected internal Psh.IntStack _intStack;
+  protected internal Psh.IntStack _intStack = new Psh.IntStack();
 
-  protected internal Psh.FloatStack _floatStack;
+  protected internal Psh.FloatStack _floatStack = new Psh.FloatStack();
 
-  protected internal BooleanStack _boolStack;
+  protected internal BooleanStack _boolStack = new BooleanStack();
 
-  protected internal ObjectStack _codeStack;
+  protected internal ObjectStack _codeStack = new ObjectStack();
 
-  protected internal ObjectStack _nameStack;
+  protected internal ObjectStack _nameStack = new ObjectStack();
 
   protected internal ObjectStack _execStack = new ObjectStack();
 
   protected internal ObjectStack _inputStack = new ObjectStack();
 
-  protected internal ObjectStack _intFrameStack = new ObjectStack();
-
-  protected internal ObjectStack _floatFrameStack = new ObjectStack();
-
-  protected internal ObjectStack _boolFrameStack = new ObjectStack();
-
-  protected internal ObjectStack _codeFrameStack = new ObjectStack();
-
-  protected internal ObjectStack _nameFrameStack = new ObjectStack();
-
   protected internal List<Stack> _customStacks = new List<Stack>();
-
-  protected internal bool _useFrames;
 
   protected internal int _totalStepsTaken;
 
   protected internal long _evaluationExecutions = 0;
+
+  // These parameters seem weird to have in the interpreter.
 
   protected internal int _maxRandomInt;
 
@@ -79,6 +69,7 @@ public class Interpreter {
 
   protected internal Random Rng = new Random();
 
+  // XXX What is the input stack and pusher really for?
   protected internal InputPusher _inputPusher = new InputPusher();
 
   // XXX yield flag?
@@ -90,10 +81,9 @@ public class Interpreter {
     // This arraylist will hold all custom stacks that can be created by the
     // problem classes
     /* Since the _inputStack will not change after initialization, it will not
-    * need a frame stack.
+     * need a frame stack.
     */
-    _useFrames = false;
-    PushStacks();
+    // PushStacks();
 
     // Auto converted Java to C# using Sharpen but it could still use some more love.
 
@@ -222,8 +212,6 @@ public class Interpreter {
     DefineStackInstructions("name", _nameStack);
     DefineStackInstructions("code", _codeStack);
     DefineStackInstructions("exec", _execStack);
-    DefineInstruction("frame.push", new Psh.PushFrame());
-    DefineInstruction("frame.pop", new Psh.PopFrame());
     _generators.Put("float.erc", new Interpreter.FloatAtomGenerator(this));
     _generators.Put("integer.erc", new Interpreter.IntAtomGenerator(this));
   }
@@ -241,9 +229,9 @@ public class Interpreter {
   /// each stack is passed to the new frame, and likewise when the frame pops,
   /// allowing for input arguments and return values.
   /// </remarks>
-  public void SetUseFrames(bool inUseFrames) {
-    _useFrames = inUseFrames;
-  }
+  // public void SetUseFrames(bool inUseFrames) {
+  //   _useFrames = inUseFrames;
+  // }
 
   /// <summary>
   /// Defines the instruction set used for random code generation in this Push
@@ -442,13 +430,7 @@ public class Interpreter {
   public int ExecuteInstruction(object inObject) {
     if (inObject is Program) {
       Program p = (Program)inObject;
-      if (_useFrames) {
-        _execStack.Push("frame.pop");
-      }
       p.PushAllReverse(_execStack);
-      if (_useFrames) {
-        _execStack.Push("frame.push");
-      }
       return 0;
     }
     if (inObject is int) {
@@ -537,72 +519,6 @@ public class Interpreter {
   public int AddCustomStack(Stack inStack) {
     _customStacks.Add(inStack);
     return _customStacks.Count - 1;
-  }
-
-  protected internal void AssignStacksFromFrame() {
-    _floatStack = (Psh.FloatStack)_floatFrameStack.Top();
-    _intStack = (Psh.IntStack)_intFrameStack.Top();
-    _boolStack = (BooleanStack)_boolFrameStack.Top();
-    _codeStack = (ObjectStack)_codeFrameStack.Top();
-    _nameStack = (ObjectStack)_nameFrameStack.Top();
-  }
-
-  public void PushStacks() {
-    _floatFrameStack.Push(new Psh.FloatStack());
-    _intFrameStack.Push(new Psh.IntStack());
-    _boolFrameStack.Push(new BooleanStack());
-    _codeFrameStack.Push(new ObjectStack());
-    _nameFrameStack.Push(new ObjectStack());
-    AssignStacksFromFrame();
-  }
-
-  public void PopStacks() {
-    _floatFrameStack.Pop();
-    _intFrameStack.Pop();
-    _boolFrameStack.Pop();
-    _codeFrameStack.Pop();
-    _nameFrameStack.Pop();
-    AssignStacksFromFrame();
-  }
-
-  public void PushFrame() {
-    if (_useFrames) {
-      bool boolTop = _boolStack.Top();
-      int intTop = _intStack.Top();
-      float floatTop = _floatStack.Top();
-      object nameTop = _nameStack.Top();
-      object codeTop = _codeStack.Top();
-      PushStacks();
-      _floatStack.Push(floatTop);
-      _intStack.Push(intTop);
-      _boolStack.Push(boolTop);
-      if (nameTop != null) {
-        _nameStack.Push(nameTop);
-      }
-      if (codeTop != null) {
-        _codeStack.Push(codeTop);
-      }
-    }
-  }
-
-  public void PopFrame() {
-    if (_useFrames) {
-      bool boolTop = _boolStack.Top();
-      int intTop = _intStack.Top();
-      float floatTop = _floatStack.Top();
-      object nameTop = _nameStack.Top();
-      object codeTop = _codeStack.Top();
-      PopStacks();
-      _floatStack.Push(floatTop);
-      _intStack.Push(intTop);
-      _boolStack.Push(boolTop);
-      if (nameTop != null) {
-        _nameStack.Push(nameTop);
-      }
-      if (codeTop != null) {
-        _codeStack.Push(codeTop);
-      }
-    }
   }
 
   /// <summary>Prints out the current stack states.</summary>

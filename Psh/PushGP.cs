@@ -160,7 +160,7 @@ public abstract class PushGP : GA {
     _interpreter.SetRandomParameters(minRandomInt, maxRandomInt, randomIntResolution, minRandomFloat, maxRandomFloat, randomFloatResolution, _maxRandomCodeSize, _maxPointsInProgram
                                     );
     // Frame mode and input pusher class
-    string framemode = GetParam("push-frame-mode", true);
+    // string framemode = GetParam("push-frame-mode", true);
     string inputpusherClass = GetParam("inputpusher-class", true);
     if (inputpusherClass == null) {
       inputpusherClass = defaultInputPusherClass;
@@ -173,9 +173,9 @@ public abstract class PushGP : GA {
     _interpreter.SetInputPusher((InputPusher)iObject);
     // Initialize the interpreter
     InitInterpreter(_interpreter);
-    if (framemode != null && framemode.Equals("pushstacks")) {
-      _interpreter.SetUseFrames(true);
-    }
+    // if (framemode != null && framemode.Equals("pushstacks")) {
+    //   _interpreter.SetUseFrames(true);
+    // }
     // Target function string
     _targetFunctionString = GetParam("target-function-string", true);
     if (_targetFunctionString == null) {
