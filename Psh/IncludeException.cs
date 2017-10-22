@@ -15,13 +15,10 @@
 */
 using System;
 
-namespace Psh
-{
-  public class IncludeException : Exception
-  {
-    internal IncludeException(string inStr)
-      : base(inStr)
-    {
-    }
+namespace Psh {
+public class IncludeException : Exception {
+  internal IncludeException(string inStr)
+  : base(inStr) {
   }
+}
 }

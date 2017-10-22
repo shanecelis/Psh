@@ -16,21 +16,18 @@
 using System;
 using System.Text;
 
-namespace Psh
-{
-  public class Checkpoint
-  {
-    internal int checkpointNumber;
+namespace Psh {
+public class Checkpoint {
+  internal int checkpointNumber;
 
-    internal GA ga;
+  internal GA ga;
 
-    internal StringBuilder report;
+  internal StringBuilder report;
 
-    public Checkpoint(GA ga)
-    {
-      checkpointNumber = 0;
-      this.ga = ga;
-      report = new StringBuilder();
-    }
+  public Checkpoint(GA ga) {
+    checkpointNumber = 0;
+    this.ga = ga;
+    report = new StringBuilder();
   }
+}
 }

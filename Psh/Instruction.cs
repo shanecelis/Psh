@@ -15,12 +15,10 @@
 */
 using System;
 
-namespace Psh
-{
-  /// <summary>Abstract instruction base for all instructions.</summary>
-  public interface Instruction
-  {
+namespace Psh {
+/// <summary>Abstract instruction base for all instructions.</summary>
+public interface Instruction {
 
-    void Execute(Interpreter inI);
-  }
+  void Execute(Interpreter inI);
+}
 }

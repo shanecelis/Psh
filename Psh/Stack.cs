@@ -15,52 +15,45 @@ using System;
 * limitations under the License.
 */
 
-namespace Psh
-{
-  /// <summary>Abstract class for implementing stacks.</summary>
-public abstract class Stack
-  {
+namespace Psh {
+/// <summary>Abstract class for implementing stacks.</summary>
+public abstract class Stack {
 
-    protected internal int _size;
+  protected internal int _size;
 
-    protected internal int _maxsize;
+  protected internal int _maxsize;
 
-    internal Stack()
-    {
-      _size = 0;
-      Resize(8);
-    }
+  internal Stack() {
+    _size = 0;
+    Resize(8);
+  }
 
-    internal abstract void Resize(int inSize);
+  internal abstract void Resize(int inSize);
 
-    internal abstract void Dup();
+  internal abstract void Dup();
 
-    internal abstract void Rot();
+  internal abstract void Rot();
 
-    internal abstract void Shove(int inIndex);
+  internal abstract void Shove(int inIndex);
 
-    internal abstract void Swap();
+  internal abstract void Swap();
 
-    internal abstract void Yank(int inIndex);
+  internal abstract void Yank(int inIndex);
 
-    internal abstract void Yankdup(int inIndex);
+  internal abstract void Yankdup(int inIndex);
 
-    public virtual void Clear()
-    {
-      _size = 0;
-    }
+  public virtual void Clear() {
+    _size = 0;
+  }
 
-    public virtual int Size()
-    {
-      return _size;
-    }
+  public virtual int Size() {
+    return _size;
+  }
 
-    public virtual void Popdiscard()
-    {
-      if (_size > 0)
-      {
-        _size--;
-      }
+  public virtual void Popdiscard() {
+    if (_size > 0) {
+      _size--;
     }
   }
+}
 }

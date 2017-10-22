@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Psh
-{
+namespace Psh {
 /// <summary>The Push stack type for integers.</summary>
 public class IntStack : GenericStack<int> { }
 
@@ -27,12 +26,10 @@ public class FloatStack : GenericStack<float> { }
 /// <summary>The Push stack type for object-based data (Strings, Programs, etc.)</summary>
 public class ObjectStack : GenericStack<object> {
 
-  public override void Push(object inValue)
-  {
+  public override void Push(object inValue) {
     // XXX I do not get what this is supposed to be doing here:
     // Maybe it's supposed to make a program copy.
-    if (inValue is Program)
-    {
+    if (inValue is Program) {
       inValue = (object)new Program((Program)inValue);
     }
     base.Push(inValue);

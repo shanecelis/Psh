@@ -15,19 +15,16 @@
 */
 using System;
 
-namespace Psh
-{
-  /// <summary>An abstract container for a GATestCase containing an input and output object.</summary>
-  public class GATestCase
-  {
-    public GATestCase(object inInput, object inOutput)
-    {
-      _input = inInput;
-      _output = inOutput;
-    }
-
-    public object _input;
-
-    public object _output;
+namespace Psh {
+/// <summary>An abstract container for a GATestCase containing an input and output object.</summary>
+public class GATestCase {
+  public GATestCase(object inInput, object inOutput) {
+    _input = inInput;
+    _output = inOutput;
   }
+
+  public object _input;
+
+  public object _output;
+}
 }

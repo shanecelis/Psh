@@ -16,49 +16,42 @@
 using System;
 using System.Collections.Generic;
 
-namespace Psh
-{
-  /// <summary>An abstract GP individual class containing a fitness value.</summary>
-  /// <remarks>
-  /// An abstract GP individual class containing a fitness value. The fitness value
-  /// represents an individual's <i>error</i> values, such that <i>lower</i>
-  /// fitness values are better and such that a fitness value of 0 indicates a
-  /// perfect solution.
-  /// </remarks>
-  public abstract class GAIndividual
-  {
-    internal float _fitness;
+namespace Psh {
+/// <summary>An abstract GP individual class containing a fitness value.</summary>
+/// <remarks>
+/// An abstract GP individual class containing a fitness value. The fitness value
+/// represents an individual's <i>error</i> values, such that <i>lower</i>
+/// fitness values are better and such that a fitness value of 0 indicates a
+/// perfect solution.
+/// </remarks>
+public abstract class GAIndividual {
+  internal float _fitness;
 
-    internal List<float> _errors;
+  internal List<float> _errors;
 
-    internal bool _fitnessSet;
+  internal bool _fitnessSet;
 
-    public virtual bool FitnessIsSet()
-    {
-      return _fitnessSet;
-    }
-
-    public virtual float GetFitness()
-    {
-      return _fitness;
-    }
-
-    public virtual void SetFitness(float inFitness)
-    {
-      _fitness = inFitness;
-      _fitnessSet = true;
-    }
-
-    public virtual List<float> GetErrors()
-    {
-      return _errors;
-    }
-
-    public virtual void SetErrors(List<float> inErrors)
-    {
-      _errors = inErrors;
-    }
-
-    public abstract GAIndividual Clone();
+  public virtual bool FitnessIsSet() {
+    return _fitnessSet;
   }
+
+  public virtual float GetFitness() {
+    return _fitness;
+  }
+
+  public virtual void SetFitness(float inFitness) {
+    _fitness = inFitness;
+    _fitnessSet = true;
+  }
+
+  public virtual List<float> GetErrors() {
+    return _errors;
+  }
+
+  public virtual void SetErrors(List<float> inErrors) {
+    _errors = inErrors;
+  }
+
+  public abstract GAIndividual Clone();
+}
 }

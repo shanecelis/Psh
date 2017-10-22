@@ -17,33 +17,28 @@ using System;
 using System.Collections.Generic;
 using Psh;
 
-namespace Psh.Coevolution
-{
-  /// <summary>
-  /// An abstract CEPredictorGA individual class for developing co-evolved
-  /// predictors.
-  /// </summary>
-  public abstract class PredictionGAIndividual : GAIndividual
-  {
-    /// <summary>Predicts the fitness of the input PushGPIndividual</summary>
-    /// <param name="individual">to predict the fitness of</param>
-    /// <returns>predicted fitness</returns>
-    public abstract float PredictSolutionFitness(PushGPIndividual pgpIndividual);
+namespace Psh.Coevolution {
+/// <summary>
+/// An abstract CEPredictorGA individual class for developing co-evolved
+/// predictors.
+/// </summary>
+public abstract class PredictionGAIndividual : GAIndividual {
+  /// <summary>Predicts the fitness of the input PushGPIndividual</summary>
+  /// <param name="individual">to predict the fitness of</param>
+  /// <returns>predicted fitness</returns>
+  public abstract float PredictSolutionFitness(PushGPIndividual pgpIndividual);
 
-    /// <summary>Computes the absolute-average-of-errors fitness from an error vector.</summary>
-    /// <returns>the average error value for the vector.</returns>
-    protected internal virtual float AbsoluteAverageOfErrors(List<float> inArray)
-    {
-      float total = 0.0f;
-      for (int n = 0; n < inArray.Count; n++)
-      {
-        total += Math.Abs(inArray[n]);
-      }
-      if (float.IsInfinity(total))
-      {
-        return float.MaxValue;
-      }
-      return (total / inArray.Count);
+  /// <summary>Computes the absolute-average-of-errors fitness from an error vector.</summary>
+  /// <returns>the average error value for the vector.</returns>
+  protected internal virtual float AbsoluteAverageOfErrors(List<float> inArray) {
+    float total = 0.0f;
+    for (int n = 0; n < inArray.Count; n++) {
+      total += Math.Abs(inArray[n]);
     }
+    if (float.IsInfinity(total)) {
+      return float.MaxValue;
+    }
+    return (total / inArray.Count);
   }
+}
 }

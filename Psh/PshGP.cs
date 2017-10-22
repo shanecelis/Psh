@@ -6,8 +6,7 @@ using Psh;
 /// PshGP executes a genetic programming run using the given parameter file. More
 /// information about parameter files can be found in the README.
 /// </remarks>
-public class PshGP
-{
+public class PshGP {
   /*
   * Copyright 2009-2010 Jon Klein
   *
@@ -24,10 +23,8 @@ public class PshGP
   * limitations under the License.
   */
   /// <exception cref="System.Exception"/>
-  public static void Main(string[] args)
-  {
-    if (args.Length != 1 && args.Length != 3)
-    {
+  public static void Main(string[] args) {
+    if (args.Length != 1 && args.Length != 3) {
       Console.Out.WriteLine("Usage: PshGP paramfile [testprogram testcasenumber]");
       System.Environment.Exit(0);
     }
@@ -40,14 +37,11 @@ public class PshGP
     {
       ga = GA.GAWithParameters(Params.ReadFromFile(args[0]));
     }
-    if (args.Length == 3)
-    {
+    if (args.Length == 3) {
       // Execute a test program
       Program p = new Program(args[1]);
       ((PushGP)ga).RunTestProgram(p, System.Convert.ToInt32(args[2]));
-    }
-    else
-    {
+    } else {
       // Execute a GP run.
       ga.Run();
     }

@@ -18,8 +18,7 @@ using Psh;
 /// separated by spaces. Note: Only int, float, and
 /// boolean inputs are accepted.
 /// </remarks>
-public class PshInspector
-{
+public class PshInspector {
   /*
   * Copyright 2009-2010 Jon Klein
   *
@@ -36,10 +35,8 @@ public class PshInspector
   * limitations under the License.
   */
   /// <exception cref="System.Exception"/>
-  public static void Main(string[] args)
-  {
-    if (args.Length != 1)
-    {
+  public static void Main(string[] args) {
+    if (args.Length != 1) {
       Console.Out.WriteLine("Usage: PshInspector inputfile");
       System.Environment.Exit(0);
     }
@@ -55,33 +52,25 @@ public class PshInspector
     // Run the Psh Inspector
     Console.Out.WriteLine("====== State after " + executed + " steps ======");
     _interpreter.PrintStacks();
-    while (executed < _executionLimit && stepsTaken == 1)
-    {
+    while (executed < _executionLimit && stepsTaken == 1) {
       executed += 1;
       // Create output string
-      if (executed == 1)
-      {
+      if (executed == 1) {
         stepPrint = "====== State after " + executed + " step ";
-      }
-      else
-      {
+      } else {
         stepPrint = "====== State after " + executed + " steps ";
       }
       stepPrint += "(last step: ";
       object execTop = _interpreter.ExecStack().Top();
-      if (execTop is Program)
-      {
+      if (execTop is Program) {
         stepPrint += "(...)";
-      }
-      else
-      {
+      } else {
         stepPrint += (string)execTop;
       }
       stepPrint += ") ======";
       // Execute 1 instruction
       stepsTaken = _interpreter.Step(1);
-      if (stepsTaken == 1)
-      {
+      if (stepsTaken == 1) {
         Console.Out.WriteLine(stepPrint);
         _interpreter.PrintStacks();
       }

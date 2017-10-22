@@ -16,25 +16,23 @@
 using System;
 using Psh;
 
-namespace Psh.TestCase
-{
-  /// <summary>A class allowing for the runtime creation of custom test cases.</summary>
-  /// <remarks>
-  /// A class allowing for the runtime creation of custom test cases.
-  /// Each test case is a dictionary of HashMap&lt; String, Object &gt;. Each entry in
-  /// the dictionary corresponds to a problem input, except for the special token
-  /// "output", which is reserved for the problem output.
-  /// </remarks>
-  public abstract class TestCaseGenerator
-  {
-    /// <returns>The number of cases the generator will create.</returns>
-    public abstract int TestCaseCount();
+namespace Psh.TestCase {
+/// <summary>A class allowing for the runtime creation of custom test cases.</summary>
+/// <remarks>
+/// A class allowing for the runtime creation of custom test cases.
+/// Each test case is a dictionary of HashMap&lt; String, Object &gt;. Each entry in
+/// the dictionary corresponds to a problem input, except for the special token
+/// "output", which is reserved for the problem output.
+/// </remarks>
+public abstract class TestCaseGenerator {
+  /// <returns>The number of cases the generator will create.</returns>
+  public abstract int TestCaseCount();
 
-    /// <returns>
-    /// Test case at index n as an ObjectPair, where _first is the input
-    /// and _second is the output. The types of the objects may depend
-    /// on the problem type.
-    /// </returns>
-    public abstract ObjectPair TestCase(int inIndex);
-  }
+  /// <returns>
+  /// Test case at index n as an ObjectPair, where _first is the input
+  /// and _second is the output. The types of the objects may depend
+  /// on the problem type.
+  /// </returns>
+  public abstract ObjectPair TestCase(int inIndex);
+}
 }

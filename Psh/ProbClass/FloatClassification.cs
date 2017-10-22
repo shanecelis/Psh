@@ -16,54 +16,46 @@
 using System;
 using Psh;
 
-namespace Psh.ProbClass
-{
-  public class FloatClassification : PushGP
-  {
+namespace Psh.ProbClass {
+public class FloatClassification : PushGP {
 
-    internal float _currentInput;
+  internal float _currentInput;
 
-    internal int _inputCount;
+  internal int _inputCount;
 
-    /// <exception cref="System.Exception"/>
-    protected internal override void InitFromParameters()
-    {
-      base.InitFromParameters();
-      string cases = GetParam("test-cases");
-      Program caselist = new Program(_interpreter, cases);
-      _inputCount = ((Program)caselist.Peek(0)).Size() - 1;
-      for (int i = 0; i < caselist.Size(); i++)
-      {
-        Program p = (Program)caselist.Peek(i);
-        if (p.Size() < 2)
-        {
-          throw new Exception("Not enough entries for fitness case \"" + p + "\"");
-        }
-        if (p.Size() != _inputCount + 1)
-        {
-          throw new Exception("Wrong number of inputs for fitness case \"" + p + "\"");
-        }
-        float @in = System.Convert.ToSingle(p.Peek(0).ToString());
-        float @out = System.Convert.ToSingle(p.Peek(1).ToString());
-        Print(";; Fitness case #" + i + " input: " + @in + " output: " + @out + "\n");
-        _testCases.Add(new GATestCase(@in, @out));
+  /// <exception cref="System.Exception"/>
+  protected internal override void InitFromParameters() {
+    base.InitFromParameters();
+    string cases = GetParam("test-cases");
+    Program caselist = new Program(_interpreter, cases);
+    _inputCount = ((Program)caselist.Peek(0)).Size() - 1;
+    for (int i = 0; i < caselist.Size(); i++) {
+      Program p = (Program)caselist.Peek(i);
+      if (p.Size() < 2) {
+        throw new Exception("Not enough entries for fitness case \"" + p + "\"");
       }
-    }
-
-    protected internal override void InitInterpreter(Interpreter inInterpreter)
-    {
-    }
-
-    public override float EvaluateTestCase(GAIndividual inIndividual, object inInput, object inOutput)
-    {
-      _interpreter.ClearStacks();
-      _currentInput = (float)inInput;
-      FloatStack stack = _interpreter.FloatStack();
-      stack.Push(_currentInput);
-      _interpreter.Execute(((PushGPIndividual)inIndividual)._program, _executionLimit);
-      float result = stack.Top();
-      // System.out.println( _interpreter + " " + result );
-      return result - ((float)inOutput);
+      if (p.Size() != _inputCount + 1) {
+        throw new Exception("Wrong number of inputs for fitness case \"" + p + "\"");
+      }
+      float @in = System.Convert.ToSingle(p.Peek(0).ToString());
+      float @out = System.Convert.ToSingle(p.Peek(1).ToString());
+      Print(";; Fitness case #" + i + " input: " + @in + " output: " + @out + "\n");
+      _testCases.Add(new GATestCase(@in, @out));
     }
   }
+
+  protected internal override void InitInterpreter(Interpreter inInterpreter) {
+  }
+
+  public override float EvaluateTestCase(GAIndividual inIndividual, object inInput, object inOutput) {
+    _interpreter.ClearStacks();
+    _currentInput = (float)inInput;
+    FloatStack stack = _interpreter.FloatStack();
+    stack.Push(_currentInput);
+    _interpreter.Execute(((PushGPIndividual)inIndividual)._program, _executionLimit);
+    float result = stack.Top();
+    // System.out.println( _interpreter + " " + result );
+    return result - ((float)inOutput);
+  }
+}
 }

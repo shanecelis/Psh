@@ -15,43 +15,35 @@
 */
 using System;
 
-namespace Psh
-{
-  /// <summary>
-  /// A PushGA individual class which is a simple wrapper around a Push Program
-  /// object.
-  /// </summary>
-  public class PushGPIndividual : GAIndividual
-  {
+namespace Psh {
+/// <summary>
+/// A PushGA individual class which is a simple wrapper around a Push Program
+/// object.
+/// </summary>
+public class PushGPIndividual : GAIndividual {
 
-    public Program _program;
+  public Program _program;
 
-    public PushGPIndividual()
-    {
-    }
+  public PushGPIndividual() {
+  }
 
-    internal PushGPIndividual(Program inProgram)
-    {
-      SetProgram(inProgram);
-      _fitnessSet = false;
-    }
+  internal PushGPIndividual(Program inProgram) {
+    SetProgram(inProgram);
+    _fitnessSet = false;
+  }
 
-    internal virtual void SetProgram(Program inProgram)
-    {
-      if (inProgram != null)
-      {
-        _program = new Program(inProgram);
-      }
-    }
-
-    public override string ToString()
-    {
-      return _program.ToString();
-    }
-
-    public override GAIndividual Clone()
-    {
-      return new Psh.PushGPIndividual(_program);
+  internal virtual void SetProgram(Program inProgram) {
+    if (inProgram != null) {
+      _program = new Program(inProgram);
     }
   }
+
+  public override string ToString() {
+    return _program.ToString();
+  }
+
+  public override GAIndividual Clone() {
+    return new Psh.PushGPIndividual(_program);
+  }
+}
 }

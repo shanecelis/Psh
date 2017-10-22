@@ -15,49 +15,36 @@
 */
 using System;
 
-namespace Psh
-{
-  public class InputPusher
-  {
+namespace Psh {
+public class InputPusher {
 
-    public void PushInput(Interpreter inI, int n)
-    {
-      ObjectStack _stack = inI.InputStack();
-      if (_stack.Size() > n)
-      {
-        object inObject = _stack.Peek(n);
-        if (inObject is int)
-        {
-          IntStack istack = inI.IntStack();
-          istack.Push((int)inObject);
-        }
-        else
-        {
-          // if (inObject is Number)
-          // {
-          //   FloatStack fstack = inI.FloatStack();
-          //   fstack.Push(((Number)inObject).FloatValue());
-          // }
-          //else
-          if (inObject is float)
-          {
-            FloatStack fstack = inI.FloatStack();
-            fstack.Push((float) inObject);
-          }
-          else
-          {
-            if (inObject is bool)
-            {
-              BooleanStack bstack = inI.BoolStack();
-              bstack.Push((bool)inObject);
-            }
-            else
-            {
-              Console.Error.WriteLine("Error during input.index - object " + inObject.GetType() + " is not a legal object according to " + this.GetType() + ".");
-            }
+  public void PushInput(Interpreter inI, int n) {
+    ObjectStack _stack = inI.InputStack();
+    if (_stack.Size() > n) {
+      object inObject = _stack.Peek(n);
+      if (inObject is int) {
+        IntStack istack = inI.IntStack();
+        istack.Push((int)inObject);
+      } else {
+        // if (inObject is Number)
+        // {
+        //   FloatStack fstack = inI.FloatStack();
+        //   fstack.Push(((Number)inObject).FloatValue());
+        // }
+        //else
+        if (inObject is float) {
+          FloatStack fstack = inI.FloatStack();
+          fstack.Push((float) inObject);
+        } else {
+          if (inObject is bool) {
+            BooleanStack bstack = inI.BoolStack();
+            bstack.Push((bool)inObject);
+          } else {
+            Console.Error.WriteLine("Error during input.index - object " + inObject.GetType() + " is not a legal object according to " + this.GetType() + ".");
           }
         }
       }
     }
   }
+}
 }

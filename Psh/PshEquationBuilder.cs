@@ -4,8 +4,7 @@ using Psh;
 using SharpenMinimal;
 
 /// <summary>Used to print equations from Psh programs</summary>
-public class PshEquationBuilder
-{
+public class PshEquationBuilder {
   /*
   * Copyright 2009-2010 Jon Klein
   *
@@ -22,10 +21,8 @@ public class PshEquationBuilder
   * limitations under the License.
   */
   /// <exception cref="System.Exception"/>
-  public static void Main(string[] args)
-  {
-    if (args.Length != 1)
-    {
+  public static void Main(string[] args) {
+    if (args.Length != 1) {
       Console.Out.WriteLine("Usage: PshEquationBuilder inputfile");
       System.Environment.Exit(0);
     }
@@ -35,12 +32,9 @@ public class PshEquationBuilder
     // Get programString
     string programString;
     int indexNewline = fileString.IndexOf("\n");
-    if (indexNewline == -1)
-    {
+    if (indexNewline == -1) {
       programString = fileString;
-    }
-    else
-    {
+    } else {
       programString = SharpenMinimal.Extensions.Trim(SharpenMinimal.Runtime.Substring(fileString, 0, indexNewline));
     }
     //Get rid of parentheses
@@ -49,102 +43,67 @@ public class PshEquationBuilder
     string[] instructions = programString.Split("\\s+");
     List<string> stringStack = new List<string>();
     stringStack.Add("x");
-    foreach (string instruction in instructions)
-    {
+    foreach (string instruction in instructions) {
       // (input.in0 float.+ float.- float.* float./ float.exp float.sin float.cos float.2pi)
-      if (instruction.Equals("input.in0"))
-      {
+      if (instruction.Equals("input.in0")) {
         stringStack.Add("x");
-      }
-      else
-      {
-        if (instruction.Equals("float.+"))
-        {
-          if (stringStack.Count > 1)
-          {
+      } else {
+        if (instruction.Equals("float.+")) {
+          if (stringStack.Count > 1) {
             string top = stringStack.Remove(stringStack.Count - 1);
             string next = stringStack.Remove(stringStack.Count - 1);
             string result = "(" + top + " + " + next + ")";
             stringStack.Add(result);
           }
-        }
-        else
-        {
-          if (instruction.Equals("float.-"))
-          {
-            if (stringStack.Count > 1)
-            {
+        } else {
+          if (instruction.Equals("float.-")) {
+            if (stringStack.Count > 1) {
               string top = stringStack.Remove(stringStack.Count - 1);
               string next = stringStack.Remove(stringStack.Count - 1);
               string result = "(" + top + " - " + next + ")";
               stringStack.Add(result);
             }
-          }
-          else
-          {
-            if (instruction.Equals("float.*"))
-            {
-              if (stringStack.Count > 1)
-              {
+          } else {
+            if (instruction.Equals("float.*")) {
+              if (stringStack.Count > 1) {
                 string top = stringStack.Remove(stringStack.Count - 1);
                 string next = stringStack.Remove(stringStack.Count - 1);
                 string result = "(" + top + " * " + next + ")";
                 stringStack.Add(result);
               }
-            }
-            else
-            {
-              if (instruction.Equals("float./"))
-              {
-                if (stringStack.Count > 1)
-                {
+            } else {
+              if (instruction.Equals("float./")) {
+                if (stringStack.Count > 1) {
                   string top = stringStack.Remove(stringStack.Count - 1);
                   string next = stringStack.Remove(stringStack.Count - 1);
                   string result = "(" + top + " / " + next + ")";
                   stringStack.Add(result);
                 }
-              }
-              else
-              {
-                if (instruction.Equals("float.exp"))
-                {
-                  if (stringStack.Count > 0)
-                  {
+              } else {
+                if (instruction.Equals("float.exp")) {
+                  if (stringStack.Count > 0) {
                     string top = stringStack.Remove(stringStack.Count - 1);
                     string result = "(e^" + top + ")";
                     stringStack.Add(result);
                   }
-                }
-                else
-                {
-                  if (instruction.Equals("float.sin"))
-                  {
-                    if (stringStack.Count > 0)
-                    {
+                } else {
+                  if (instruction.Equals("float.sin")) {
+                    if (stringStack.Count > 0) {
                       string top = stringStack.Remove(stringStack.Count - 1);
                       string result = "sin(" + top + ")";
                       stringStack.Add(result);
                     }
-                  }
-                  else
-                  {
-                    if (instruction.Equals("float.cos"))
-                    {
-                      if (stringStack.Count > 0)
-                      {
+                  } else {
+                    if (instruction.Equals("float.cos")) {
+                      if (stringStack.Count > 0) {
                         string top = stringStack.Remove(stringStack.Count - 1);
                         string result = "cos(" + top + ")";
                         stringStack.Add(result);
                       }
-                    }
-                    else
-                    {
-                      if (instruction.Equals("float.2pi"))
-                      {
+                    } else {
+                      if (instruction.Equals("float.2pi")) {
                         stringStack.Add("2 * pi");
-                      }
-                      else
-                      {
+                      } else {
                         throw new Exception("Unrecognized Psh instruction " + instruction + " in program.");
                       }
                     }
