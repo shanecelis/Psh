@@ -156,7 +156,7 @@ public abstract class PushGP : GA {
       throw (new Exception("interpreter-class must inherit from class Interpreter"));
     }
     _interpreter = (Interpreter)iObject;
-    _interpreter.SetInstructions(new Program(_interpreter, GetParam("instruction-set")));
+    _interpreter.SetInstructions(new Program(GetParam("instruction-set")));
     _interpreter.SetRandomParameters(minRandomInt, maxRandomInt, randomIntResolution, minRandomFloat, maxRandomFloat, randomFloatResolution, _maxRandomCodeSize, _maxPointsInProgram
                                     );
     // Frame mode and input pusher class
@@ -232,7 +232,7 @@ public abstract class PushGP : GA {
       if (i.GetFitness() < _bestMeanFitness) {
         _bestMeanFitness = i.GetFitness();
         _bestIndividual = n;
-        _bestSize = ((PushGPIndividual)i)._program.Programsize();
+        _bestSize = ((PushGPIndividual)i)._program.ProgramSize();
         _bestErrors = i.GetErrors();
       }
     }
@@ -246,7 +246,7 @@ public abstract class PushGP : GA {
   protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify) {
     List<float> errors = new List<float>();
     if (!duringSimplify) {
-      _averageSize += ((PushGPIndividual)inIndividual)._program.Programsize();
+      _averageSize += ((PushGPIndividual)inIndividual)._program.ProgramSize();
     }
     var sw = Stopwatch.StartNew();
     // long t = Runtime.CurrentTimeMillis();
@@ -294,7 +294,7 @@ public abstract class PushGP : GA {
     report += ";; Partial Simplification (may beat best):\n  ";
     report += simplified._program + "\n";
     report += ";; Partial Simplification Size: ";
-    report += simplified._program.Programsize() + "\n\n";
+    report += simplified._program.ProgramSize() + "\n\n";
     return report;
   }
 
@@ -328,7 +328,7 @@ public abstract class PushGP : GA {
     report += ">> Best Program: ";
     report += simplified._program + "\n";
     report += ">> Size: ";
-    report += simplified._program.Programsize() + "\n\n";
+    report += simplified._program.ProgramSize() + "\n\n";
     return report;
   }
 
@@ -345,12 +345,12 @@ public abstract class PushGP : GA {
     for (int i = 0; i < steps; i++) {
       madeSimpler = false;
       float method = Rng.Next(100);
-      if (trial._program.Programsize() <= 0) {
+      if (trial._program.ProgramSize() <= 0) {
         break;
       }
       if (method < _simplifyFlattenPercent) {
         // Flatten random thing
-        int pointIndex = Rng.Next(trial._program.Programsize());
+        int pointIndex = Rng.Next(trial._program.ProgramSize());
         object point = trial._program.Subtree(pointIndex);
         if (point is Program) {
           trial._program.Flatten(pointIndex);
@@ -360,10 +360,10 @@ public abstract class PushGP : GA {
         // Remove small number of random things
         int numberToRemove = Rng.Next(3) + 1;
         for (int j = 0; j < numberToRemove; j++) {
-          int trialSize = trial._program.Programsize();
+          int trialSize = trial._program.ProgramSize();
           if (trialSize > 0) {
             int pointIndex = Rng.Next(trialSize);
-            trial._program.ReplaceSubtree(pointIndex, new Program(_interpreter));
+            trial._program.ReplaceSubtree(pointIndex, new Program());
             trial._program.Flatten(pointIndex);
             madeSimpler = true;
           }
@@ -406,15 +406,15 @@ public abstract class PushGP : GA {
   protected internal override GAIndividual ReproduceByCrossover(int inIndex) {
     PushGPIndividual a = (PushGPIndividual)ReproduceByClone(inIndex);
     PushGPIndividual b = (PushGPIndividual)TournamentSelect(_tournamentSize, inIndex);
-    if (a._program.Programsize() <= 0) {
+    if (a._program.ProgramSize() <= 0) {
       return b;
     }
-    if (b._program.Programsize() <= 0) {
+    if (b._program.ProgramSize() <= 0) {
       return a;
     }
     int aindex = ReproductionNodeSelection(a);
     int bindex = ReproductionNodeSelection(b);
-    if (a._program.Programsize() + b._program.SubtreeSize(bindex) - a._program.SubtreeSize(aindex) <= _maxPointsInProgram) {
+    if (a._program.ProgramSize() + b._program.SubtreeSize(bindex) - a._program.SubtreeSize(aindex) <= _maxPointsInProgram) {
       a._program.ReplaceSubtree(aindex, b._program.Subtree(bindex));
     }
     return a;
@@ -422,7 +422,7 @@ public abstract class PushGP : GA {
 
   protected internal override GAIndividual ReproduceByMutation(int inIndex) {
     PushGPIndividual i = (PushGPIndividual)ReproduceByClone(inIndex);
-    int totalsize = i._program.Programsize();
+    int totalsize = i._program.ProgramSize();
     int which = ReproductionNodeSelection(i);
     int oldsize = i._program.SubtreeSize(which);
     int newsize = 0;
@@ -452,7 +452,7 @@ public abstract class PushGP : GA {
   /// <param name="inInd">= Individual to select node from.</param>
   /// <returns>Index of the node to use for reproduction.</returns>
   protected internal virtual int ReproductionNodeSelection(PushGPIndividual inInd) {
-    int totalSize = inInd._program.Programsize();
+    int totalSize = inInd._program.ProgramSize();
     int selectedNode = 0;
     if (totalSize <= 1) {
       selectedNode = 0;

@@ -24,27 +24,27 @@ namespace Psh {
 /// <summary>The Push language interpreter.</summary>
 public class Interpreter {
 
-  protected internal Dictionary<string, Instruction> _instructions = new Dictionary<string, Instruction>();
+  protected internal Dictionary<string, Instruction>               _instructions = new Dictionary<string, Instruction>();
 
   protected internal Dictionary<string, Interpreter.AtomGenerator> _generators = new Dictionary<string, Interpreter.AtomGenerator>();
 
-  protected internal List<Interpreter.AtomGenerator> _randomGenerators = new List<Interpreter.AtomGenerator>();
+  protected internal List<Interpreter.AtomGenerator>               _randomGenerators = new List<Interpreter.AtomGenerator>();
 
-  protected internal Psh.IntStack _intStack = new Psh.IntStack();
+  protected internal Psh.IntStack         _intStack = new Psh.IntStack();
 
-  protected internal Psh.FloatStack _floatStack = new Psh.FloatStack();
+  protected internal Psh.FloatStack       _floatStack = new Psh.FloatStack();
 
-  protected internal BooleanStack _boolStack = new BooleanStack();
+  protected internal BooleanStack         _boolStack = new BooleanStack();
 
-  protected internal ObjectStack _codeStack = new ObjectStack();
+  protected internal ObjectStack          _codeStack = new ObjectStack();
 
   protected internal GenericStack<string> _nameStack = new GenericStack<string>();
 
-  protected internal ObjectStack _execStack = new ObjectStack();
+  protected internal ObjectStack          _execStack = new ObjectStack();
 
-  protected internal ObjectStack _inputStack = new ObjectStack();
+  protected internal ObjectStack          _inputStack = new ObjectStack();
 
-  protected internal List<Stack> _stacks = new List<Stack>();
+  protected internal List<Stack>          _stacks = new List<Stack>();
 
   protected internal int _totalStepsTaken;
 
@@ -52,11 +52,11 @@ public class Interpreter {
 
   // These parameters seem weird to have in the interpreter.
 
-  protected internal int _maxRandomInt;
+  protected internal int   _maxRandomInt;
 
-  protected internal int _minRandomInt;
+  protected internal int   _minRandomInt;
 
-  protected internal int _randomIntResolution;
+  protected internal int   _randomIntResolution;
 
   protected internal float _maxRandomFloat;
 
@@ -64,9 +64,9 @@ public class Interpreter {
 
   protected internal float _randomFloatResolution;
 
-  protected internal int _maxRandomCodeSize;
+  protected internal int   _maxRandomCodeSize;
 
-  protected internal int _maxPointsInProgram;
+  protected internal int   _maxPointsInProgram;
 
   protected internal Random Rng = new Random();
 
@@ -85,13 +85,12 @@ public class Interpreter {
      * need a frame stack.
     */
     _stacks.Add(_intStack);
-    _stacks.Add(_floatStack);
+    _stacks.Add(_floatStack); 
     _stacks.Add(_execStack);
     _stacks.Add(_nameStack);
     _stacks.Add(_boolStack);
     _stacks.Add(_codeStack);
     _stacks.Add(_inputStack);
-    // PushStacks();
 
     // Auto converted Java to C# using Sharpen but it could still use some more love.
 
@@ -156,6 +155,8 @@ public class Interpreter {
     DefineInstruction("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
     DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
     DefineInstruction("integer.rand", new IntegerRand());
+    DefineStackInstructions("integer", _intStack);
+
     DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));
     DefineInstruction<float>("float.-", (a, b) => unchecked(a - b));
     DefineInstruction<float>("float./", (a, b) => unchecked(b != 0f ? a / b : 0f));
@@ -178,6 +179,8 @@ public class Interpreter {
     DefineInstruction("float.frominteger", (int a) => (float) a);
     DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
     DefineInstruction("float.rand", new FloatRand());
+    DefineStackInstructions("float", _floatStack);
+
     DefineInstruction<bool>("boolean.=", (a, b) => a == b);
     DefineInstruction<bool>("boolean.not", a => ! a);
     DefineInstruction<bool>("boolean.and", (a, b) => a & b);
@@ -186,6 +189,8 @@ public class Interpreter {
     DefineInstruction("boolean.frominteger", (int a) => a != 0);
     DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
     DefineInstruction("boolean.rand", new BoolRand());
+    DefineStackInstructions("boolean", _boolStack);
+
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.fromboolean", new CodeFromBoolean());
     DefineInstruction("code.frominteger", new CodeFromInteger());
@@ -214,17 +219,15 @@ public class Interpreter {
     DefineInstruction("input.inall", new InputInAll(_inputStack));
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
     DefineInstruction("input.stackdepth", new Depth(_inputStack));
-    DefineStackInstructions("integer", _intStack);
-    DefineStackInstructions("float", _floatStack);
-    DefineStackInstructions("boolean", _boolStack);
-    DefineStackInstructions("name", _nameStack);
     DefineStackInstructions("code", _codeStack);
     DefineStackInstructions("exec", _execStack);
+    DefineStackInstructions("name", _nameStack);
     _generators.Put("float.erc", new Interpreter.FloatAtomGenerator());
     _generators.Put("integer.erc", new Interpreter.IntAtomGenerator());
   }
 
   // XXX What are frames?
+  // YYY We're removing frames for now.
   /// <summary>
   /// Enables experimental Push "frames"
   /// When frames are enabled, each Push subtree is given a fresh set of stacks
@@ -268,8 +271,14 @@ public class Interpreter {
       // Check for registered
       if (name.IndexOf("registered.") == 0) {
         string registeredType = SharpenMinimal.Runtime.Substring(name, 11);
-        if (!registeredType.Equals("integer") && !registeredType.Equals("float") && !registeredType.Equals("boolean") && !registeredType.Equals("exec") && !registeredType
-            .Equals("code") && !registeredType.Equals("name") && !registeredType.Equals("input") && !registeredType.Equals("frame")) {
+        if (   !registeredType.Equals("integer")
+            && !registeredType.Equals("float")
+            && !registeredType.Equals("boolean")
+            && !registeredType.Equals("exec")
+            && !registeredType.Equals("code")
+            && !registeredType.Equals("name")
+            && !registeredType.Equals("input")
+            && !registeredType.Equals("frame")) {
           Console.Error.WriteLine("Unknown instruction \"" + name + "\" in instruction set");
         } else {
           // Legal stack type, so add all generators matching
@@ -285,17 +294,17 @@ public class Interpreter {
             }
           }
           if (registeredType.Equals("boolean")) {
-            Interpreter.AtomGenerator t = _generators.Get("true");
+            var t = _generators.Get("true");
             _randomGenerators.Add(t);
-            Interpreter.AtomGenerator f = _generators.Get("false");
+            var f = _generators.Get("false");
             _randomGenerators.Add(f);
           }
           if (registeredType.Equals("integer")) {
-            Interpreter.AtomGenerator g = _generators.Get("integer.erc");
+            var g = _generators.Get("integer.erc");
             _randomGenerators.Add(g);
           }
           if (registeredType.Equals("float")) {
-            Interpreter.AtomGenerator g = _generators.Get("float.erc");
+            var g = _generators.Get("float.erc");
             _randomGenerators.Add(g);
           }
         }
@@ -305,11 +314,11 @@ public class Interpreter {
           int num = System.Convert.ToInt32(strnum);
           for (int i = 0; i < num; i++) {
             DefineInstruction("input.in" + i, new InputInN(i));
-            Interpreter.AtomGenerator g = _generators.Get("input.in" + i);
+            var g = _generators.Get("input.in" + i);
             _randomGenerators.Add(g);
           }
         } else {
-          Interpreter.AtomGenerator g = _generators.Get(name);
+          var g = _generators.Get(name);
           if (g == null) {
             throw new Exception("Unknown instruction \"" + name + "\" in instruction set");
           } else {
@@ -639,7 +648,7 @@ public class Interpreter {
   /// <param name="inSize">The requested size for the program to be generated.</param>
   /// <returns>A random Push program of the given size.</returns>
   public Program RandomCode(int inSize) {
-    Program p = new Program(this);
+    Program p = new Program();
     IList<int> distribution = RandomCodeDistribution(inSize - 1, inSize - 1);
     for (int i = 0; i < distribution.Count; i++) {
       int count = distribution[i];

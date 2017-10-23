@@ -278,7 +278,7 @@ internal class CodeDoRange : ObjectStackInstruction {
         istack.Push(start);
         start = (start < stop) ? (start + 1) : (start - 1);
         try {
-          Program recursiveCallProgram = new Program(inI);
+          Program recursiveCallProgram = new Program();
           recursiveCallProgram.Push(start);
           recursiveCallProgram.Push(stop);
           recursiveCallProgram.Push("code.quote");
@@ -310,14 +310,14 @@ internal class CodeDoTimes : ObjectStackInstruction {
         } else {
           // create a new program with integer.pop in front of
           // the popped object
-          Program newProgram = new Program(inI);
+          Program newProgram = new Program();
           newProgram.Push("integer.pop");
           newProgram.Push(bodyObj);
           bodyObj = newProgram;
         }
         int stop = istack.Pop() - 1;
         try {
-          Program doRangeMacroProgram = new Program(inI);
+          Program doRangeMacroProgram = new Program();
           doRangeMacroProgram.Push(0);
           doRangeMacroProgram.Push(stop);
           doRangeMacroProgram.Push("code.quote");
@@ -344,7 +344,7 @@ internal class CodeDoCount : ObjectStackInstruction {
         int stop = istack.Pop() - 1;
         object bodyObj = _stack.Pop();
         try {
-          Program doRangeMacroProgram = new Program(inI);
+          Program doRangeMacroProgram = new Program();
           doRangeMacroProgram.Push(0);
           doRangeMacroProgram.Push(stop);
           doRangeMacroProgram.Push("code.quote");
@@ -413,7 +413,7 @@ internal class ExecDoRange : ObjectStackInstruction {
         start = (start < stop) ? (start + 1) : (start - 1);
         // trh//Made changes to correct errors with code.do*range
         try {
-          Program recursiveCallProgram = new Program(inI);
+          Program recursiveCallProgram = new Program();
           recursiveCallProgram.Push(start);
           recursiveCallProgram.Push(stop);
           recursiveCallProgram.Push("exec.do*range");
@@ -444,14 +444,14 @@ internal class ExecDoTimes : ObjectStackInstruction {
         } else {
           // create a new program with integer.pop in front of
           // the popped object
-          Program newProgram = new Program(inI);
+          Program newProgram = new Program();
           newProgram.Push("integer.pop");
           newProgram.Push(bodyObj);
           bodyObj = newProgram;
         }
         int stop = istack.Pop() - 1;
         try {
-          Program doRangeMacroProgram = new Program(inI);
+          Program doRangeMacroProgram = new Program();
           doRangeMacroProgram.Push(0);
           doRangeMacroProgram.Push(stop);
           doRangeMacroProgram.Push("exec.do*range");
@@ -477,7 +477,7 @@ internal class ExecDoCount : ObjectStackInstruction {
         int stop = istack.Pop() - 1;
         object bodyObj = _stack.Pop();
         try {
-          Program doRangeMacroProgram = new Program(inI);
+          Program doRangeMacroProgram = new Program();
           doRangeMacroProgram.Push(0);
           doRangeMacroProgram.Push(stop);
           doRangeMacroProgram.Push("exec.do*range");
@@ -526,10 +526,10 @@ internal class ExecS : ObjectStackInstruction {
       object a = _stack.Pop();
       object b = _stack.Pop();
       object c = _stack.Pop();
-      Program listBC = new Program(inI);
+      Program listBC = new Program();
       listBC.Push(b);
       listBC.Push(c);
-      if (listBC.Programsize() > _maxPointsInProgram) {
+      if (listBC.ProgramSize() > _maxPointsInProgram) {
         // If the new list is too large, turn into a noop by re-pushing
         // the popped instructions
         _stack.Push(c);
@@ -553,7 +553,7 @@ internal class ExecY : ObjectStackInstruction {
     // Removes the second item on the stack
     if (_stack.Size() > 0) {
       object a = _stack.Pop();
-      Program listExecYA = new Program(inI);
+      Program listExecYA = new Program();
       listExecYA.Push("exec.y");
       listExecYA.Push(a);
       _stack.Push(listExecYA);

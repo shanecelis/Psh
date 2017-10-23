@@ -34,7 +34,7 @@ public class CartCentering : PushGP {
   protected internal override void InitFromParameters() {
     base.InitFromParameters();
     string cases = GetParam("test-cases");
-    Program caselist = new Program(_interpreter, cases);
+    Program caselist = new Program(cases);
     for (int i = 0; i < caselist.Size(); i++) {
       Program singleCase = (Program)caselist.Peek(i);
       if (singleCase.Size() < 2) {

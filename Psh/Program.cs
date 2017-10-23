@@ -20,47 +20,19 @@ namespace Psh {
 /// <summary>A Push program.</summary>
 public class Program : ObjectStack {
 
-  internal Interpreter _interpreter = null;
-
-  // public Interpreter GetInterpreter()
-  // {
-  //   return _interpreter;
-  // }
-
-  // public void SetInterpreter(Interpreter _interpreter)
-  // {
-  //   this._interpreter = _interpreter;
-  // }
-
   /// <summary>Constructs an empty Program.</summary>
-  [System.ObsoleteAttribute]
-  public Program() {
-  }
-
-  /// <summary>Constructs an empty Program with an associated Interpreter.</summary>
-  public Program(Interpreter inInterpreter) {
-    _interpreter = inInterpreter;
-  }
+  public Program() {}
 
   /// <summary>Constructs a copy of an existing Program.</summary>
   /// <param name="inOther">The Push program to copy.</param>
   public Program(Psh.Program inOther) {
     inOther.CopyTo(this);
-    _interpreter = inOther._interpreter;
   }
 
   /// <summary>Constructs a Push program by parsing a String.</summary>
   /// <param name="inString">The Push program string to parse.</param>
   /// <exception cref="System.Exception"/>
   public Program(string inString) {
-    Parse(inString);
-  }
-
-  /// <summary>Constructs a Push program by parsing a String.</summary>
-  /// <param name="inString">The Push program string to parse.</param>
-  /// <exception cref="System.Exception"/>
-  public Program(Interpreter _interpreter, string inString) {
-    this._interpreter = _interpreter;
     Parse(inString);
   }
 
@@ -74,7 +46,7 @@ public class Program : ObjectStack {
     inString = inString.Replace(")", " ) ");
     string[] tokens = inString.Split("\\s+");
     Parse(tokens, 0);
-    return Programsize();
+    return ProgramSize();
   }
 
   /// <exception cref="System.Exception"/>
@@ -89,7 +61,7 @@ public class Program : ObjectStack {
           // token in the list is a special case -- no need to create
           // a sub-program
           if (!first) {
-            Psh.Program p = new Psh.Program(_interpreter);
+            Psh.Program p = new Psh.Program();
             n = p.Parse(inTokens, n + 1);
             Push(p);
           }
@@ -125,17 +97,17 @@ public class Program : ObjectStack {
       }
     }
     // If we're here, there was no closing brace for one of the programs
-    throw new Exception("no closing brace found for program");
+    throw new Exception("No closing brace found for program");
   }
 
   /// <summary>Returns the size of the program and all subprograms.</summary>
   /// <returns>The size of the program.</returns>
-  public int Programsize() {
+  public int ProgramSize() {
     int size = _size;
     for (int n = 0; n < _size; n++) {
       object o = _stack[n];
       if (o is Psh.Program) {
-        size += ((Psh.Program)o).Programsize();
+        size += ((Psh.Program)o).ProgramSize();
       }
     }
     return size;
@@ -150,7 +122,7 @@ public class Program : ObjectStack {
       return 0;
     }
     if (sub is Psh.Program) {
-      return ((Psh.Program)sub).Programsize();
+      return ((Psh.Program)sub).ProgramSize();
     }
     return 1;
   }
@@ -167,7 +139,7 @@ public class Program : ObjectStack {
         object o = _stack[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
-          int length = sub.Programsize();
+          int length = sub.ProgramSize();
           if (inIndex - startIndex < length) {
             return sub.Subtree(inIndex - startIndex);
           }
@@ -192,7 +164,7 @@ public class Program : ObjectStack {
         object o = _stack[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
-          int length = sub.Programsize();
+          int length = sub.ProgramSize();
           if (inIndex - startIndex < length) {
             return sub.ReplaceSubtree(inIndex - startIndex, inReplacement);
           }
@@ -230,7 +202,7 @@ public class Program : ObjectStack {
         object o = _stack[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
-          int length = sub.Programsize();
+          int length = sub.ProgramSize();
           if (inIndex - startIndex < length) {
             sub.Flatten(inIndex - startIndex);
             break;
@@ -249,19 +221,6 @@ public class Program : ObjectStack {
     }
   }
 
-  public override string ToString() {
-    string result = "(";
-    for (int n = 0; n < _size; n++) {
-      if (result[result.Length - 1] == '(') {
-        result += _stack[n].ToString();
-      } else {
-        result += " " + _stack[n];
-      }
-    }
-    result += ")";
-    return result;
-  }
-
   /// <summary>Creates a copy of an object suitable for adding to a Push Program.</summary>
   /// <remarks>
   /// Creates a copy of an object suitable for adding to a Push Program. Java's
@@ -269,21 +228,25 @@ public class Program : ObjectStack {
   /// </remarks>
   private object Cloneforprogram(object inObject) {
     // Java clone() is useless :(
-    if (inObject is string) {
-      return inObject; //new string((string)inObject);
+    if (inObject is string
+        || inObject is int
+        || inObject is float
+        || inObject is Instruction
+        ) {
+      return inObject;
     }
-    if (inObject is int) {
-      return System.Convert.ToInt32((int)inObject);
-    }
-    if (inObject is float) {
-      return System.Convert.ToSingle((float)inObject);
-    }
+    // if () {
+    //   return System.Convert.ToInt32((int)inObject);
+    // }
+    // if () {
+    //   return System.Convert.ToSingle((float)inObject);
+    // }
     if (inObject is Psh.Program) {
       return new Psh.Program((Psh.Program)inObject);
     }
-    if (inObject is Instruction) {
-      return inObject;
-    }
+    // if () {
+    //   return inObject;
+    // }
     // no need to copy; instructions are singletons
     return null;
   }

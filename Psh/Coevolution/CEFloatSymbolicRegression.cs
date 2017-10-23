@@ -72,7 +72,7 @@ public class CEFloatSymbolicRegression : PushGP {
       }
     } else {
       // Get test cases from test-cases.
-      Program caselist = new Program(_interpreter, cases);
+      Program caselist = new Program(cases);
       for (int i = 0; i < caselist.Size(); i++) {
         Program p = (Program)caselist.Peek(i);
         if (p.Size() < 2) {
@@ -184,7 +184,7 @@ public class CEFloatSymbolicRegression : PushGP {
       if (i.GetFitness() < _bestMeanFitness) {
         _bestMeanFitness = i.GetFitness();
         _bestIndividual = n;
-        _bestSize = ((PushGPIndividual)i)._program.Programsize();
+        _bestSize = ((PushGPIndividual)i)._program.ProgramSize();
         _bestErrors = i.GetErrors();
       }
     }
@@ -205,12 +205,12 @@ public class CEFloatSymbolicRegression : PushGP {
     for (int i = 0; i < steps; i++) {
       madeSimpler = false;
       float method = Rng.Next(100);
-      if (trial._program.Programsize() <= 0) {
+      if (trial._program.ProgramSize() <= 0) {
         break;
       }
       if (method < _simplifyFlattenPercent) {
         // Flatten random thing
-        int pointIndex = Rng.Next(trial._program.Programsize());
+        int pointIndex = Rng.Next(trial._program.ProgramSize());
         object point = trial._program.Subtree(pointIndex);
         if (point is Program) {
           trial._program.Flatten(pointIndex);
@@ -220,10 +220,10 @@ public class CEFloatSymbolicRegression : PushGP {
         // Remove small number of random things
         int numberToRemove = Rng.Next(3) + 1;
         for (int j = 0; j < numberToRemove; j++) {
-          int trialSize = trial._program.Programsize();
+          int trialSize = trial._program.ProgramSize();
           if (trialSize > 0) {
             int pointIndex = Rng.Next(trialSize);
-            trial._program.ReplaceSubtree(pointIndex, new Program(_interpreter));
+            trial._program.ReplaceSubtree(pointIndex, new Program());
             trial._program.Flatten(pointIndex);
             madeSimpler = true;
           }

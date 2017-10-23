@@ -53,7 +53,7 @@ public class IntSymbolicRegression : PushGP {
       }
     } else {
       // Get test cases from test-cases.
-      Program caselist = new Program(_interpreter, cases);
+      Program caselist = new Program(cases);
       for (int i = 0; i < caselist.Size(); i++) {
         Program p = (Program)caselist.Peek(i);
         if (p.Size() < 2) {

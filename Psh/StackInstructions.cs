@@ -62,9 +62,7 @@ internal class Quote : Instruction {
 
 internal class Pop : StackInstruction {
 
-  internal Pop(Stack inStack)
-  : base(inStack) {
-  }
+  internal Pop(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     if (_stack.Size() > 0) {
@@ -75,9 +73,7 @@ internal class Pop : StackInstruction {
 
 internal class Flush : StackInstruction {
 
-  internal Flush(Stack inStack)
-  : base(inStack) {
-  }
+  internal Flush(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     _stack.Clear();
@@ -86,9 +82,7 @@ internal class Flush : StackInstruction {
 
 internal class Dup : StackInstruction {
 
-  internal Dup(Stack inStack)
-  : base(inStack) {
-  }
+  internal Dup(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     _stack.Dup();
@@ -97,9 +91,7 @@ internal class Dup : StackInstruction {
 
 internal class Rot : StackInstruction {
 
-  internal Rot(Stack inStack)
-  : base(inStack) {
-  }
+  internal Rot(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     if (_stack.Size() > 2) {
@@ -110,9 +102,7 @@ internal class Rot : StackInstruction {
 
 internal class Shove : StackInstruction {
 
-  internal Shove(Stack inStack)
-  : base(inStack) {
-  }
+  internal Shove(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     IntStack iStack = inI.IntStack();
@@ -129,9 +119,7 @@ internal class Shove : StackInstruction {
 
 internal class Swap : StackInstruction {
 
-  internal Swap(Stack inStack)
-  : base(inStack) {
-  }
+  internal Swap(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     if (_stack.Size() > 1) {
@@ -142,9 +130,7 @@ internal class Swap : StackInstruction {
 
 internal class Yank : StackInstruction {
 
-  internal Yank(Stack inStack)
-  : base(inStack) {
-  }
+  internal Yank(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     IntStack iStack = inI.IntStack();
@@ -161,9 +147,7 @@ internal class Yank : StackInstruction {
 
 internal class YankDup : StackInstruction {
 
-  internal YankDup(Stack inStack)
-  : base(inStack) {
-  }
+  internal YankDup(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     IntStack iStack = inI.IntStack();
@@ -180,9 +164,7 @@ internal class YankDup : StackInstruction {
 
 internal class Depth : StackInstruction {
 
-  internal Depth(Stack inStack)
-  : base(inStack) {
-  }
+  internal Depth(Stack inStack) : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     IntStack stack = inI.IntStack();

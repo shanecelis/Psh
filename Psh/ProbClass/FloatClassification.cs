@@ -27,7 +27,7 @@ public class FloatClassification : PushGP {
   protected internal override void InitFromParameters() {
     base.InitFromParameters();
     string cases = GetParam("test-cases");
-    Program caselist = new Program(_interpreter, cases);
+    Program caselist = new Program(cases);
     _inputCount = ((Program)caselist.Peek(0)).Size() - 1;
     for (int i = 0; i < caselist.Size(); i++) {
       Program p = (Program)caselist.Peek(i);

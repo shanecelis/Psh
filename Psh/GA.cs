@@ -57,7 +57,7 @@ public abstract class GA {
   [System.NonSerialized]
   protected internal TextWriter _outputStream;
 
-  protected internal Psh.Checkpoint _checkpoint;
+  // protected internal Psh.Checkpoint _checkpoint;
 
   protected internal string _checkpointPrefix;
 
@@ -215,7 +215,7 @@ public abstract class GA {
       _trivialGeographyRadius = (int)GetFloatParam("trivial-geography-radius", true);
     }
     _checkpointPrefix = GetParam("checkpoint-prefix", true);
-    _checkpoint = new Psh.Checkpoint(this);
+    // _checkpoint = new Psh.Checkpoint(this);
     ResizeAndInitialize((int)GetFloatParam("population-size"));
     _outputfile = GetParam("output-file", true);
     if (_outputfile != null) {
@@ -397,7 +397,7 @@ public abstract class GA {
       _outputStream.Write(inStr);//Sharpen.Runtime.GetBytesForString(inStr));
       _outputStream.Flush();
     }
-    _checkpoint.report.Append(inStr);
+    // _checkpoint.report.Append(inStr);
   }
 
   /// <summary>
