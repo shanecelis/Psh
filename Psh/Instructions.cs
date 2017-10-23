@@ -1,231 +1,34 @@
+
 /*
-* Copyright 2009-2010 Jon Klein
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2009-2010 Jon Klein
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 using System;
 
 namespace Psh {
-/// <summary>
-/// Abstract instruction class for instructions which operate on any of the
-/// built-in stacks.
-/// </summary>
-internal abstract class StackInstruction : Instruction {
 
-  protected internal Stack _stack;
+internal class Constant<T> : Instruction {
 
-  internal StackInstruction(Stack inStack) {
-    //
-    // All instructions
-    //
-    _stack = inStack;
-  }
+  internal T _value;
 
-  public abstract void Execute(Interpreter inI);
-}
-
-/// <summary>
-/// Abstract instruction class for instructions which operate on one of the
-/// standard ObjectStacks (code & exec).
-/// </summary>
-internal abstract class ObjectStackInstruction : Instruction {
-
-  protected internal ObjectStack _stack;
-
-  internal ObjectStackInstruction(ObjectStack inStack) {
-    _stack = inStack;
-  }
-
-  public abstract void Execute(Interpreter inI);
-}
-
-internal class Quote : Instruction {
-
-  public void Execute(Interpreter inI) {
-    ObjectStack cstack = inI.CodeStack();
-    ObjectStack estack = inI.ExecStack();
-    if (estack.Size() > 0) {
-      cstack.Push(estack.Pop());
-    }
-  }
-}
-
-internal class Pop : StackInstruction {
-
-  internal Pop(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    if (_stack.Size() > 0) {
-      _stack.Popdiscard();
-    }
-  }
-}
-
-internal class Flush : StackInstruction {
-
-  internal Flush(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    _stack.Clear();
-  }
-}
-
-internal class Dup : StackInstruction {
-
-  internal Dup(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    _stack.Dup();
-  }
-}
-
-internal class Rot : StackInstruction {
-
-  internal Rot(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    if (_stack.Size() > 2) {
-      _stack.Rot();
-    }
-  }
-}
-
-internal class Shove : StackInstruction {
-
-  internal Shove(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    IntStack iStack = inI.IntStack();
-    if (iStack.Size() > 0) {
-      int index = iStack.Pop();
-      if (_stack.Size() > 0) {
-        _stack.Shove(index);
-      } else {
-        iStack.Push(index);
-      }
-    }
-  }
-}
-
-internal class Swap : StackInstruction {
-
-  internal Swap(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    if (_stack.Size() > 1) {
-      _stack.Swap();
-    }
-  }
-}
-
-internal class Yank : StackInstruction {
-
-  internal Yank(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    IntStack iStack = inI.IntStack();
-    if (iStack.Size() > 0) {
-      int index = iStack.Pop();
-      if (_stack.Size() > 0) {
-        _stack.Yank(index);
-      } else {
-        iStack.Push(index);
-      }
-    }
-  }
-}
-
-internal class YankDup : StackInstruction {
-
-  internal YankDup(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    IntStack iStack = inI.IntStack();
-    if (iStack.Size() > 0) {
-      int index = iStack.Pop();
-      if (_stack.Size() > 0) {
-        _stack.Yankdup(index);
-      } else {
-        iStack.Push(index);
-      }
-    }
-  }
-}
-
-internal class Depth : StackInstruction {
-
-  internal Depth(Stack inStack)
-  : base(inStack) {
-  }
-
-  public override void Execute(Interpreter inI) {
-    IntStack stack = inI.IntStack();
-    stack.Push(_stack.Size());
-  }
-}
-
-internal class IntegerConstant : Instruction {
-
-  internal int _value;
-
-  public IntegerConstant(int inValue) {
+  public Constant(T inValue) {
     _value = inValue;
   }
 
   public void Execute(Interpreter inI) {
-    inI.IntStack().Push(_value);
-  }
-}
-
-internal class FloatConstant : Instruction {
-
-  internal float _value;
-
-  public FloatConstant(float inValue) {
-    _value = inValue;
-  }
-
-  public void Execute(Interpreter inI) {
-    inI.FloatStack().Push(_value);
-  }
-}
-
-internal class BooleanConstant : Instruction {
-
-  internal bool _value;
-
-  public BooleanConstant(bool inValue) {
-    _value = inValue;
-  }
-
-  public void Execute(Interpreter inI) {
-    inI.BoolStack().Push(_value);
+    var stack = inI.GetStack<T>();
+    stack.Push(_value);
   }
 }
 
@@ -240,25 +43,6 @@ internal class ObjectConstant : ObjectStackInstruction {
 
   public override void Execute(Interpreter inI) {
     _stack.Push(_value);
-  }
-}
-
-internal abstract class BinaryIntegerInstruction : Instruction {
-  //
-  //
-  // Binary integer instructions
-  //
-  internal abstract int BinaryOperator(int inA, int inB);
-
-  public void Execute(Interpreter inI) {
-    IntStack stack = inI.IntStack();
-    if (stack.Size() > 1) {
-      int a;
-      int b;
-      a = stack.Pop();
-      b = stack.Pop();
-      stack.Push(BinaryOperator(b, a));
-    }
   }
 }
 
@@ -327,20 +111,6 @@ internal class UnaryInstruction<inT,outT> : Instruction {
   }
 }
 
-internal abstract class UnaryIntInstruction : Instruction {
-  //
-  //Unary int instructions
-  //
-  internal abstract int UnaryOperator(int inValue);
-
-  public void Execute(Interpreter inI) {
-    IntStack stack = inI.IntStack();
-    if (stack.Size() > 0) {
-      stack.Push(UnaryOperator(stack.Pop()));
-    }
-  }
-}
-
 internal class IntegerRand : Instruction {
   internal Random Rng;
 
@@ -371,25 +141,6 @@ internal class BinaryInstruction<inT,outT> : Instruction {
       a = istack.Pop();
       b = istack.Pop();
       ostack.Push(func(b, a));
-    }
-  }
-}
-
-
-internal abstract class BinaryFloatInstruction : Instruction {
-  //
-  // Binary float instructions with float output
-  //
-  internal abstract float BinaryOperator(float inA, float inB);
-
-  public void Execute(Interpreter inI) {
-    FloatStack stack = inI.FloatStack();
-    if (stack.Size() > 1) {
-      float a;
-      float b;
-      a = stack.Pop();
-      b = stack.Pop();
-      stack.Push(BinaryOperator(b, a));
     }
   }
 }
@@ -806,8 +557,7 @@ internal class ExecS : ObjectStackInstruction {
 
 internal class ExecY : ObjectStackInstruction {
   internal ExecY(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     // Removes the second item on the stack
@@ -823,9 +573,7 @@ internal class ExecY : ObjectStackInstruction {
 }
 
 internal class ExecNoop : Instruction {
-  public void Execute(Interpreter inI) {
-    // Does Nothing
-  }
+  public void Execute(Interpreter inI) {}
 }
 
 internal class RandomPushCode : ObjectStackInstruction {
@@ -855,8 +603,7 @@ internal class RandomPushCode : ObjectStackInstruction {
 
 internal class ObjectEquals : ObjectStackInstruction {
   internal ObjectEquals(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     BooleanStack bstack = inI.BoolStack();
@@ -870,8 +617,7 @@ internal class ObjectEquals : ObjectStackInstruction {
 
 internal class IF : ObjectStackInstruction {
   internal IF(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     BooleanStack bstack = inI.BoolStack();

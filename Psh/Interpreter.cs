@@ -10,6 +10,7 @@ using System;
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
+
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
@@ -37,7 +38,7 @@ public class Interpreter {
 
   protected internal ObjectStack _codeStack = new ObjectStack();
 
-  protected internal ObjectStack _nameStack = new ObjectStack();
+  protected internal GenericStack<string> _nameStack = new GenericStack<string>();
 
   protected internal ObjectStack _execStack = new ObjectStack();
 
@@ -200,8 +201,8 @@ public class Interpreter {
     DefineInstruction("exec.if", new IF(_execStack));
     DefineInstruction("code.rand", new RandomPushCode(_codeStack));
     DefineInstruction("exec.rand", new RandomPushCode(_execStack));
-    DefineInstruction("true", new BooleanConstant(true));
-    DefineInstruction("false", new BooleanConstant(false));
+    DefineInstruction("true", new Constant<bool>(true));
+    DefineInstruction("false", new Constant<bool>(false));
     DefineInstruction("input.index", new InputIndex(_inputStack));
     DefineInstruction("input.inall", new InputInAll(_inputStack));
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
@@ -455,7 +456,7 @@ public class Interpreter {
       if (i != null) {
         i.Execute(this);
       } else {
-        _nameStack.Push(inObject);
+        _nameStack.Push((string)inObject);
       }
       return 0;
     }
@@ -501,7 +502,7 @@ public class Interpreter {
   }
 
   /// <summary>Fetch the active name stack.</summary>
-  public ObjectStack NameStack() {
+  public GenericStack<string> NameStack() {
     return _nameStack;
   }
 
