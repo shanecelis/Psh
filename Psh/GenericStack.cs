@@ -13,6 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+using System;
 using System.Text;
 
 namespace Psh {
@@ -21,6 +22,10 @@ public class GenericStack<T> : Stack {
   protected internal T[] _stack;
 
   internal const int _blocksize = 16;
+
+  public Type stackType {
+    get { return typeof(T); }
+  }
 
   public virtual void PushAllReverse(GenericStack<T> inOther) {
     for (int n = _size - 1; n >= 0; n--) {

@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 using System;
+using System.Text;
 using SharpenMinimal;
 
 namespace Psh {
@@ -249,6 +250,19 @@ public class Program : ObjectStack {
     // }
     // no need to copy; instructions are singletons
     return null;
+  }
+
+
+  public override string ToString() {
+    var result = new StringBuilder("(");
+    for (int n = _size - 1; n >= 0; n--) {
+      if (n != _size - 1) {
+        result.Append(" ");
+      }
+      result.Append(_stack[n].ToString());
+    }
+    result.Append(")");
+    return result.ToString();
   }
 }
 }

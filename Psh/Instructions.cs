@@ -18,7 +18,7 @@ using System;
 
 namespace Psh {
 
-internal class Constant<T> : Instruction {
+public class Constant<T> : Instruction {
 
   internal T _value;
 
@@ -46,7 +46,7 @@ internal class ObjectConstant : ObjectStackInstruction {
   }
 }
 
-internal class BinaryInstruction<T> : Instruction {
+public class BinaryInstruction<T> : Instruction {
 
   private Func<T,T,T> func;
   public BinaryInstruction(Func<T,T,T> func) {
@@ -80,7 +80,22 @@ internal class BinaryInstruction<T> : Instruction {
   // }
 }
 
-internal class UnaryInstruction<T> : Instruction {
+public class NullaryInstruction<T> : Instruction {
+  private Func<T> func;
+
+  public NullaryInstruction(Func<T> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    GenericStack<T> stack = inI.GetStack<T>();
+    if (stack.Size() > 0) {
+      stack.Push(func());
+    }
+  }
+}
+
+public class UnaryInstruction<T> : Instruction {
   private Func<T,T> func;
 
   public UnaryInstruction(Func<T,T> func) {
@@ -95,7 +110,7 @@ internal class UnaryInstruction<T> : Instruction {
   }
 }
 
-internal class UnaryInstruction<inT,outT> : Instruction {
+public class UnaryInstruction<inT,outT> : Instruction {
   private Func<inT,outT> func;
 
   public UnaryInstruction(Func<inT,outT> func) {
@@ -125,7 +140,7 @@ internal class IntegerRand : Instruction {
   }
 }
 
-internal class BinaryInstruction<inT,outT> : Instruction {
+public class BinaryInstruction<inT,outT> : Instruction {
   private Func<inT,inT,outT> func;
 
   public BinaryInstruction(Func<inT,inT,outT> func) {

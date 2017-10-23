@@ -1,4 +1,3 @@
-using System;
 /*
 * Copyright 2009-2010 Jon Klein
 *
@@ -16,6 +15,8 @@ using System;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using SharpenMinimal;
@@ -44,7 +45,8 @@ public class Interpreter {
 
   protected internal ObjectStack          _inputStack = new ObjectStack();
 
-  protected internal List<Stack>          _stacks = new List<Stack>();
+  // This kind of looks like it wants to be a map, but I think the order is more important.
+  protected internal List<Tuple<string, Stack>> _stacks = new List<Tuple<string, Stack>>();
 
   protected internal int _totalStepsTaken;
 
@@ -84,13 +86,13 @@ public class Interpreter {
     /* Since the _inputStack will not change after initialization, it will not
      * need a frame stack.
     */
-    _stacks.Add(_intStack);
-    _stacks.Add(_floatStack); 
-    _stacks.Add(_execStack);
-    _stacks.Add(_nameStack);
-    _stacks.Add(_boolStack);
-    _stacks.Add(_codeStack);
-    _stacks.Add(_inputStack);
+    AddStack("integer", _intStack);
+    AddStack("float",   _floatStack);
+    AddStack("boolean", _boolStack);
+    AddStack("code",    _codeStack);
+    AddStack("exec",    _execStack);
+    AddStack("name",    _nameStack);
+    AddStack("input",   _inputStack);
 
     // Auto converted Java to C# using Sharpen but it could still use some more love.
 
@@ -155,7 +157,6 @@ public class Interpreter {
     DefineInstruction("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
     DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
     DefineInstruction("integer.rand", new IntegerRand());
-    DefineStackInstructions("integer", _intStack);
 
     DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));
     DefineInstruction<float>("float.-", (a, b) => unchecked(a - b));
@@ -179,7 +180,6 @@ public class Interpreter {
     DefineInstruction("float.frominteger", (int a) => (float) a);
     DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
     DefineInstruction("float.rand", new FloatRand());
-    DefineStackInstructions("float", _floatStack);
 
     DefineInstruction<bool>("boolean.=", (a, b) => a == b);
     DefineInstruction<bool>("boolean.not", a => ! a);
@@ -189,7 +189,6 @@ public class Interpreter {
     DefineInstruction("boolean.frominteger", (int a) => a != 0);
     DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
     DefineInstruction("boolean.rand", new BoolRand());
-    DefineStackInstructions("boolean", _boolStack);
 
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.fromboolean", new CodeFromBoolean());
@@ -219,9 +218,6 @@ public class Interpreter {
     DefineInstruction("input.inall", new InputInAll(_inputStack));
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
     DefineInstruction("input.stackdepth", new Depth(_inputStack));
-    DefineStackInstructions("code", _codeStack);
-    DefineStackInstructions("exec", _execStack);
-    DefineStackInstructions("name", _nameStack);
     _generators.Put("float.erc", new Interpreter.FloatAtomGenerator());
     _generators.Put("integer.erc", new Interpreter.IntAtomGenerator());
   }
@@ -339,23 +335,23 @@ public class Interpreter {
     _randomGenerators.Add(iag);
   }
 
-  protected internal void DefineInstruction<T>(string inName, Func<T,T> f) {
+  public void DefineInstruction<T>(string inName, Func<T,T> f) {
     DefineInstruction(inName, new UnaryInstruction<T>(f));
   }
 
-  protected internal void DefineInstruction<T>(string inName, Func<T,T,T> f) {
+  public void DefineInstruction<T>(string inName, Func<T,T,T> f) {
     DefineInstruction(inName, new BinaryInstruction<T>(f));
   }
 
-  protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f) {
+  public void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f) {
     DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
   }
 
-  protected internal void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f) {
+  public void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f) {
     DefineInstruction(inName, new BinaryInstruction<inT,outT>(f));
   }
 
-  protected internal void DefineInstruction(string inName, Instruction inInstruction) {
+  public void DefineInstruction(string inName, Instruction inInstruction) {
     _instructions.Put(inName, inInstruction);
     _generators.Put(inName, new Interpreter.InstructionAtomGenerator(inName));
   }
@@ -480,14 +476,20 @@ public class Interpreter {
   }
 
   public Psh.GenericStack<T> GetStack<T>() {
-    if (typeof(T) == typeof(int))
-      return _intStack as Psh.GenericStack<T>;
-    else if (typeof(T) == typeof(bool))
-      return _boolStack as Psh.GenericStack<T>;
-    else if (typeof(T) == typeof(float))
-      return _floatStack as Psh.GenericStack<T>;
-    else
-      throw new Exception("No stack for type " + typeof(T));
+    return _stacks
+      .Select(x => x.Item2)
+      .Where(y => y is GenericStack<T>)
+      .Cast<GenericStack<T>>()
+      .Where(s => s.stackType == typeof(T))
+      .Single();
+    // if (typeof(T) == typeof(int))
+    //   return _intStack as Psh.GenericStack<T>;
+    // else if (typeof(T) == typeof(bool))
+    //   return _boolStack as Psh.GenericStack<T>;
+    // else if (typeof(T) == typeof(float))
+    //   return _floatStack as Psh.GenericStack<T>;
+    // else
+    //   throw new Exception("No stack for type " + typeof(T));
     // XXX Do the good thing!
     // return null;
   }
@@ -528,13 +530,18 @@ public class Interpreter {
   }
 
   /// <summary>Fetch the indexed custom stack</summary>
-  public Stack GetCustomStack(int inIndex) {
-    return _stacks[inIndex];
+  public Stack GetStack(int inIndex) {
+    return _stacks[inIndex].Item2;
+  }
+
+  public Stack GetStack(string stackName) {
+    return _stacks.Where(x => x.Item1 == stackName).Single().Item2;
   }
 
   /// <summary>Add a custom stack, and return that stack's index</summary>
-  public int AddCustomStack(Stack inStack) {
-    _stacks.Add(inStack);
+  public int AddStack(string stackName, Stack inStack) {
+    _stacks.Add(Tuple.Create(stackName, inStack));
+    DefineStackInstructions(stackName, inStack);
     return _stacks.Count - 1;
   }
 
@@ -545,22 +552,21 @@ public class Interpreter {
 
   /// <summary>Returns a string containing the current Interpreter stack states.</summary>
   public override string ToString() {
-    string result = string.Empty;
-    result += "exec stack: " + _execStack + "\n";
-    result += "code stack: " + _codeStack + "\n";
-    result += "int stack: " + _intStack + "\n";
-    result += "float stack: " + _floatStack + "\n";
-    result += "boolean stack: " + _boolStack + "\n";
-    result += "name stack: " + _nameStack + "\n";
-    result += "input stack: " + _inputStack + "\n";
-    return result;
+    var sb = new StringBuilder();
+    foreach (var t in _stacks) {
+      sb.Append(t.Item1);
+      sb.Append(" stack: ");
+      sb.Append(t.Item2);
+      sb.Append("\n");
+    }
+    return sb.ToString();
   }
 
   /// <summary>Resets the Push interpreter state by clearing all of the stacks.</summary>
   public void ClearStacks() {
     // Clear all custom stacks
-    foreach (Stack s in _stacks) {
-      s.Clear();
+    foreach (var t in _stacks) {
+      t.Item2.Clear();
     }
   }
 
