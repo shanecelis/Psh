@@ -44,7 +44,7 @@ public class Interpreter {
 
   protected internal ObjectStack _inputStack = new ObjectStack();
 
-  protected internal List<Stack> _customStacks = new List<Stack>();
+  protected internal List<Stack> _stacks = new List<Stack>();
 
   protected internal int _totalStepsTaken;
 
@@ -84,6 +84,13 @@ public class Interpreter {
     /* Since the _inputStack will not change after initialization, it will not
      * need a frame stack.
     */
+    _stacks.Add(_intStack);
+    _stacks.Add(_floatStack);
+    _stacks.Add(_execStack);
+    _stacks.Add(_nameStack);
+    _stacks.Add(_boolStack);
+    _stacks.Add(_codeStack);
+    _stacks.Add(_inputStack);
     // PushStacks();
 
     // Auto converted Java to C# using Sharpen but it could still use some more love.
@@ -213,8 +220,8 @@ public class Interpreter {
     DefineStackInstructions("name", _nameStack);
     DefineStackInstructions("code", _codeStack);
     DefineStackInstructions("exec", _execStack);
-    _generators.Put("float.erc", new Interpreter.FloatAtomGenerator(this));
-    _generators.Put("integer.erc", new Interpreter.IntAtomGenerator(this));
+    _generators.Put("float.erc", new Interpreter.FloatAtomGenerator());
+    _generators.Put("integer.erc", new Interpreter.IntAtomGenerator());
   }
 
   // XXX What are frames?
@@ -317,7 +324,7 @@ public class Interpreter {
     Define a new instruction and add it to the random generators.
    */
   public void AddInstruction(string inName, Instruction inInstruction) {
-    var iag = new Interpreter.InstructionAtomGenerator(this, inName);
+    var iag = new Interpreter.InstructionAtomGenerator(inName);
     _instructions.Put(inName, inInstruction);
     _generators.Put(inName, iag);
     _randomGenerators.Add(iag);
@@ -341,7 +348,7 @@ public class Interpreter {
 
   protected internal void DefineInstruction(string inName, Instruction inInstruction) {
     _instructions.Put(inName, inInstruction);
-    _generators.Put(inName, new Interpreter.InstructionAtomGenerator(this, inName));
+    _generators.Put(inName, new Interpreter.InstructionAtomGenerator(inName));
   }
 
   protected internal void DefineStackInstructions(string inTypeName, Stack inStack) {
@@ -513,13 +520,13 @@ public class Interpreter {
 
   /// <summary>Fetch the indexed custom stack</summary>
   public Stack GetCustomStack(int inIndex) {
-    return _customStacks[inIndex];
+    return _stacks[inIndex];
   }
 
   /// <summary>Add a custom stack, and return that stack's index</summary>
   public int AddCustomStack(Stack inStack) {
-    _customStacks.Add(inStack);
-    return _customStacks.Count - 1;
+    _stacks.Add(inStack);
+    return _stacks.Count - 1;
   }
 
   /// <summary>Prints out the current stack states.</summary>
@@ -542,15 +549,8 @@ public class Interpreter {
 
   /// <summary>Resets the Push interpreter state by clearing all of the stacks.</summary>
   public void ClearStacks() {
-    _intStack.Clear();
-    _floatStack.Clear();
-    _execStack.Clear();
-    _nameStack.Clear();
-    _boolStack.Clear();
-    _codeStack.Clear();
-    _inputStack.Clear();
     // Clear all custom stacks
-    foreach (Stack s in _customStacks) {
+    foreach (Stack s in _stacks) {
       s.Clear();
     }
   }
@@ -699,23 +699,14 @@ public class Interpreter {
   }
 
   public interface AtomGenerator {
-
     object Generate(Interpreter inInterpreter);
-
-    // internal AtomGenerator(Interpreter _enclosing)
-    // {
-    //   // this._enclosing = _enclosing;
-    // }
-
-    // private readonly Interpreter _enclosing;
   }
 
   private class InstructionAtomGenerator : Interpreter.AtomGenerator {
 
     internal string _instruction;
 
-    internal InstructionAtomGenerator(Interpreter _enclosing, string inInstructionName) {
-      // this._enclosing = _enclosing;
+    internal InstructionAtomGenerator(string inInstructionName) {
       this._instruction = inInstructionName;
     }
 
@@ -723,37 +714,25 @@ public class Interpreter {
       return this._instruction;
     }
 
-    // private readonly Interpreter _enclosing;
   }
 
   private class FloatAtomGenerator : Interpreter.AtomGenerator {
 
     public object Generate(Interpreter inInterpreter) {
-      float r = (float) this._enclosing.Rng.NextDouble() * (this._enclosing._maxRandomFloat - this._enclosing._minRandomFloat);
-      r -= (r % this._enclosing._randomFloatResolution);
-      return r + this._enclosing._minRandomFloat;
+      float r = (float) inInterpreter.Rng.NextDouble() * (inInterpreter._maxRandomFloat - inInterpreter._minRandomFloat);
+      r -= (r % inInterpreter._randomFloatResolution);
+      return r + inInterpreter._minRandomFloat;
     }
 
-    internal FloatAtomGenerator(Interpreter _enclosing) {
-      this._enclosing = _enclosing;
-    }
-
-    private readonly Interpreter _enclosing;
   }
 
   private class IntAtomGenerator : Interpreter.AtomGenerator {
 
     public object Generate(Interpreter inInterpreter) {
-      int r = this._enclosing.Rng.Next(this._enclosing._maxRandomInt - this._enclosing._minRandomInt);
-      r -= (r % this._enclosing._randomIntResolution);
-      return r + this._enclosing._minRandomInt;
+      int r = inInterpreter.Rng.Next(inInterpreter._maxRandomInt - inInterpreter._minRandomInt);
+      r -= (r % inInterpreter._randomIntResolution);
+      return r + inInterpreter._minRandomInt;
     }
-
-    internal IntAtomGenerator(Interpreter _enclosing) {
-      this._enclosing = _enclosing;
-    }
-
-    private readonly Interpreter _enclosing;
   }
 }
 }

@@ -211,8 +211,7 @@ internal class InputInN : Instruction {
 
 internal class InputInAll : ObjectStackInstruction {
   internal InputInAll(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     if (_stack.Size() > 0) {
@@ -225,8 +224,7 @@ internal class InputInAll : ObjectStackInstruction {
 
 internal class InputInRev : ObjectStackInstruction {
   internal InputInRev(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     if (_stack.Size() > 0) {
@@ -239,8 +237,7 @@ internal class InputInRev : ObjectStackInstruction {
 
 internal class InputIndex : ObjectStackInstruction {
   internal InputIndex(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   public override void Execute(Interpreter inI) {
     IntStack istack = inI.IntStack();
@@ -259,8 +256,7 @@ internal class InputIndex : ObjectStackInstruction {
 
 internal class CodeDoRange : ObjectStackInstruction {
   internal CodeDoRange(Interpreter inI)
-  : base(inI.CodeStack()) {
-  }
+  : base(inI.CodeStack()) {}
 
   //
   // Instructions for code and exec stack
@@ -300,8 +296,7 @@ internal class CodeDoRange : ObjectStackInstruction {
 
 internal class CodeDoTimes : ObjectStackInstruction {
   internal CodeDoTimes(Interpreter inI)
-  : base(inI.CodeStack()) {
-  }
+  : base(inI.CodeStack()) {}
 
   public override void Execute(Interpreter inI) {
     IntStack istack = inI.IntStack();
@@ -339,8 +334,7 @@ internal class CodeDoTimes : ObjectStackInstruction {
 
 internal class CodeDoCount : ObjectStackInstruction {
   internal CodeDoCount(Interpreter inI)
-  : base(inI.CodeStack()) {
-  }
+  : base(inI.CodeStack()) {}
 
   public override void Execute(Interpreter inI) {
     IntStack istack = inI.IntStack();
@@ -401,8 +395,7 @@ internal class CodeFromFloat : Instruction {
 
 internal class ExecDoRange : ObjectStackInstruction {
   internal ExecDoRange(Interpreter inI)
-  : base(inI.ExecStack()) {
-  }
+  : base(inI.ExecStack()) {}
 
   // Begin exec iteration functions
   public override void Execute(Interpreter inI) {
@@ -437,8 +430,7 @@ internal class ExecDoRange : ObjectStackInstruction {
 
 internal class ExecDoTimes : ObjectStackInstruction {
   internal ExecDoTimes(Interpreter inI)
-  : base(inI.ExecStack()) {
-  }
+  : base(inI.ExecStack()) {}
 
   public override void Execute(Interpreter inI) {
     IntStack istack = inI.IntStack();
@@ -475,8 +467,7 @@ internal class ExecDoTimes : ObjectStackInstruction {
 
 internal class ExecDoCount : ObjectStackInstruction {
   internal ExecDoCount(Interpreter inI)
-  : base(inI.ExecStack()) {
-  }
+  : base(inI.ExecStack()) {}
 
   public override void Execute(Interpreter inI) {
     IntStack istack = inI.IntStack();
@@ -502,8 +493,7 @@ internal class ExecDoCount : ObjectStackInstruction {
 
 internal class ExecK : ObjectStackInstruction {
   internal ExecK(ObjectStack inStack)
-  : base(inStack) {
-  }
+  : base(inStack) {}
 
   // End exec iteration functions.
   public override void Execute(Interpreter inI) {
