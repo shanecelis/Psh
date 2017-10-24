@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 using System;
+using System.Linq;
 using System.Text;
 using SharpenMinimal;
 
@@ -255,8 +256,8 @@ public class Program : ObjectStack {
 
   public override string ToString() {
     var result = new StringBuilder("(");
-    for (int n = _size - 1; n >= 0; n--) {
-      if (n != _size - 1) {
+    for (int n = 0; n < _size; n++) {
+      if (n != 0 && n != _size - 1) {
         result.Append(" ");
       }
       result.Append(_stack[n].ToString());

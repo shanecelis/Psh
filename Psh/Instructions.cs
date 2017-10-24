@@ -18,6 +18,11 @@ using System;
 
 namespace Psh {
 
+/// <summary>Abstract instruction base for all instructions.</summary>
+public interface Instruction {
+  void Execute(Interpreter inI);
+}
+
 public class Constant<T> : Instruction {
 
   internal T _value;
@@ -46,38 +51,78 @@ internal class ObjectConstant : ObjectStackInstruction {
   }
 }
 
-public class BinaryInstruction<T> : Instruction {
-
-  private Func<T,T,T> func;
-  public BinaryInstruction(Func<T,T,T> func) {
+public class BinaryAction<X,Y> : Instruction {
+  private Action<X,Y> func;
+  public BinaryAction(Action<X,Y> func) {
     this.func = func;
   }
 
-  // Binary integer instructions
-  //
-  // internal abstract T BinaryOperator(T inA, T inB);
-
   public void Execute(Interpreter inI) {
-    GenericStack<T> stack = inI.GetStack<T>();
-    if (stack.Size() > 1) {
-      T a, b, c;
-      a = stack.Pop();
-      b = stack.Pop();
+    var stack1 = inI.GetStack<X>();
+    var stack2 = inI.GetStack<Y>();
+    if (stack1.Size() > 1 && stack2.Size() > 1) {
+      X a = stack1.Pop();
+      Y b = stack2.Pop();
       try {
-        c = func(b, a);
-        stack.Push(c);
+        func(a, b);
       } catch (ArithmeticException) {
-        c = default(T);
+        // Don't care.
       } catch (Exception e) {
         throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
       }
-      stack.Push(c);
     }
   }
+}
 
-  // public static implicit operator BinaryInstruction<T>(Func<T,T,T> f) {
-  //   return new BinaryInstruction<T>(f);
-  // }
+public class BinaryAction<T> : BinaryAction<T,T> {
+  public BinaryAction(Action<T,T> func) : base(func) {}
+}
+
+public class BinaryInstruction<X,Y,Z> : Instruction {
+  private Func<X,Y,Z> func;
+
+  public BinaryInstruction(Func<X,Y,Z> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    var istack = inI.GetStack<X>();
+    var i2stack = inI.GetStack<Y>();
+    var ostack = inI.GetStack<Z>();
+    if (istack.Size() > 1 && i2stack.Size() > 1) {
+      X a = istack.Pop();
+      Y b = i2stack.Pop();
+      Z c;
+      try {
+        c = func(a, b);
+      } catch (ArithmeticException) {
+        c = default(Z);
+      } catch (Exception e) {
+        throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
+      }
+      ostack.Push(c);
+    }
+  }
+}
+
+public class BinaryInstruction<Tin,Tout> : BinaryInstruction<Tin,Tin,Tout> {
+  public BinaryInstruction(Func<Tin,Tin,Tout> func) : base(func) {}
+}
+
+public class BinaryInstruction<T> : BinaryInstruction<T,T,T> {
+  public BinaryInstruction(Func<T,T,T> func) : base(func) {}
+}
+
+public class NullaryAction : Instruction {
+  private Action func;
+
+  public NullaryAction(Action func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    func();
+  }
 }
 
 public class NullaryInstruction<T> : Instruction {
@@ -95,17 +140,17 @@ public class NullaryInstruction<T> : Instruction {
   }
 }
 
-public class UnaryInstruction<T> : Instruction {
-  private Func<T,T> func;
+public class UnaryAction<T> : Instruction {
+  private Action<T> func;
 
-  public UnaryInstruction(Func<T,T> func) {
+  public UnaryAction(Action<T> func) {
     this.func = func;
   }
 
   public void Execute(Interpreter inI) {
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 0) {
-      stack.Push(func(stack.Pop()));
+      func(stack.Pop());
     }
   }
 }
@@ -126,6 +171,10 @@ public class UnaryInstruction<inT,outT> : Instruction {
   }
 }
 
+public class UnaryInstruction<T> : UnaryInstruction<T, T> {
+  public UnaryInstruction(Func<T,T> func) : base(func) {}
+}
+
 internal class IntegerRand : Instruction {
   internal Random Rng;
 
@@ -140,25 +189,6 @@ internal class IntegerRand : Instruction {
   }
 }
 
-public class BinaryInstruction<inT,outT> : Instruction {
-  private Func<inT,inT,outT> func;
-
-  public BinaryInstruction(Func<inT,inT,outT> func) {
-    this.func = func;
-  }
-
-  public void Execute(Interpreter inI) {
-    var istack = inI.GetStack<inT>();
-    var ostack = inI.GetStack<outT>();
-    if (istack.Size() > 1) {
-      inT a;
-      inT b;
-      a = istack.Pop();
-      b = istack.Pop();
-      ostack.Push(func(b, a));
-    }
-  }
-}
 
 // internal class FloatTan : UnaryFloatInstruction
 // {
@@ -268,6 +298,20 @@ internal class InputIndex : ObjectStackInstruction {
     }
   }
 }
+
+// (
+//   BOOLEAN.OR
+//   FALSE
+//   TRUE
+//   FLOAT.+
+//   5.2
+//   4.1
+//   INTEGER.*
+//   3
+//  2
+
+//   )
+
 
 internal class CodeDoRange : ObjectStackInstruction {
   internal CodeDoRange(Interpreter inI)

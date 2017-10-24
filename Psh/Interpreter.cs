@@ -70,6 +70,8 @@ public class Interpreter {
 
   protected internal int   _maxPointsInProgram;
 
+  public bool caseSensitive = false;
+
   protected internal Random Rng = new Random();
 
   // XXX What is the input stack and pusher really for?
@@ -86,11 +88,11 @@ public class Interpreter {
     /* Since the _inputStack will not change after initialization, it will not
      * need a frame stack.
     */
+    AddStack("exec",    _execStack);
+    AddStack("code",    _codeStack);
     AddStack("integer", _intStack);
     AddStack("float",   _floatStack);
     AddStack("boolean", _boolStack);
-    AddStack("code",    _codeStack);
-    AddStack("exec",    _execStack);
     AddStack("name",    _nameStack);
     AddStack("input",   _inputStack);
 
@@ -335,12 +337,36 @@ public class Interpreter {
     _randomGenerators.Add(iag);
   }
 
+  public void DefineConstant<T>(string inName, T value) {
+    DefineInstruction(inName, new Constant<T>(value));
+  }
+
+  public void DefineInstruction<T>(string inName, Func<T> f) {
+    DefineInstruction(inName, new NullaryInstruction<T>(f));
+  }
+
   public void DefineInstruction<T>(string inName, Func<T,T> f) {
     DefineInstruction(inName, new UnaryInstruction<T>(f));
   }
 
+  public void DefineInstruction<T>(string inName, Action<T> f) {
+    DefineInstruction(inName, new UnaryAction<T>(f));
+  }
+
   public void DefineInstruction<T>(string inName, Func<T,T,T> f) {
     DefineInstruction(inName, new BinaryInstruction<T>(f));
+  }
+
+  public void DefineInstruction<X,Y,Z>(string inName, Func<X,Y,Z> f) {
+    DefineInstruction(inName, new BinaryInstruction<X,Y,Z>(f));
+  }
+
+  public void DefineInstruction<X,Y>(string inName, Action<X,Y> f) {
+    DefineInstruction(inName, new BinaryAction<X,Y>(f));
+  }
+
+  public void DefineInstruction<T>(string inName, Action<T,T> f) {
+    DefineInstruction(inName, new BinaryAction<T>(f));
   }
 
   public void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f) {
@@ -352,6 +378,9 @@ public class Interpreter {
   }
 
   public void DefineInstruction(string inName, Instruction inInstruction) {
+    if (! caseSensitive) {
+      inName = inName.ToUpper();
+    }
     _instructions.Put(inName, inInstruction);
     _generators.Put(inName, new Interpreter.InstructionAtomGenerator(inName));
   }
@@ -464,7 +493,7 @@ public class Interpreter {
       return 0;
     }
     if (inObject is string) {
-      Instruction i = (Instruction) _instructions.Get(inObject);
+      Instruction i = (Instruction) _instructions.Get(caseSensitive ? inObject : ((string)inObject).ToUpper());
       if (i != null) {
         i.Execute(this);
       } else {
