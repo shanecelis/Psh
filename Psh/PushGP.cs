@@ -153,7 +153,7 @@ public abstract class PushGP : GA {
     Type iclass = Type.GetType(interpreterClass);
     object iObject = System.Activator.CreateInstance(iclass);
     if (!(iObject is Interpreter)) {
-      throw (new Exception("interpreter-class must inherit from class Interpreter"));
+      throw new Exception("interpreter-class must inherit from class Interpreter");
     }
     _interpreter = (Interpreter)iObject;
     _interpreter.SetInstructions(new Program(GetParam("instruction-set")));
@@ -249,7 +249,6 @@ public abstract class PushGP : GA {
       _averageSize += ((PushGPIndividual)inIndividual)._program.ProgramSize();
     }
     var sw = Stopwatch.StartNew();
-    // long t = Runtime.CurrentTimeMillis();
     for (int n = 0; n < _testCases.Count; n++) {
       GATestCase test = _testCases[n];
       float e = EvaluateTestCase(inIndividual, test._input, test._output);
