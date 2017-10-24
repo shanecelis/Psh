@@ -1,9 +1,9 @@
 PshSharp
 ========
 
-PshSharp is a C# port of Jon Klein's [project Psh](https://github.com/jonklein/Psh), a Java implementation of the Push programming language and of PushGP.  Push is a stack-based language designed for evolutionary computation, specifically genetic programming.  PushGP is a genetic programming system that evolves programs in Push.  More information about Push and PushGP can be found [here](http://hampshire.edu/lspector/push.html).
+PshSharp is a C# port of Jon Klein's [project Psh](https://github.com/jonklein/Psh), a Java implementation of the Push programming language and PushGP.  Push is a stack-based language designed for evolutionary computation, specifically genetic programming.  PushGP is a genetic programming system that evolves programs in Push.  More information about Push and PushGP can be found [here](http://hampshire.edu/lspector/push.html).
 
-This is v0.1.0 of PshSharp.
+This is version 0.1.0 of PshSharp.
 
 Getting Started
 ===============
