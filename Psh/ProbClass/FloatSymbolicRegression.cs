@@ -55,12 +55,12 @@ public class FloatSymbolicRegression : PushGP {
       // Get test cases from test-cases.
       Program caselist = new Program(cases);
       for (int i = 0; i < caselist.Size(); i++) {
-        Program p = (Program)caselist.Peek(i);
+        Program p = (Program)caselist.DeepPeek(i);
         if (p.Size() < 2) {
           throw new Exception("Not enough elements for fitness case \"" + p + "\"");
         }
-        float @in = System.Convert.ToSingle(p.Peek(0).ToString());
-        float @out = System.Convert.ToSingle(p.Peek(1).ToString());
+        float @in = System.Convert.ToSingle(p.DeepPeek(0).ToString());
+        float @out = System.Convert.ToSingle(p.DeepPeek(1).ToString());
         Print(";; Fitness case #" + i + " input: " + @in + " output: " + @out + "\n");
         _testCases.Add(new GATestCase(@in, @out));
       }

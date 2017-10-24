@@ -55,12 +55,12 @@ public class IntSymbolicRegression : PushGP {
       // Get test cases from test-cases.
       Program caselist = new Program(cases);
       for (int i = 0; i < caselist.Size(); i++) {
-        Program p = (Program)caselist.Peek(i);
+        Program p = (Program)caselist.DeepPeek(i);
         if (p.Size() < 2) {
           throw new Exception("Not enough elements for fitness case \"" + p + "\"");
         }
-        int @in = System.Convert.ToInt32(p.Peek(0).ToString());
-        int @out = System.Convert.ToInt32(p.Peek(1).ToString());
+        int @in = System.Convert.ToInt32(p.DeepPeek(0).ToString());
+        int @out = System.Convert.ToInt32(p.DeepPeek(1).ToString());
         Print(";; Fitness case #" + i + " input: " + @in + " output: " + @out + "\n");
         _testCases.Add(new GATestCase(@in, @out));
       }

@@ -36,12 +36,12 @@ public class CartCentering : PushGP {
     string cases = GetParam("test-cases");
     Program caselist = new Program(cases);
     for (int i = 0; i < caselist.Size(); i++) {
-      Program singleCase = (Program)caselist.Peek(i);
+      Program singleCase = (Program)caselist.DeepPeek(i);
       if (singleCase.Size() < 2) {
         throw new Exception("Not enough elements for fitness case \"" + singleCase + "\"");
       }
-      float x = System.Convert.ToSingle(singleCase.Peek(0).ToString());
-      float v = System.Convert.ToSingle(singleCase.Peek(1).ToString());
+      float x = System.Convert.ToSingle(singleCase.DeepPeek(0).ToString());
+      float v = System.Convert.ToSingle(singleCase.DeepPeek(1).ToString());
       Print(";; Fitness case #" + i + " position: " + x + " velocity: " + v + "\n");
       ObjectPair xv = new ObjectPair(x, v);
       _testCases.Add(new GATestCase(xv, null));

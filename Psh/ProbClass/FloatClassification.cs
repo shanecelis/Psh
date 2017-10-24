@@ -28,17 +28,17 @@ public class FloatClassification : PushGP {
     base.InitFromParameters();
     string cases = GetParam("test-cases");
     Program caselist = new Program(cases);
-    _inputCount = ((Program)caselist.Peek(0)).Size() - 1;
+    _inputCount = ((Program)caselist.DeepPeek(0)).Size() - 1;
     for (int i = 0; i < caselist.Size(); i++) {
-      Program p = (Program)caselist.Peek(i);
+      Program p = (Program)caselist.DeepPeek(i);
       if (p.Size() < 2) {
         throw new Exception("Not enough entries for fitness case \"" + p + "\"");
       }
       if (p.Size() != _inputCount + 1) {
         throw new Exception("Wrong number of inputs for fitness case \"" + p + "\"");
       }
-      float @in = System.Convert.ToSingle(p.Peek(0).ToString());
-      float @out = System.Convert.ToSingle(p.Peek(1).ToString());
+      float @in = System.Convert.ToSingle(p.DeepPeek(0).ToString());
+      float @out = System.Convert.ToSingle(p.DeepPeek(1).ToString());
       Print(";; Fitness case #" + i + " input: " + @in + " output: " + @out + "\n");
       _testCases.Add(new GATestCase(@in, @out));
     }

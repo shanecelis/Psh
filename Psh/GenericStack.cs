@@ -171,33 +171,52 @@ public class GenericStack<T> : List<T>, Stack {
     }
   }
 
-  public virtual void Shove(T obj, int n) {
-    if (n < 0)
-      n = 0;
-    if (n >= Count) {
-      n = Count - 1;
+  public int ReverseIndex(int reverseIndex) {
+    if (reverseIndex < 0)
+      reverseIndex = 0;
+    if (reverseIndex >= Count) {
+      reverseIndex = Count - 1;
     }
+    return Count - 1 - reverseIndex;
+  }
+
+  // count = 2
+  //   n = 1
+
+  //   i = 2 - 1 == 1;
+  // Shove(x, 0) = Push(x)
+  // Shove(x, 1) = y = Pop(); Push(x); Push(y);
+  public virtual void Shove(T obj, int n) {
     // n = 0 is the same as push, so
     // the position in the array we insert at is
     // Count-n.
-    Insert(Count - n - 1, obj);
+    int i = ReverseIndex(n);
+    try {
+      if (Count == 0 || i == Count - 1)
+        Add(obj);
+      else
+        Insert(i + 1, obj);
+    } catch (Exception e) {
+      throw new Exception("shove fail on count " + Count + " arg " + n + " index " + i, e);
+    }
   }
 
   public void Shove(int inIndex) {
-    if (Count > 0) {
-      if (inIndex < 0) {
-        inIndex = 0;
-      }
-      if (inIndex > Count - 1) {
-        inIndex = Count - 1;
-      }
-      T toShove = Top();
-      int shovedIndex = Count - inIndex - 1;
-      for (int i = Count - 1; i > shovedIndex; i--) {
-        this[i] = this[i - 1];
-      }
-      this[shovedIndex] = toShove;
-    }
+    Shove(Top(), inIndex);
+    // if (Count > 0) {
+    //   if (inIndex < 0) {
+    //     inIndex = 0;
+    //   }
+    //   if (inIndex > Count - 1) {
+    //     inIndex = Count - 1;
+    //   }
+    //   T toShove = Top();
+    //   int shovedIndex = Count - inIndex - 1;
+    //   for (int i = Count - 1; i > shovedIndex; i--) {
+    //     this[i] = this[i - 1];
+    //   }
+    //   this[shovedIndex] = toShove;
+    // }
   }
 
   public void Swap() {
@@ -226,7 +245,7 @@ public class GenericStack<T> : List<T>, Stack {
         inIndex = Count - 1;
       }
       int yankedIndex = Count - inIndex - 1;
-      T toYank = Peek(yankedIndex);
+      T toYank = DeepPeek(yankedIndex);
       for (int i = yankedIndex; i < Count - 1; i++) {
         this[i] = this[i + 1];
       }
@@ -243,14 +262,16 @@ public class GenericStack<T> : List<T>, Stack {
         inIndex = Count - 1;
       }
       int yankedIndex = Count - inIndex - 1;
-      Push(Peek(yankedIndex));
+      Push(DeepPeek(yankedIndex));
     }
   }
 
   public override string ToString() {
     var result = new StringBuilder("[");
-    for (int n = Count - 1; n >= 0; n--) {
-      if (n != Count - 1) {
+    // Why does this happen backwards?
+    // for (int n = Count - 1; n >= 0; n--) {
+    for (int n = 0; n < Count; n++) {
+      if (n != 0) {
         result.Append(" ");
       }
       result.Append(this[n].ToString());

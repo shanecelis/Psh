@@ -244,7 +244,7 @@ public class InstructionTest
   public void StampRepresentation() {
     istack.Push(1);
     istack.Push(0);
-    Assert.AreEqual("[0 1]", istack.ToString());
+    Assert.AreEqual("[1 0]", istack.ToString());
     Assert.AreEqual(0, istack.Pop());
     Assert.AreEqual(1, istack.Pop());
     // Assert.AreEqual(new [] { 1, 2, 3}, new [] { 1, 0, 4, 5});

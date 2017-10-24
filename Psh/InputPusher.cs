@@ -21,7 +21,7 @@ public class InputPusher {
   public void PushInput(Interpreter inI, int n) {
     ObjectStack _stack = inI.InputStack();
     if (_stack.Size() > n) {
-      object inObject = _stack.Peek(n);
+      object inObject = _stack.DeepPeek(n);
       if (inObject is int) {
         IntStack istack = inI.IntStack();
         istack.Push((int)inObject);

@@ -22,7 +22,7 @@ namespace Psh.Tests {
 [TestFixture]
 public class GenericStackTest
 {
-  [Test] public void testPushPop() 
+  [Test] public void testPushPop()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
     GenericStack<List<string>> stringListStack = new GenericStack<List<string>>();
@@ -52,7 +52,7 @@ public class GenericStackTest
     Assert.AreEqual(0, stringStack.Count);
   }
 
-  [Test] public void testPushAllReverse() 
+  [Test] public void testPushAllReverse()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
@@ -69,7 +69,7 @@ public class GenericStackTest
     Assert.AreEqual("value 2", stringStack2.Pop());
   }
 
-  [Test] public void testHashCode() 
+  [Test] public void testHashCode()
   {
     List<string> stringStack = new List<string>();
     List<string> stringStack2 = new List<string>();
@@ -83,7 +83,7 @@ public class GenericStackTest
     Assert.AreNotEqual(stringStack.GetHashCode(), stringStack2.GetHashCode());
   }
 
-  [Test] public void testEquals() 
+  [Test] public void testEquals()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
     GenericStack<string> stringStack2 = new GenericStack<string>();
@@ -110,21 +110,35 @@ public class GenericStackTest
     Assert.AreEqual(stringStack.GetHashCode(), stringStack2.GetHashCode());
   }
 
-  [Test] public void testPeek() 
+  [Test] public void testDeepPeek()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
     stringStack.Push("value 1");
     stringStack.Push("value 2");
 
-    Assert.AreEqual("value 1", stringStack.Peek(0)); // deepest stack
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0)); // deepest stack
     Assert.AreEqual(2, stringStack.Count);
     Assert.AreEqual("value 2", stringStack.Top());
     Assert.AreEqual(2, stringStack.Count);
-    Assert.AreEqual("value 2", stringStack.Peek(1));
+    Assert.AreEqual("value 2", stringStack.DeepPeek(1));
   }
 
-  [Test] public void testDup() 
+
+  [Test] public void testPeek()
+  {
+    GenericStack<string> stringStack = new GenericStack<string>();
+
+    stringStack.Push("value 1");
+    stringStack.Push("value 2");
+
+    Assert.AreEqual("value 2", stringStack.Peek(0)); // deepest stack
+    Assert.AreEqual(2, stringStack.Count);
+    Assert.AreEqual("value 2", stringStack.Top());
+    Assert.AreEqual("value 1", stringStack.Peek(1));
+  }
+
+  [Test] public void testDup()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
@@ -141,24 +155,24 @@ public class GenericStackTest
     Assert.AreEqual("value 1", stringStack.Peek(2));
   }
 
-  [Test] public void testSwap() 
+  [Test] public void testSwap()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
     stringStack.Push("value 1");
     stringStack.Swap();
     Assert.AreEqual(1, stringStack.Count);
-    Assert.AreEqual("value 1", stringStack.Peek(0));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
 
     stringStack.Push("value 2");
     stringStack.Swap();
 
     Assert.AreEqual(2, stringStack.Count);
-    Assert.AreEqual("value 1", stringStack.Peek(1));
-    Assert.AreEqual("value 2", stringStack.Peek(0));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(1));
+    Assert.AreEqual("value 2", stringStack.DeepPeek(0));
   }
 
-  [Test] public void testRot() 
+  [Test] public void testRot()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
@@ -167,34 +181,61 @@ public class GenericStackTest
     stringStack.Rot();
 
     Assert.AreEqual(2, stringStack.Count);
-    Assert.AreEqual("value 2", stringStack.Peek(1));
-    Assert.AreEqual("value 1", stringStack.Peek(0));
+    Assert.AreEqual("value 2", stringStack.DeepPeek(1));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
 
     stringStack.Push("value 3");
     stringStack.Push("value 4");
     stringStack.Rot();
     Assert.AreEqual(4, stringStack.Count);
-    Assert.AreEqual("value 2", stringStack.Peek(3));
-    Assert.AreEqual("value 4", stringStack.Peek(2));
-    Assert.AreEqual("value 3", stringStack.Peek(1));
-    Assert.AreEqual("value 1", stringStack.Peek(0));
+    Assert.AreEqual("value 2", stringStack.DeepPeek(3));
+    Assert.AreEqual("value 4", stringStack.DeepPeek(2));
+    Assert.AreEqual("value 3", stringStack.DeepPeek(1));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
   }
 
-  [Test] public void testShove() 
+  [Test] public void TestReverseIndex() {
+    GenericStack<string> stringStack = new GenericStack<string>();
+    stringStack.Push("1");
+    stringStack.Push("2");
+    stringStack.Push("3");
+
+    Assert.AreEqual(2, stringStack.ReverseIndex(0));
+    Assert.AreEqual(1, stringStack.ReverseIndex(1));
+    Assert.AreEqual(0, stringStack.ReverseIndex(2));
+    Assert.AreEqual(0, stringStack.ReverseIndex(5));
+    Assert.AreEqual(2, stringStack.ReverseIndex(-20));
+  }
+
+  [Test] public void testShove()
   {
     GenericStack<string> stringStack = new GenericStack<string>();
 
     stringStack.Shove("value 1", 0);
     Assert.AreEqual(1, stringStack.Count);
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
     Assert.AreEqual("value 1", stringStack.Peek(0));
+    stringStack.Shove("value 4", 0);
+    Assert.AreEqual(2, stringStack.Count);
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
+    Assert.AreEqual("value 4", stringStack.Peek(0));
+    stringStack.Pop();
 
     stringStack.Shove("value 2", 1);
     Assert.AreEqual(2, stringStack.Count);
-    Assert.AreEqual("value 2", stringStack.Peek(0));
-    Assert.AreEqual("value 1", stringStack.Peek(1));
+    // Assert.AreEqual("value 2", stringStack.DeepPeek(0));
+    // Assert.AreEqual("value 1", stringStack.DeepPeek(1));
+    Assert.AreEqual("[value 1 value 2]", stringStack.ToString());
+    Assert.AreEqual("value 2", stringStack.DeepPeek(1));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
 
+    Assert.AreEqual(2, stringStack.Count);
     stringStack.Shove("value 3", 1);
     Assert.AreEqual(3, stringStack.Count);
+    Assert.AreEqual("[value 1 value 3 value 2]", stringStack.ToString());
+    Assert.AreEqual("value 2", stringStack.DeepPeek(2));
+    Assert.AreEqual("value 3", stringStack.DeepPeek(1));
+    Assert.AreEqual("value 1", stringStack.DeepPeek(0));
     Assert.AreEqual("value 2", stringStack.Peek(0));
     Assert.AreEqual("value 3", stringStack.Peek(1));
     Assert.AreEqual("value 1", stringStack.Peek(2));

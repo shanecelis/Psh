@@ -256,7 +256,7 @@ public class Interpreter {
   public void SetInstructions(Program inInstructionList) {
     _randomGenerators.Clear();
     for (int n = 0; n < inInstructionList.Size(); n++) {
-      object o = inInstructionList.Peek(n);
+      object o = inInstructionList.DeepPeek(n);
       string name = null;
       if (o is Instruction) {
         if (_instructions.Keys.Contains(o))
