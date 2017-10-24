@@ -69,7 +69,7 @@ public abstract class GA {
   /// </summary>
   /// <exception cref="System.Exception"/>
   public static GA GAWithParameters(Dictionary<string, string> inParams) {
-    Type cls = Type.GetType(inParams.Get("problem-class"));
+    Type cls = Type.GetType(inParams["problem-class"]);
     object gaObject = System.Activator.CreateInstance(cls);
     if (!(gaObject is GA)) {
       throw (new Exception("problem-class must inherit from class GA"));
@@ -146,8 +146,8 @@ public abstract class GA {
   /// <returns>the string value for the parameter.</returns>
   /// <exception cref="System.Exception"/>
   protected internal virtual string GetParam(string inName, bool inOptional) {
-    string value = _parameters.Get(inName);
-    if (value == null && !inOptional) {
+    string value;
+    if (! _parameters.TryGetValue(inName, out value) && !inOptional) {
       throw new Exception("Could not locate required parameter \"" + inName + "\"");
     }
     return value;
@@ -176,12 +176,13 @@ public abstract class GA {
   /// <returns>the float value for the parameter.</returns>
   /// <exception cref="System.Exception"/>
   protected internal virtual float GetFloatParam(string inName, bool inOptional) {
-    string value = _parameters.Get(inName);
-    if (value == null && !inOptional) {
-      throw new Exception("Could not locate required parameter \"" + inName + "\"");
-    }
-    if (value == null) {
-      return float.NaN;
+    string value;
+    if (! _parameters.TryGetValue(inName, out value)) {
+      if (! inOptional) {
+        throw new Exception("Could not locate required parameter \"" + inName + "\"");
+      } else {
+        return float.NaN;
+      }
     }
     return float.Parse(value);
   }

@@ -51,7 +51,7 @@ public abstract class PredictionGA : GA {
   /// <returns/>
   /// <exception cref="System.Exception"></exception>
   public static PredictionGA PredictionGAWithParameters(PushGP inSolutionGA, Dictionary<string, string> inParams) {
-    Type cls = Type.GetType(inParams.Get("problem-class"));
+    Type cls = Type.GetType(inParams["problem-class"]);
     object gaObject = System.Activator.CreateInstance(cls);
     if (!(gaObject is PredictionGA)) {
       throw (new Exception("Predictor problem-class must inherit from" + " class PredictorGA"));

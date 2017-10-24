@@ -157,16 +157,16 @@ public class CEFloatSymbolicRegression : PushGP {
   /// <exception cref="System.Exception"/>
   private Dictionary<string, string> GetPredictorParameters(Dictionary<string, string> parameters) {
     Dictionary<string, string> predictorParameters = new Dictionary<string, string>();
-    predictorParameters.Put("max-generations", int.MaxValue.ToString());
-    predictorParameters.Put("problem-class", GetParam("PREDICTOR-problem-class"));
-    predictorParameters.Put("individual-class", GetParam("PREDICTOR-individual-class"));
-    predictorParameters.Put("population-size", GetParam("PREDICTOR-population-size"));
-    predictorParameters.Put("mutation-percent", GetParam("PREDICTOR-mutation-percent"));
-    predictorParameters.Put("crossover-percent", GetParam("PREDICTOR-crossover-percent"));
-    predictorParameters.Put("tournament-size", GetParam("PREDICTOR-tournament-size"));
-    predictorParameters.Put("trivial-geography-radius", GetParam("PREDICTOR-trivial-geography-radius"));
-    predictorParameters.Put("generations-between-trainers", GetParam("PREDICTOR-generations-between-trainers"));
-    predictorParameters.Put("trainer-population-size", GetParam("PREDICTOR-trainer-population-size"));
+    predictorParameters["max-generations"] = int.MaxValue.ToString();
+    predictorParameters["problem-class"] = GetParam("PREDICTOR-problem-class");
+    predictorParameters["individual-class"] = GetParam("PREDICTOR-individual-class");
+    predictorParameters["population-size"] = GetParam("PREDICTOR-population-size");
+    predictorParameters["mutation-percent"] = GetParam("PREDICTOR-mutation-percent");
+    predictorParameters["crossover-percent"] = GetParam("PREDICTOR-crossover-percent");
+    predictorParameters["tournament-size"] = GetParam("PREDICTOR-tournament-size");
+    predictorParameters["trivial-geography-radius"] = GetParam("PREDICTOR-trivial-geography-radius");
+    predictorParameters["generations-between-trainers"] = GetParam("PREDICTOR-generations-between-trainers");
+    predictorParameters["trainer-population-size"] = GetParam("PREDICTOR-trainer-population-size");
     return predictorParameters;
   }
 

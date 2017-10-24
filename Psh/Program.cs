@@ -257,7 +257,7 @@ public class Program : ObjectStack {
   public override string ToString() {
     var result = new StringBuilder("(");
     for (int n = 0; n < _size; n++) {
-      if (n != 0 && n != _size - 1) {
+      if (n != 0) {
         result.Append(" ");
       }
       result.Append(_stack[n].ToString());

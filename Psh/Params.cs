@@ -83,7 +83,7 @@ public class Params {
               linenumber++;
               value += SharpenMinimal.Extensions.Trim(line);
             }
-            inMap.Put(name, value);
+            inMap[name] = value;
           }
         }
       }

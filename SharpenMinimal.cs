@@ -61,24 +61,24 @@ public static class Extensions {
     return d.Contains(key);
   }
 
-  public static U Get<T, U>(this IDictionary<T, U> d, T key) {
+  public static U Get2<T, U>(this IDictionary<T, U> d, T key) {
     U val;
     d.TryGetValue(key, out val);
     return val;
   }
 
-  public static object Get(this IDictionary d, object key) {
+  public static object Get2(this IDictionary d, object key) {
     return d[key];
   }
 
-  public static U Put<T, U>(this IDictionary<T, U> d, T key, U value) {
+  public static U Put2<T, U>(this IDictionary<T, U> d, T key, U value) {
     U old;
     d.TryGetValue(key, out old);
     d[key] = value;
     return old;
   }
 
-  public static object Put(this IDictionary d, object key, object value) {
+  public static object Put2(this IDictionary d, object key, object value) {
     object old = d[key];
     d[key] = value;
     return old;
@@ -89,7 +89,7 @@ public static class Extensions {
       d[val.Key] = val.Value;
   }
 
-  public static object Put(this Hashtable d, object key, object value) {
+  public static object Put2(this Hashtable d, object key, object value) {
     object old = d[key];
     d[key] = value;
     return old;

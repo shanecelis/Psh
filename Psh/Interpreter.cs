@@ -70,6 +70,8 @@ public class Interpreter {
 
   protected internal int   _maxPointsInProgram;
 
+  // XXX This value needs to be set at the beginning somehow.
+  // Or setting it is just more complicated.
   public bool caseSensitive = false;
 
   protected internal Random Rng = new Random();
@@ -86,7 +88,7 @@ public class Interpreter {
     // This arraylist will hold all custom stacks that can be created by the
     // problem classes
     /* Since the _inputStack will not change after initialization, it will not
-     * need a frame stack.
+      * need a frame stack.
     */
     AddStack("exec",    _execStack);
     AddStack("code",    _codeStack);
@@ -220,8 +222,8 @@ public class Interpreter {
     DefineInstruction("input.inall", new InputInAll(_inputStack));
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
     DefineInstruction("input.stackdepth", new Depth(_inputStack));
-    _generators.Put("float.erc", new Interpreter.FloatAtomGenerator());
-    _generators.Put("integer.erc", new Interpreter.IntAtomGenerator());
+    _generators[InstructionCase("float.erc")] = new Interpreter.FloatAtomGenerator();
+    _generators[InstructionCase("integer.erc")] = new Interpreter.IntAtomGenerator();
   }
 
   // XXX What are frames?
@@ -287,22 +289,22 @@ public class Interpreter {
           //   string key = (string)keys[i];
           foreach (string key in _instructions.Keys) {
             if (key.IndexOf(registeredType) == 0) {
-              Interpreter.AtomGenerator g = _generators.Get(key);
+              Interpreter.AtomGenerator g = _generators[key];
               _randomGenerators.Add(g);
             }
           }
           if (registeredType.Equals("boolean")) {
-            var t = _generators.Get("true");
+            var t = _generators["true"];
             _randomGenerators.Add(t);
-            var f = _generators.Get("false");
+            var f = _generators["false"];
             _randomGenerators.Add(f);
           }
           if (registeredType.Equals("integer")) {
-            var g = _generators.Get("integer.erc");
+            var g = _generators["integer.erc"];
             _randomGenerators.Add(g);
           }
           if (registeredType.Equals("float")) {
-            var g = _generators.Get("float.erc");
+            var g = _generators["float.erc"];
             _randomGenerators.Add(g);
           }
         }
@@ -312,11 +314,11 @@ public class Interpreter {
           int num = System.Convert.ToInt32(strnum);
           for (int i = 0; i < num; i++) {
             DefineInstruction("input.in" + i, new InputInN(i));
-            var g = _generators.Get("input.in" + i);
+            var g = _generators["input.in" + i];
             _randomGenerators.Add(g);
           }
         } else {
-          var g = _generators.Get(name);
+          var g = _generators[name];
           if (g == null) {
             throw new Exception("Unknown instruction \"" + name + "\" in instruction set");
           } else {
@@ -331,9 +333,10 @@ public class Interpreter {
     Define a new instruction and add it to the random generators.
    */
   public void AddInstruction(string inName, Instruction inInstruction) {
+    inName = InstructionCase(inName);
     var iag = new Interpreter.InstructionAtomGenerator(inName);
-    _instructions.Put(inName, inInstruction);
-    _generators.Put(inName, iag);
+    _instructions[inName] = inInstruction;
+    _generators[inName] = iag;
     _randomGenerators.Add(iag);
   }
 
@@ -343,6 +346,10 @@ public class Interpreter {
 
   public void DefineInstruction<T>(string inName, Func<T> f) {
     DefineInstruction(inName, new NullaryInstruction<T>(f));
+  }
+
+  public void DefineInstruction(string inName, Action f) {
+    DefineInstruction(inName, new NullaryAction(f));
   }
 
   public void DefineInstruction<T>(string inName, Func<T,T> f) {
@@ -378,11 +385,9 @@ public class Interpreter {
   }
 
   public void DefineInstruction(string inName, Instruction inInstruction) {
-    if (! caseSensitive) {
-      inName = inName.ToUpper();
-    }
-    _instructions.Put(inName, inInstruction);
-    _generators.Put(inName, new Interpreter.InstructionAtomGenerator(inName));
+    inName = InstructionCase(inName);
+    _instructions[inName] = inInstruction;
+    _generators[inName] = new Interpreter.InstructionAtomGenerator(inName);
   }
 
   protected internal void DefineStackInstructions(string inTypeName, Stack inStack) {
@@ -493,7 +498,7 @@ public class Interpreter {
       return 0;
     }
     if (inObject is string) {
-      Instruction i = (Instruction) _instructions.Get(caseSensitive ? inObject : ((string)inObject).ToUpper());
+      var i = (Instruction) _instructions[InstructionCase((string)inObject)];
       if (i != null) {
         i.Execute(this);
       } else {
@@ -615,26 +620,30 @@ public class Interpreter {
     // return list;
   }
 
+  public string InstructionCase(string instructionName) {
+    return caseSensitive ? instructionName : instructionName.ToLower();
+  }
+
   /// <summary>Returns a string of all the instructions used in this run.</summary>
   /// <returns/>
   public string GetInstructionsString() {
     // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
     // List<string> strings = new List<string>();
-    List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators.Get(key))).ToList();
+    List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators[key])).ToList();
     // string str = string.Empty;
     // for (int i = 0; i < keys.Length; i++)
     // {
     //   string key = (string)keys[i];
-    //   if (_randomGenerators.Contains(_generators.Get(key)))
+    //   if (_randomGenerators.Contains(_generators[key))]
     //   {
     //     strings.Add(key);
     //   }
     // }
-    if (_randomGenerators.Contains(_generators.Get("float.erc"))) {
-      strings.Add("float.erc");
+    if (_randomGenerators.Contains(_generators[InstructionCase("float.erc")])) {
+      strings.Add(InstructionCase("float.erc"));
     }
-    if (_randomGenerators.Contains(_generators.Get("integer.erc"))) {
-      strings.Add("integer.erc");
+    if (_randomGenerators.Contains(_generators[InstructionCase("integer.erc")])) {
+      strings.Add(InstructionCase("integer.erc"));
     }
     return strings.OrderBy(x => x).Aggregate((current, next) => current + next);
     // strings.Sort();
@@ -649,7 +658,7 @@ public class Interpreter {
   /// <param name="instr"/>
   /// <returns>the Instruction or null if no such Instruction.</returns>
   public Instruction GetInstruction(string instr) {
-    return _instructions.Get(instr);
+    return _instructions[instr];
   }
 
   /// <summary>Returns the number of evaluation executions so far this run.</summary>
@@ -676,7 +685,11 @@ public class Interpreter {
   /// </returns>
   public object RandomAtom() {
     int index = Rng.Next(_randomGenerators.Count);
-    return _randomGenerators[index].Generate(this);
+    try {
+      return _randomGenerators[index].Generate(this);
+    } catch (Exception e) {
+      throw new Exception("got bad generator for index " + index + " rg " + _randomGenerators[index], e);
+    }
   }
 
   /// <summary>Generates a random Push program of a given size.</summary>
