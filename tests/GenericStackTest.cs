@@ -225,14 +225,14 @@ public class GenericStackTest
     Assert.AreEqual(2, stringStack.Count);
     // Assert.AreEqual("value 2", stringStack.DeepPeek(0));
     // Assert.AreEqual("value 1", stringStack.DeepPeek(1));
-    Assert.AreEqual("[value 1 value 2]", stringStack.ToString());
+    // Assert.AreEqual("[value 1 value 2]", stringStack.ToString());
     Assert.AreEqual("value 2", stringStack.DeepPeek(1));
     Assert.AreEqual("value 1", stringStack.DeepPeek(0));
 
     Assert.AreEqual(2, stringStack.Count);
     stringStack.Shove("value 3", 1);
     Assert.AreEqual(3, stringStack.Count);
-    Assert.AreEqual("[value 1 value 3 value 2]", stringStack.ToString());
+    // Assert.AreEqual("[value 1 value 3 value 2]", stringStack.ToString());
     Assert.AreEqual("value 2", stringStack.DeepPeek(2));
     Assert.AreEqual("value 3", stringStack.DeepPeek(1));
     Assert.AreEqual("value 1", stringStack.DeepPeek(0));
@@ -240,6 +240,14 @@ public class GenericStackTest
     Assert.AreEqual("value 3", stringStack.Peek(1));
     Assert.AreEqual("value 1", stringStack.Peek(2));
 
+  }
+
+  [Test] public void TestTop() {
+    GenericStack<string> stringStack = new GenericStack<string>();
+    stringStack.Push("Hi");
+    Assert.AreEqual("Hi", stringStack.Top());
+    stringStack.Pop();
+    Assert.AreEqual(null, stringStack.Top());
   }
 }
 }

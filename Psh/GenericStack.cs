@@ -133,7 +133,7 @@ public class GenericStack<T> : List<T>, Stack {
 
 
   public virtual T Top() {
-    return this.Last();
+    return Count != 0 ? this.Last() : default(T);
     // return Peek(Count - 1);
   }
 
@@ -269,9 +269,10 @@ public class GenericStack<T> : List<T>, Stack {
   public override string ToString() {
     var result = new StringBuilder("[");
     // Why does this happen backwards?
-    // for (int n = Count - 1; n >= 0; n--) {
-    for (int n = 0; n < Count; n++) {
-      if (n != 0) {
+    for (int n = Count - 1; n >= 0; n--) {
+    // for (int n = 0; n < Count; n++) {
+      // if (n != 0) {
+      if (n != Count - 1) {
         result.Append(" ");
       }
       result.Append(this[n].ToString());

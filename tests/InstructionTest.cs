@@ -30,7 +30,7 @@ public class InstructionTest
   protected FloatStack fstack = null;
   protected BooleanStack bstack = null;
 
-  // Sets things up before each and every test in the test case
+  // Sets things up before each test.
   [SetUp]
   protected void setUp() 
   {
@@ -244,7 +244,8 @@ public class InstructionTest
   public void StampRepresentation() {
     istack.Push(1);
     istack.Push(0);
-    Assert.AreEqual("[1 0]", istack.ToString());
+    // Assert.AreEqual("[1 0]", istack.ToString());
+    Assert.AreEqual("[0 1]", istack.ToString());
     Assert.AreEqual(0, istack.Pop());
     Assert.AreEqual(1, istack.Pop());
     // Assert.AreEqual(new [] { 1, 2, 3}, new [] { 1, 0, 4, 5});

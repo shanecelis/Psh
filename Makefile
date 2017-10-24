@@ -27,12 +27,17 @@ LIBRARY = $(MAIN_FILE).dll
 INSTALL_LOCATION = /Users/shane/unity/Eye\ Shader/Assets/Push3
 NUNIT_DIR = NUnit.Framework-3.8.1/bin/net-4.0
 
-all: $(LIBRARY) $(EXECUTABLE) Tests.dll
+all: $(LIBRARY) $(EXECUTABLE) Tests.dll PshInspector.exe
 
-$(EXECUTABLE): $(LIBRARY) PshGP.cs
-	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) PshGP.cs -out:$(EXECUTABLE) -main:$(MAIN_FILE)
+# I thought it'd be nice to not recompile everything.  But it's just a hassle so forget it.
+# $(EXECUTABLE): $(LIBRARY) PshGP.cs
+# 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) PshGP.cs -out:$(EXECUTABLE) -main:$(MAIN_FILE)
 
-# $(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) $(MAIN_FILE).cs -out:$(EXECUTABLE)
+# $(EXECUTABLE): $(CSHARP_SOURCE_FILES) PshGP.cs
+# 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) $(CSHARP_SOURCE_FILES) PshGP.cs -out:$(EXECUTABLE) -main:$(MAIN_FILE)
+
+%.exe: %.cs $(CSHARP_SOURCE_FILES)
+	$(CSHARP_COMPILER) $(CSHARP_FLAGS) $(CSHARP_SOURCE_FILES) $< -out:$@ -main:$(basename $(notdir $<))
 
 $(LIBRARY): $(CSHARP_SOURCE_FILES)
 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library $(CSHARP_SOURCE_FILES) -out:$(LIBRARY)
@@ -44,7 +49,7 @@ Tests.dll: $(CSHARP_TEST_FILES) $(LIBRARY)
 test: Tests.dll
 	$(MONO) --debug $(NUNIT_DIR)/nunitlite-runner.exe Tests.dll
 
-run: all
+sample-run: all
 	$(RUN_EXE) ./$(EXECUTABLE) gpsamples/intreg1.pushgp
 
 install: $(LIBRARY)
