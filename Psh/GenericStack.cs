@@ -43,47 +43,48 @@ public class GenericStack<T> : List<T>, Stack {
     return Count;
   }
 
-  // public bool Equals(object inOther) {
-  //   if (this == inOther) {
-  //     return true;
-  //   }
-  //   // Sadly, because generics are implemented using type erasure,
-  //   // a GenericStack<A> will be the same class as a GenericStack<B>,
-  //   // this being GenericStack. So the best we can do here is be assured
-  //   // that inOther is at least a GenericStack.
-  //   //
-  //   // This just means that every empty stack is the same as every other
-  //   // empty stack.
-  //   if (inOther.GetType() != GetType()) {
-  //     return false;
-  //   }
-  //   return ((GenericStack<T>)inOther).Comparestack(this, Count);
-  // }
-
-  // public int GetHashCode() {
-  //   int hash = GetType().GetHashCode();
-  //   hash = 37 * hash + /*Arrays.*/DeepHashCode(this.this);
-  //   return hash;
-  // }
-
-  // private int DeepHashCode(T[] array) {
-  //   int hash = 0;
-  //   for (int i = 0; i < array.Length; i++)
-  //     hash ^= array[i].GetHashCode();
-  //   return hash;
-  // }
-
-  internal virtual bool Comparestack(T[] inOther, int inOtherSize) {
-    if (inOtherSize != Count) {
+  public override bool Equals(object inOther) {
+    if (this == inOther) {
+      return true;
+    }
+    // Sadly, because generics are implemented using type erasure,
+    // a GenericStack<A> will be the same class as a GenericStack<B>,
+    // this being GenericStack. So the best we can do here is be assured
+    // that inOther is at least a GenericStack.
+    //
+    // This just means that every empty stack is the same as every other
+    // empty stack.
+    if (inOther.GetType() != GetType()) {
       return false;
     }
-    for (int n = 0; n < Count; n++) {
-      if (!this[n].Equals(inOther[n])) {
-        return false;
-      }
-    }
-    return true;
+    return this.SequenceEqual((GenericStack<T>)inOther);
   }
+
+  public override int GetHashCode() {
+    int hash = GetType().GetHashCode();
+    hash = 37 * hash + /*Arrays.*/DeepHashCode(this);
+    return hash;
+  }
+
+  private int DeepHashCode(List<T> array) {
+    int hash = 0;
+    for (int i = 0; i < array.Count; i++)
+      hash ^= array[i].GetHashCode();
+    return hash;
+  }
+
+  // internal virtual bool Comparestack(T[] inOther, int inOtherSize) {
+  //   if (inOtherSize != Count) {
+  //     return false;
+  //   }
+  //   this.SequenceEqual(
+  //   for (int n = 0; n < Count; n++) {
+  //     if (!this[n].Equals(inOther[n])) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
   // internal void Resize(int inSize) {
   //   T[] newstack = new T[inSize];
@@ -94,12 +95,42 @@ public class GenericStack<T> : List<T>, Stack {
   //   _maxsize = inSize;
   // }
 
-  public virtual T Peek(int inIndex) {
-    if (inIndex >= 0 && inIndex < Count) {
-      return this[inIndex];
+  // XXX This seems like strange semantics for Peek().
+  // I'd expect Peek() == Pop()
+  public virtual T Peek(int n) {
+
+    if (n < 0)
+      n = 0;
+    if (n >= Count) {
+      n = Count - 1;
     }
-    return default(T);
+    // n = 0 is the same as push, so
+    // the position in the array we insert at is
+    // Count-n.
+    return this[Count - n - 1];
+    // if (inIndex >= 0 && inIndex < Count) {
+    //   return this[inIndex];
+    // }
+    // return default(T);
   }
+
+  public virtual T DeepPeek(int n) {
+
+    if (n < 0)
+      n = 0;
+    if (n >= Count) {
+      n = Count - 1;
+    }
+    // n = 0 is the same as push, so
+    // the position in the array we insert at is
+    // Count-n.
+    return this[n];
+    // if (inIndex >= 0 && inIndex < Count) {
+    //   return this[inIndex];
+    // }
+    // return default(T);
+  }
+
 
   public virtual T Top() {
     return this.Last();
@@ -141,22 +172,15 @@ public class GenericStack<T> : List<T>, Stack {
   }
 
   public virtual void Shove(T obj, int n) {
-    if (n > Count) {
-      n = Count;
+    if (n < 0)
+      n = 0;
+    if (n >= Count) {
+      n = Count - 1;
     }
     // n = 0 is the same as push, so
     // the position in the array we insert at is
     // Count-n.
-    Insert(n, obj);
-    // n = Count - n;
-    // for (int i = Count; i > n; i--) {
-    //   this[i] = this[i - 1];
-    // }
-    // this[n] = obj;
-    // Count++;
-    // if (Count >= _maxsize) {
-    //   Resize(_maxsize + _blocksize);
-    // }
+    Insert(Count - n - 1, obj);
   }
 
   public void Shove(int inIndex) {
@@ -210,7 +234,7 @@ public class GenericStack<T> : List<T>, Stack {
     }
   }
 
-  public void Yankdup(int inIndex) {
+  public void YankDup(int inIndex) {
     if (Count > 0) {
       if (inIndex < 0) {
         inIndex = 0;

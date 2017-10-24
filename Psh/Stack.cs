@@ -19,8 +19,6 @@ namespace Psh {
 /// <summary>Abstract class for implementing stacks.</summary>
 public interface Stack {
 
-  // void Resize(int inSize);
-
   void Dup();
 
   void Rot();
@@ -31,7 +29,7 @@ public interface Stack {
 
   void Yank(int inIndex);
 
-  void Yankdup(int inIndex);
+  void YankDup(int inIndex);
 
   void Clear();
 

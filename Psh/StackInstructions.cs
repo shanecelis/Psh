@@ -154,7 +154,7 @@ internal class YankDup : StackInstruction {
     if (iStack.Size() > 0) {
       int index = iStack.Pop();
       if (_stack.Size() > 0) {
-        _stack.Yankdup(index);
+        _stack.YankDup(index);
       } else {
         iStack.Push(index);
       }
