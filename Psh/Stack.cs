@@ -17,43 +17,27 @@ using System;
 
 namespace Psh {
 /// <summary>Abstract class for implementing stacks.</summary>
-public abstract class Stack {
+public interface Stack {
 
-  protected internal int _size;
+  // void Resize(int inSize);
 
-  protected internal int _maxsize;
+  void Dup();
 
-  internal Stack() {
-    _size = 0;
-    Resize(8);
-  }
+  void Rot();
 
-  internal abstract void Resize(int inSize);
+  void Shove(int inIndex);
 
-  internal abstract void Dup();
+  void Swap();
 
-  internal abstract void Rot();
+  void Yank(int inIndex);
 
-  internal abstract void Shove(int inIndex);
+  void Yankdup(int inIndex);
 
-  internal abstract void Swap();
+  void Clear();
 
-  internal abstract void Yank(int inIndex);
+  int Size();
 
-  internal abstract void Yankdup(int inIndex);
-
-  public virtual void Clear() {
-    _size = 0;
-  }
-
-  public virtual int Size() {
-    return _size;
-  }
-
-  public virtual void Popdiscard() {
-    if (_size > 0) {
-      _size--;
-    }
-  }
+  void Popdiscard();
 }
+
 }

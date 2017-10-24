@@ -31,49 +31,47 @@ public class ProgramTest {
 		q.Parse( "( 1.0 ( TEST 2 ( 3 ) ) )" );
 		r.Parse( "( 2.0 ( TEST 2 ( 3 ) ) )" );
 
-		Assert.AreEqual(p, r);
+		Assert.AreNotEqual(p, r);
 		Assert.AreEqual(p, q);
 	}
 
-  // [Test]
-	// public void testParse() {
-	// 	// Parse a program, and then re-parse its string representation.
-	// 	// They should be equal.
+  [Test]
+	public void testParse() {
+		// Parse a program, and then re-parse its string representation.
+		// They should be equal.
 
-	// 	Program p = new Program(), q = new Program();
-	// 	String program = "(1(2) (3) TEST TEST (2 TEST))";
+		Program p = new Program(), q = new Program();
+		var program = "(1(2) (3) TEST TEST (2 TEST))";
 
-	// 	p.Parse( program );
-	// 	q.Parse( p.toString() );
+		p.Parse( program );
+		q.Parse( p.ToString() );
 
-	// 	assertTrue( p.equals( q ) );
-	// }
+		Assert.AreEqual( p, q );
+	}
 
-  // [Test]
-	// public void testSubtreeFetch() {
-	// 	Program p = new Program();
-	// 	p.Parse( "( 2.0 ( TEST 2 ( 3 ) ) )" );
+  [Test]
+	public void testSubtreeFetch() {
+		Program p = new Program();
+		p.Parse( "( 2.0 ( TEST 2 ( 3 ) ) )" );
+	}
 
-	// 	assertTrue( true );
-	// }
+  [Test]
+	public void testSubtreeReplace() {
+		Program p = new Program();
+		Program q = new Program();
 
-  // [Test]
-	// public void testSubtreeReplace() {
-	// 	Program p = new Program();
-	// 	Program q = new Program();
+		p.Parse( "( 2.0 ( TEST 2 ( 3 ) ) )" );
 
-	// 	p.Parse( "( 2.0 ( TEST 2 ( 3 ) ) )" );
+		p.ReplaceSubtree( 0, 3 );
+		p.ReplaceSubtree( 2, "TEST2" );
+		p.ReplaceSubtree( 3, new Program( "( X )" ) );
 
-	// 	p.ReplaceSubtree( 0, 3 );
-	// 	p.ReplaceSubtree( 2, "TEST2" );
-	// 	p.ReplaceSubtree( 3, new Program( "( X )" ) );
+		// Console.Out.WriteLine( p );
 
-	// 	Console.Out.WriteLine( p );
+		q.Parse( "( 3 ( TEST2 ( X ) ( 3 ) ) )" );
 
-	// 	q.Parse( "( 3 ( TEST2 ( X ) ( 3 ) ) )" );
-
-	// 	assertTrue( q.equals( p ) );
-	// }
+		Assert.AreEqual( p, q );
+	}
 
 }
 }

@@ -107,7 +107,7 @@ public class Program : ObjectStack {
   public int ProgramSize() {
     int size = _size;
     for (int n = 0; n < _size; n++) {
-      object o = _stack[n];
+      object o = this[n];
       if (o is Psh.Program) {
         size += ((Psh.Program)o).ProgramSize();
       }
@@ -134,11 +134,11 @@ public class Program : ObjectStack {
   /// <returns>The program subtree.</returns>
   public object Subtree(int inIndex) {
     if (inIndex < _size) {
-      return _stack[inIndex];
+      return this[inIndex];
     } else {
       int startIndex = _size;
       for (int n = 0; n < _size; n++) {
-        object o = _stack[n];
+        object o = this[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
           int length = sub.ProgramSize();
@@ -158,12 +158,12 @@ public class Program : ObjectStack {
   /// <returns>True if a replacement was made (the index was valid).</returns>
   public bool ReplaceSubtree(int inIndex, object inReplacement) {
     if (inIndex < _size) {
-      _stack[inIndex] = Cloneforprogram(inReplacement);
+      this[inIndex] = Cloneforprogram(inReplacement);
       return true;
     } else {
       int startIndex = _size;
       for (int n = 0; n < _size; n++) {
-        object o = _stack[n];
+        object o = this[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
           int length = sub.ProgramSize();
@@ -186,22 +186,22 @@ public class Program : ObjectStack {
       Clear();
       for (int i = 0; i < replacement._size; i++) {
         if (inIndex == i) {
-          if (replacement._stack[i] is Psh.Program) {
-            Psh.Program p = (Psh.Program)replacement._stack[i];
+          if (replacement[i] is Psh.Program) {
+            Psh.Program p = (Psh.Program)replacement[i];
             for (int j = 0; j < p._size; j++) {
-              this.Push(p._stack[j]);
+              this.Push(p[j]);
             }
           } else {
-            this.Push(replacement._stack[i]);
+            this.Push(replacement[i]);
           }
         } else {
-          this.Push(replacement._stack[i]);
+          this.Push(replacement[i]);
         }
       }
     } else {
       int startIndex = _size;
       for (int n = 0; n < _size; n++) {
-        object o = _stack[n];
+        object o = this[n];
         if (o is Psh.Program) {
           Psh.Program sub = (Psh.Program)o;
           int length = sub.ProgramSize();
@@ -219,7 +219,7 @@ public class Program : ObjectStack {
   /// <param name="inOther">The program to receive the copy of this program</param>
   public void CopyTo(Psh.Program inOther) {
     for (int n = 0; n < _size; n++) {
-      inOther.Push(_stack[n]);
+      inOther.Push(this[n]);
     }
   }
 
@@ -260,7 +260,7 @@ public class Program : ObjectStack {
       if (n != 0) {
         result.Append(" ");
       }
-      result.Append(_stack[n].ToString());
+      result.Append(this[n].ToString());
     }
     result.Append(")");
     return result.ToString();

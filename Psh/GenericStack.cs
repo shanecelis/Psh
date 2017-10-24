@@ -14,94 +14,109 @@
 * limitations under the License.
 */
 using System;
+using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Psh {
 /// <summary>The Push stack type for generic data (Strings, Programs, etc.)</summary>
-public class GenericStack<T> : Stack {
-  protected internal T[] _stack;
+public class GenericStack<T> : List<T>, Stack {
+  // protected internal T[] _stack;
 
-  internal const int _blocksize = 16;
+  // internal const int _blocksize = 16;
 
   public Type stackType {
     get { return typeof(T); }
   }
 
+  public int _size {
+    get { return Count; }
+  }
+
   public virtual void PushAllReverse(GenericStack<T> inOther) {
-    for (int n = _size - 1; n >= 0; n--) {
-      inOther.Push(_stack[n]);
+    for (int n = Count - 1; n >= 0; n--) {
+      inOther.Push(this[n]);
     }
   }
 
-  public override bool Equals(object inOther) {
-    if (this == inOther) {
-      return true;
-    }
-    // Sadly, because generics are implemented using type erasure,
-    // a GenericStack<A> will be the same class as a GenericStack<B>,
-    // this being GenericStack. So the best we can do here is be assured
-    // that inOther is at least a GenericStack.
-    //
-    // This just means that every empty stack is the same as every other
-    // empty stack.
-    if (inOther.GetType() != GetType()) {
-      return false;
-    }
-    return ((GenericStack<T>)inOther).Comparestack(_stack, _size);
+  public int Size() {
+    return Count;
   }
 
-  public override int GetHashCode() {
-    int hash = GetType().GetHashCode();
-    hash = 37 * hash + /*Arrays.*/DeepHashCode(this._stack);
-    return hash;
-  }
+  // public bool Equals(object inOther) {
+  //   if (this == inOther) {
+  //     return true;
+  //   }
+  //   // Sadly, because generics are implemented using type erasure,
+  //   // a GenericStack<A> will be the same class as a GenericStack<B>,
+  //   // this being GenericStack. So the best we can do here is be assured
+  //   // that inOther is at least a GenericStack.
+  //   //
+  //   // This just means that every empty stack is the same as every other
+  //   // empty stack.
+  //   if (inOther.GetType() != GetType()) {
+  //     return false;
+  //   }
+  //   return ((GenericStack<T>)inOther).Comparestack(this, Count);
+  // }
 
-  private int DeepHashCode(T[] array) {
-    int hash = 0;
-    for (int i = 0; i < array.Length; i++)
-      hash ^= array[i].GetHashCode();
-    return hash;
-  }
+  // public int GetHashCode() {
+  //   int hash = GetType().GetHashCode();
+  //   hash = 37 * hash + /*Arrays.*/DeepHashCode(this.this);
+  //   return hash;
+  // }
+
+  // private int DeepHashCode(T[] array) {
+  //   int hash = 0;
+  //   for (int i = 0; i < array.Length; i++)
+  //     hash ^= array[i].GetHashCode();
+  //   return hash;
+  // }
 
   internal virtual bool Comparestack(T[] inOther, int inOtherSize) {
-    if (inOtherSize != _size) {
+    if (inOtherSize != Count) {
       return false;
     }
-    for (int n = 0; n < _size; n++) {
-      if (!_stack[n].Equals(inOther[n])) {
+    for (int n = 0; n < Count; n++) {
+      if (!this[n].Equals(inOther[n])) {
         return false;
       }
     }
     return true;
   }
 
-  internal override void Resize(int inSize) {
-    T[] newstack = new T[inSize];
-    if (_stack != null) {
-      System.Array.Copy(_stack, 0, newstack, 0, _size);
-    }
-    _stack = newstack;
-    _maxsize = inSize;
-  }
+  // internal void Resize(int inSize) {
+  //   T[] newstack = new T[inSize];
+  //   if (this != null) {
+  //     System.Array.Copy(this, 0, newstack, 0, Count);
+  //   }
+  //   this = newstack;
+  //   _maxsize = inSize;
+  // }
 
   public virtual T Peek(int inIndex) {
-    if (inIndex >= 0 && inIndex < _size) {
-      return _stack[inIndex];
+    if (inIndex >= 0 && inIndex < Count) {
+      return this[inIndex];
     }
     return default(T);
   }
 
   public virtual T Top() {
-    return Peek(_size - 1);
+    return this.Last();
+    // return Peek(Count - 1);
   }
 
   public virtual T Pop() {
     T result = default(T);
-    if (_size > 0) {
-      result = _stack[_size - 1];
-      _size--;
+    if (Count > 0) {
+      result = this[Count - 1];
+      RemoveAt(Count - 1);
     }
     return result;
+  }
+
+  public void Popdiscard() {
+    Pop();
   }
 
   public virtual void Push(T inValue) {
@@ -111,108 +126,110 @@ public class GenericStack<T> : Stack {
     // {
     //   inValue = (T)new Program((Program)inValue);
     // }
-    _stack[_size] = inValue;
-    _size++;
-    if (_size >= _maxsize) {
-      Resize(_maxsize + _blocksize);
-    }
+    // this[Count] = inValue;
+    // Count++;
+    // if (Count >= _maxsize) {
+    //   Resize(_maxsize + _blocksize);
+    // }
+    Add(inValue);
   }
 
-  internal override void Dup() {
-    if (_size > 0) {
-      Push(_stack[_size - 1]);
+  public void Dup() {
+    if (Count > 0) {
+      Push(this[Count - 1]);
     }
   }
 
   public virtual void Shove(T obj, int n) {
-    if (n > _size) {
-      n = _size;
+    if (n > Count) {
+      n = Count;
     }
     // n = 0 is the same as push, so
     // the position in the array we insert at is
-    // _size-n.
-    n = _size - n;
-    for (int i = _size; i > n; i--) {
-      _stack[i] = _stack[i - 1];
-    }
-    _stack[n] = obj;
-    _size++;
-    if (_size >= _maxsize) {
-      Resize(_maxsize + _blocksize);
-    }
+    // Count-n.
+    Insert(n, obj);
+    // n = Count - n;
+    // for (int i = Count; i > n; i--) {
+    //   this[i] = this[i - 1];
+    // }
+    // this[n] = obj;
+    // Count++;
+    // if (Count >= _maxsize) {
+    //   Resize(_maxsize + _blocksize);
+    // }
   }
 
-  internal override void Shove(int inIndex) {
-    if (_size > 0) {
+  public void Shove(int inIndex) {
+    if (Count > 0) {
       if (inIndex < 0) {
         inIndex = 0;
       }
-      if (inIndex > _size - 1) {
-        inIndex = _size - 1;
+      if (inIndex > Count - 1) {
+        inIndex = Count - 1;
       }
       T toShove = Top();
-      int shovedIndex = _size - inIndex - 1;
-      for (int i = _size - 1; i > shovedIndex; i--) {
-        _stack[i] = _stack[i - 1];
+      int shovedIndex = Count - inIndex - 1;
+      for (int i = Count - 1; i > shovedIndex; i--) {
+        this[i] = this[i - 1];
       }
-      _stack[shovedIndex] = toShove;
+      this[shovedIndex] = toShove;
     }
   }
 
-  internal override void Swap() {
-    if (_size > 1) {
-      T tmp = _stack[_size - 2];
-      _stack[_size - 2] = _stack[_size - 1];
-      _stack[_size - 1] = tmp;
+  public void Swap() {
+    if (Count > 1) {
+      T tmp = this[Count - 2];
+      this[Count - 2] = this[Count - 1];
+      this[Count - 1] = tmp;
     }
   }
 
-  internal override void Rot() {
-    if (_size > 2) {
-      T tmp = _stack[_size - 3];
-      _stack[_size - 3] = _stack[_size - 2];
-      _stack[_size - 2] = _stack[_size - 1];
-      _stack[_size - 1] = tmp;
+  public void Rot() {
+    if (Count > 2) {
+      T tmp = this[Count - 3];
+      this[Count - 3] = this[Count - 2];
+      this[Count - 2] = this[Count - 1];
+      this[Count - 1] = tmp;
     }
   }
 
-  internal override void Yank(int inIndex) {
-    if (_size > 0) {
+  public void Yank(int inIndex) {
+    if (Count > 0) {
       if (inIndex < 0) {
         inIndex = 0;
       }
-      if (inIndex > _size - 1) {
-        inIndex = _size - 1;
+      if (inIndex > Count - 1) {
+        inIndex = Count - 1;
       }
-      int yankedIndex = _size - inIndex - 1;
+      int yankedIndex = Count - inIndex - 1;
       T toYank = Peek(yankedIndex);
-      for (int i = yankedIndex; i < _size - 1; i++) {
-        _stack[i] = _stack[i + 1];
+      for (int i = yankedIndex; i < Count - 1; i++) {
+        this[i] = this[i + 1];
       }
-      _stack[_size - 1] = toYank;
+      this[Count - 1] = toYank;
     }
   }
 
-  internal override void Yankdup(int inIndex) {
-    if (_size > 0) {
+  public void Yankdup(int inIndex) {
+    if (Count > 0) {
       if (inIndex < 0) {
         inIndex = 0;
       }
-      if (inIndex > _size - 1) {
-        inIndex = _size - 1;
+      if (inIndex > Count - 1) {
+        inIndex = Count - 1;
       }
-      int yankedIndex = _size - inIndex - 1;
+      int yankedIndex = Count - inIndex - 1;
       Push(Peek(yankedIndex));
     }
   }
 
   public override string ToString() {
     var result = new StringBuilder("[");
-    for (int n = _size - 1; n >= 0; n--) {
-      if (n != _size - 1) {
+    for (int n = Count - 1; n >= 0; n--) {
+      if (n != Count - 1) {
         result.Append(" ");
       }
-      result.Append(_stack[n].ToString());
+      result.Append(this[n].ToString());
     }
     result.Append("]");
     return result.ToString();

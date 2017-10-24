@@ -15,6 +15,7 @@ CSHARP_FLAGS = -unsafe -debug -checked- -langversion:4
 
 #change to the environment compiler
 CSHARP_COMPILER = mcs
+MONO = mono
 # CSHARP_COMPILER = $(UNITY_HOME)/Unity.app/Contents/Mono/bin/mcs
 # CSHARP_COMPILER = $(UNITY_HOME)/Unity.app/Contents/MonoBleedingEdge/bin/mcs
 LIB = $(UNITY_HOME)/Unity.app/Contents/MonoBleedingEdge/lib/mono/4.0
@@ -24,10 +25,11 @@ RUN_EXE = $(UNITY_HOME)/Unity.app/Contents/MonoBleedingEdge/bin/mono
 EXECUTABLE = $(MAIN_FILE).exe
 LIBRARY = $(MAIN_FILE).dll
 INSTALL_LOCATION = /Users/shane/unity/Eye\ Shader/Assets/Push3
+NUNIT_DIR = NUnit.Framework-3.8.1/bin/net-4.0
 
 all: $(LIBRARY) $(EXECUTABLE) Tests.dll
 
-$(EXECUTABLE): $(LIBRARY)
+$(EXECUTABLE): $(LIBRARY) PshGP.cs
 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) PshGP.cs -out:$(EXECUTABLE) -main:$(MAIN_FILE)
 
 # $(CSHARP_COMPILER) $(CSHARP_FLAGS) -r:$(LIBRARY) $(MAIN_FILE).cs -out:$(EXECUTABLE)
@@ -37,10 +39,10 @@ $(LIBRARY): $(CSHARP_SOURCE_FILES)
 
 
 Tests.dll: $(CSHARP_TEST_FILES) $(LIBRARY)
-	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:NUnit.3.7.0/lib/net40/nunit.framework.dll -r:$(LIBRARY) $(CSHARP_TEST_FILES) -out:Tests.dll
+	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:$(NUNIT_DIR)/nunit.framework.dll -r:$(LIBRARY) $(CSHARP_TEST_FILES) -out:Tests.dll
 
 test: Tests.dll
-	echo hi
+	$(MONO) --debug $(NUNIT_DIR)/nunitlite-runner.exe Tests.dll
 
 run: all
 	$(RUN_EXE) ./$(EXECUTABLE) gpsamples/intreg1.pushgp

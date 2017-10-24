@@ -28,6 +28,7 @@ public class PshGP {
       Console.Out.WriteLine("Usage: PshGP paramfile [testprogram testcasenumber]");
       System.Environment.Exit(0);
     }
+    Console.Out.WriteLine("Hi");
     GA ga = null;
     // if (args[0].EndsWith(".gz"))
     // {

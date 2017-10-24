@@ -41,8 +41,7 @@ internal class ObjectConstant : ObjectStackInstruction {
 
   internal object _value;
 
-  public ObjectConstant(ObjectStack inStack, object inValue)
-  : base(inStack) {
+  public ObjectConstant(ObjectStack inStack, object inValue) : base(inStack) {
     _value = inValue;
   }
 
@@ -90,8 +89,8 @@ public class BinaryInstruction<X,Y,Z> : Instruction {
     var i2stack = inI.GetStack<Y>();
     var ostack = inI.GetStack<Z>();
     if (istack.Size() > 1 && i2stack.Size() > 1) {
-      X a = istack.Pop();
       Y b = i2stack.Pop();
+      X a = istack.Pop();
       Z c;
       try {
         c = func(a, b);

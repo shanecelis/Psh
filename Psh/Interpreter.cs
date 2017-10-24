@@ -498,8 +498,8 @@ public class Interpreter {
       return 0;
     }
     if (inObject is string) {
-      var i = (Instruction) _instructions[InstructionCase((string)inObject)];
-      if (i != null) {
+      Instruction i;
+      if (_instructions.TryGetValue(InstructionCase((string)inObject), out i)) {
         i.Execute(this);
       } else {
         _nameStack.Push((string)inObject);
@@ -509,7 +509,7 @@ public class Interpreter {
     return -1;
   }
 
-  public Psh.GenericStack<T> GetStack<T>() {
+  public GenericStack<T> GetStack<T>() {
     return _stacks
       .Select(x => x.Item2)
       .Where(y => y is GenericStack<T>)
