@@ -229,6 +229,7 @@ public abstract class PushGP : GA {
       GAIndividual i = _populations[_currentPopulation][n];
       EvaluateIndividual(i);
       totalFitness += i.GetFitness();
+      // fitness is minimized.
       if (i.GetFitness() < _bestMeanFitness) {
         _bestMeanFitness = i.GetFitness();
         _bestIndividual = n;
@@ -254,6 +255,7 @@ public abstract class PushGP : GA {
       float e = EvaluateTestCase(inIndividual, test._input, test._output);
       errors.Add(e);
     }
+    // XXX We measure the time but don't do anything with it.
     var t = sw.ElapsedMilliseconds;
     sw.Stop();
     inIndividual.SetFitness(AbsoluteAverageOfErrors(errors));

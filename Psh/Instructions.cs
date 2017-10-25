@@ -59,9 +59,17 @@ public class BinaryAction<X,Y> : Instruction {
   public void Execute(Interpreter inI) {
     var stack1 = inI.GetStack<X>();
     var stack2 = inI.GetStack<Y>();
-    if (stack1.Size() > 1 && stack2.Size() > 1) {
-      X a = stack1.Pop();
+
+    // This is no good any more, because X might equal Y in which case
+    // stack1.Size() > 1
+
+    // if (stack1.Size() > 0 && stack2.Size() > 0) {
+      if (stack2.Count == 0)
+        return;
       Y b = stack2.Pop();
+      if (stack1.Count == 0)
+        return;
+      X a = stack1.Pop();
       try {
         func(a, b);
       } catch (ArithmeticException) {
@@ -69,13 +77,13 @@ public class BinaryAction<X,Y> : Instruction {
       } catch (Exception e) {
         throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
       }
-    }
   }
 }
 
 public class BinaryAction<T> : BinaryAction<T,T> {
   public BinaryAction(Action<T,T> func) : base(func) {}
 }
+
 
 public class BinaryInstruction<X,Y,Z> : Instruction {
   private Func<X,Y,Z> func;
@@ -88,8 +96,12 @@ public class BinaryInstruction<X,Y,Z> : Instruction {
     var istack = inI.GetStack<X>();
     var i2stack = inI.GetStack<Y>();
     var ostack = inI.GetStack<Z>();
-    if (istack.Size() > 1 && i2stack.Size() > 1) {
+    // if (istack.Size() > 1 && i2stack.Size() > 1) {
+      if (i2stack.Count == 0)
+        return;
       Y b = i2stack.Pop();
+      if (istack.Count == 0)
+        return;
       X a = istack.Pop();
       Z c;
       try {
@@ -100,7 +112,6 @@ public class BinaryInstruction<X,Y,Z> : Instruction {
         throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
       }
       ostack.Push(c);
-    }
   }
 }
 

@@ -1,0 +1,11 @@
+* PshSharp TODO
+** Legacy TODOs
+- [ ] Make way to conduct multiple runs and get statistics about those runs, to compare things such as population, generations, or use of ERCs.
+- [ ] Add co-evolution fitness predictors. This will be a big project (make a git branch).
+  - [ ] Many GA an PushGP methods are can be overwritten in order to implement co-evolution.
+- [ ] Add instructions for integer.fromfloat, float.frominteger, etc.
+- [ ] During Auto-simplification, instead of only flattening or removing random points, could run a subprogram for a bit, and then replace it by whatever constants are left on the stacks. This would be useful when code like "boolean.stackdepth" is used only to get a 0 on the int stack.
+** New TODOs
+- [ ] implement missing instructions. See PushMissingInstructions.txt
+- [ ] caseSensitive can't really be set without hard coding it.
+  Too much happens in the constructor.

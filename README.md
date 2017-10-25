@@ -164,7 +164,7 @@ See previous change log from Java [Psh project](https://github.com/jonklein/Psh)
 Acknowledgments
 ===============
 
-Jon Klein, Tom Helmuth, Robert Baruch wrote the original Psh implementation in Java, which PshSharp is based on.  It was supported partially by National Science Foundation under Grant No. 1017817.
+Jon Klein, Tom Helmuth, Robert Baruch wrote the original Psh implementation in Java, which PshSharp is based on.  Psh was supported partially by National Science Foundation under Grant No. 1017817.
 
 Lee Spector, Chris Perry, Jon Klein, and Maarten Keijzer wrote the [Push 3.0 Programming Language Description](http://faculty.hampshire.edu/lspector/push3-description.html).
 

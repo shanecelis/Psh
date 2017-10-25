@@ -47,7 +47,7 @@ Tests.dll: $(CSHARP_TEST_FILES) $(LIBRARY)
 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:$(NUNIT_DIR)/nunit.framework.dll -r:$(LIBRARY) $(CSHARP_TEST_FILES) -out:Tests.dll
 
 test: Tests.dll
-	$(MONO) --debug $(NUNIT_DIR)/nunitlite-runner.exe Tests.dll
+	$(MONO) --debug $(NUNIT_DIR)/nunitlite-runner.exe -noresult -noheader Tests.dll
 
 sample-run: all
 	$(RUN_EXE) ./$(EXECUTABLE) gpsamples/intreg1.pushgp

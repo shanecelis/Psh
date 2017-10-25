@@ -1,4 +1,5 @@
-*.class
 .project
-.classpath
-/Run from CEFloatReg2
+*.exe
+*.mdb
+*.dll
+NUnit.Framework*

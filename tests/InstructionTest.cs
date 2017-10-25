@@ -673,5 +673,33 @@ public class InstructionTest
     Assert.AreEqual(fstack, interpreter.FloatStack());
     Assert.AreEqual(bstack, interpreter.BoolStack());
   }
+
+  [Test]
+  public void TestIntegerDefine() {
+    interpreter.Execute(new Program("(1 x)"));
+    Assert.AreEqual(1, interpreter.NameStack().Count);
+    Assert.AreEqual(1, interpreter.IntStack().Count);
+    interpreter.ClearStacks();
+    Assert.AreEqual(0, interpreter.FloatStack().Count);
+    Assert.AreEqual(0, interpreter.NameStack().Count);
+    Assert.AreEqual(0, interpreter.IntStack().Count);
+    interpreter.Execute(new Program("(1 x integer.define x)"), 3);
+    Assert.AreEqual(1, interpreter.IntStack().Count);
+    Assert.AreEqual(0, interpreter.FloatStack().Count);
+    Assert.AreEqual(1, interpreter.NameStack().Count);
+
+    // define "x"
+    interpreter.Step(1);
+    Assert.AreEqual(0, interpreter.FloatStack().Count);
+    Assert.AreEqual(0, interpreter.IntStack().Count);
+    Assert.AreEqual(0, interpreter.NameStack().Count);
+
+    // eval "x"
+    interpreter.Step(1);
+    Assert.AreEqual(0, interpreter.FloatStack().Count);
+    Assert.AreEqual(1, interpreter.IntStack().Count);
+    Assert.AreEqual(1, interpreter.IntStack().Top());
+    Assert.AreEqual(0, interpreter.NameStack().Count);
+  }
 }
 }

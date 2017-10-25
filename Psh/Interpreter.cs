@@ -155,9 +155,10 @@ public class Interpreter {
     DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
     DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
     DefineInstruction<int>("integer.log", (a) => unchecked((int) Math.Log(a)));
+    DefineInstruction("integer.define", (int i, string name) => { DefineConstant(name, i); });
     // DefineInstruction("integer.ln", new IntegerLn());
-    DefineInstruction("integer.fromfloat", (float a) => (int) a);//(new IntegerFromFloat());
-    DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);//new IntegerFromBoolean());
+    DefineInstruction("integer.fromfloat", (float a) => (int) a);
+    DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);
     DefineInstruction("integer.rand", new IntegerRand());
 
     DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));
@@ -182,6 +183,7 @@ public class Interpreter {
     DefineInstruction("float.frominteger", (int a) => (float) a);
     DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
     DefineInstruction("float.rand", new FloatRand());
+    DefineInstruction("float.define", (float i, string name) => { DefineConstant(name, i); });
 
     DefineInstruction<bool>("boolean.=", (a, b) => a == b);
     DefineInstruction<bool>("boolean.not", a => ! a);
@@ -191,6 +193,7 @@ public class Interpreter {
     DefineInstruction("boolean.frominteger", (int a) => a != 0);
     DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
     DefineInstruction("boolean.rand", new BoolRand());
+    DefineInstruction("boolean.define", (bool b, string name) => { DefineConstant(name, b); });
 
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.fromboolean", new CodeFromBoolean());
