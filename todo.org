@@ -9,3 +9,15 @@
 - [ ] implement missing instructions. See PushMissingInstructions.txt
 - [ ] caseSensitive can't really be set without hard coding it.
   Too much happens in the constructor.
+** Missing instructions
+- [X] boolean.define
+- [ ] code.define
+- [ ] code.definition
+- [ ] code.instructions
+- [ ] exec.define
+- [X] float.define
+- [X] integer.define
+- [ ] name.=
+- [ ] name.quote
+- [ ] name.rand
+- [ ] name.randboundname

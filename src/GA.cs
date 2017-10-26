@@ -55,7 +55,7 @@ public abstract class GA {
   protected internal Type _individualClass;
 
   [System.NonSerialized]
-  protected internal TextWriter _outputStream;
+  public TextWriter _outputStream;
 
   // protected internal Psh.Checkpoint _checkpoint;
 
@@ -499,22 +499,21 @@ public abstract class GA {
   /// by subclasses to customize GA behavior.
   /// </remarks>
   /// <exception cref="System.Exception"></exception>
-  protected internal virtual void BeginGeneration() {
-  }
+  protected internal abstract void BeginGeneration();
 
   /// <summary>Called at the end of each generation.</summary>
   /// <remarks>
   /// Called at the end of each generation. This method may be overridden by
   /// subclasses to customize GA behavior.
   /// </remarks>
-  protected internal virtual void EndGeneration() {
-  }
+  protected internal abstract void EndGeneration();
 
   protected internal abstract void InitIndividual(GAIndividual inIndividual);
 
   protected internal abstract void EvaluateIndividual(GAIndividual inIndividual);
 
   public abstract float EvaluateTestCase(GAIndividual inIndividual, object inInput, object inOutput);
+  // XXX this seems like it maybe ought to go else where.
 
   protected internal abstract GAIndividual ReproduceByCrossover(int inIndex);
 

@@ -240,11 +240,7 @@ public abstract class PushGP : GA {
     _populationMeanFitness = totalFitness / _populations[_currentPopulation].Length;
   }
 
-  protected internal override void EvaluateIndividual(GAIndividual inIndividual) {
-    EvaluateIndividual(inIndividual, false);
-  }
-
-  protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify) {
+  protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify = false) {
     List<float> errors = new List<float>();
     if (!duringSimplify) {
       _averageSize += ((PushGPIndividual)inIndividual)._program.ProgramSize();

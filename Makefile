@@ -3,7 +3,7 @@ MAIN_FILE = PshGP
 
 #change this to the depth of the project folders
 #if needed, add a preffix for a common project folder
-CSHARP_SOURCE_FILES = $(wildcard Psh/*/*/*.cs Psh/*/*.cs Psh/*.cs)
+CSHARP_SOURCE_FILES = $(wildcard src/*/*/*.cs src/*/*.cs src/*.cs)
 CSHARP_TEST_FILES = $(wildcard tests/*/*/*.cs tests/*/*.cs tests/*.cs)
 
 # UNITY_HOME=/Applications/Unity5.3.2f1

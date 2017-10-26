@@ -38,4 +38,13 @@ public interface Stack {
   void Popdiscard();
 }
 
+// This should be represented too.
+public interface Stack<T> : Stack {
+  void Push(T o);
+  T Pop();
+  T Peek();
+  T DeepPeek();
+  void Shove(T o, int i);
+}
+
 }
