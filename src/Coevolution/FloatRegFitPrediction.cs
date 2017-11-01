@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Psh;
-using SharpenMinimal;
 
 namespace Psh.Coevolution {
+
 public class FloatRegFitPrediction : PredictionGA {
   protected internal override void InitIndividual(GAIndividual inIndividual) {
     FloatRegFitPredictionIndividual i = (FloatRegFitPredictionIndividual)inIndividual;
@@ -103,5 +103,8 @@ public class FloatRegFitPrediction : PredictionGA {
     }
     return a;
   }
+
+
+  protected internal override void EndGeneration() { }
 }
 }

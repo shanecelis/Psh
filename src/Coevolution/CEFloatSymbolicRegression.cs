@@ -18,7 +18,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using Psh;
 using Psh.TestCase;
-using SharpenMinimal;
 
 namespace Psh.Coevolution {
 /// <summary>

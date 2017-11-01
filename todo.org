@@ -1,4 +1,10 @@
 * PshSharp TODO
+** Problem
+   - EvalPshGPStamp doesn't respect the instruction set that I give it via code.
+** Bugs
+   - 
+** Questions
+   - Why does Interpreter know about how to make random things?
 ** Legacy TODOs
 - [ ] Make way to conduct multiple runs and get statistics about those runs, to compare things such as population, generations, or use of ERCs.
 - [ ] Add co-evolution fitness predictors. This will be a big project (make a git branch).

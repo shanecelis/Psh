@@ -16,7 +16,6 @@
 using System;
 using System.Collections.Generic;
 using Psh;
-using SharpenMinimal;
 
 namespace Psh.Coevolution {
 /// <summary>
@@ -84,7 +83,7 @@ public abstract class PredictionGA : GA {
       // Time to add a new trainer
       PushGPIndividual newTrainer = (PushGPIndividual)ChooseNewTrainer().Clone();
       EvaluateSolutionIndividual(newTrainer);
-      _trainerPopulation.Remove(0);
+      _trainerPopulation.RemoveAt(0);
       _trainerPopulation.Add(newTrainer);
       EvaluateTrainerFitnesses();
     }

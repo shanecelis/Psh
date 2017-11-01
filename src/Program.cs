@@ -16,7 +16,7 @@
 using System;
 using System.Linq;
 using System.Text;
-using SharpenMinimal;
+using System.Text.RegularExpressions;
 
 namespace Psh {
 /// <summary>A Push program.</summary>
@@ -46,7 +46,7 @@ public class Program : ObjectStack {
     Clear();
     inString = inString.Replace("(", " ( ");
     inString = inString.Replace(")", " ) ");
-    string[] tokens = inString.Split("\\s+");
+    string[] tokens = Regex.Split(inString, "\\s+");
     Parse(tokens, 0);
     return ProgramSize();
   }
