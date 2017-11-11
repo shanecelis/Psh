@@ -701,5 +701,14 @@ public class InstructionTest
     Assert.AreEqual(1, interpreter.IntStack().Top());
     Assert.AreEqual(0, interpreter.NameStack().Count);
   }
+
+  [Test]
+  public void TestNameEqual() {
+    interpreter.Execute(new Program("(blah1 blah2 name.=)"));
+    Assert.AreEqual(0, interpreter.NameStack().Count);
+    Assert.AreEqual(1, interpreter.BoolStack().Count);
+    Assert.AreEqual(false, interpreter.BoolStack().Top());
+    // Assert.AreEqual(false, true);
+  }
 }
 }

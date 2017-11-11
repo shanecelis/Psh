@@ -23,6 +23,10 @@ public interface Instruction {
   void Execute(Interpreter inI);
 }
 
+public interface IPeekable {
+  bool peek { get; set; }
+}
+
 public class Constant<T> : Instruction {
 
   internal T _value;
@@ -50,77 +54,14 @@ internal class ObjectConstant : ObjectStackInstruction {
   }
 }
 
-public class BinaryAction<X,Y> : Instruction {
-  private Action<X,Y> func;
-  public BinaryAction(Action<X,Y> func) {
-    this.func = func;
+public abstract class Peekable : IPeekable {
+  private bool _peek = false;
+  public bool peek {
+    get { return _peek; }
+    set { _peek = value; }
   }
 
-  public void Execute(Interpreter inI) {
-    var stack1 = inI.GetStack<X>();
-    var stack2 = inI.GetStack<Y>();
-
-    // This is no good any more, because X might equal Y in which case
-    // stack1.Size() > 1
-
-    // if (stack1.Size() > 0 && stack2.Size() > 0) {
-      if (stack2.Count == 0)
-        return;
-      Y b = stack2.Pop();
-      if (stack1.Count == 0)
-        return;
-      X a = stack1.Pop();
-      try {
-        func(a, b);
-      } catch (ArithmeticException) {
-        // Don't care.
-      } catch (Exception e) {
-        throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
-      }
-  }
-}
-
-public class BinaryAction<T> : BinaryAction<T,T> {
-  public BinaryAction(Action<T,T> func) : base(func) {}
-}
-
-
-public class BinaryInstruction<X,Y,Z> : Instruction {
-  private Func<X,Y,Z> func;
-
-  public BinaryInstruction(Func<X,Y,Z> func) {
-    this.func = func;
-  }
-
-  public void Execute(Interpreter inI) {
-    var istack = inI.GetStack<X>();
-    var i2stack = inI.GetStack<Y>();
-    var ostack = inI.GetStack<Z>();
-    // if (istack.Size() > 1 && i2stack.Size() > 1) {
-      if (i2stack.Count == 0)
-        return;
-      Y b = i2stack.Pop();
-      if (istack.Count == 0)
-        return;
-      X a = istack.Pop();
-      Z c;
-      try {
-        c = func(a, b);
-      } catch (ArithmeticException) {
-        c = default(Z);
-      } catch (Exception e) {
-        throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
-      }
-      ostack.Push(c);
-  }
-}
-
-public class BinaryInstruction<Tin,Tout> : BinaryInstruction<Tin,Tin,Tout> {
-  public BinaryInstruction(Func<Tin,Tin,Tout> func) : base(func) {}
-}
-
-public class BinaryInstruction<T> : BinaryInstruction<T,T,T> {
-  public BinaryInstruction(Func<T,T,T> func) : base(func) {}
+  // public abstract void Execute(Interpreter inI);
 }
 
 public class NullaryAction : Instruction {
@@ -150,7 +91,7 @@ public class NullaryInstruction<T> : Instruction {
   }
 }
 
-public class UnaryAction<T> : Instruction {
+public class UnaryAction<T> : Peekable, Instruction {
   private Action<T> func;
 
   public UnaryAction(Action<T> func) {
@@ -160,12 +101,12 @@ public class UnaryAction<T> : Instruction {
   public void Execute(Interpreter inI) {
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 0) {
-      func(stack.Pop());
+    func(! peek ? stack.Pop() : stack.Top());
     }
   }
 }
 
-public class UnaryInstruction<inT,outT> : Instruction {
+public class UnaryInstruction<inT,outT> : Peekable, Instruction {
   private Func<inT,outT> func;
 
   public UnaryInstruction(Func<inT,outT> func) {
@@ -176,13 +117,142 @@ public class UnaryInstruction<inT,outT> : Instruction {
     var istack = inI.GetStack<inT>();
     var ostack = inI.GetStack<outT>();
     if (istack.Size() > 0) {
-      ostack.Push(func(istack.Pop()));
+      ostack.Push(func(! peek ? istack.Pop() : istack.Top()));
     }
   }
 }
 
-public class UnaryInstruction<T> : UnaryInstruction<T, T> {
-  public UnaryInstruction(Func<T,T> func) : base(func) {}
+public class BinaryAction<X,Y> : Peekable, Instruction {
+  private Action<X,Y> func;
+
+  public BinaryAction(Action<X,Y> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    var stack1 = inI.GetStack<X>();
+    var stack2 = inI.GetStack<Y>();
+
+    // This is no good any more, because X might equal Y in which case
+    // stack1.Size() > 1
+
+    // if (stack1.Size() > 0 && stack2.Size() > 0) {
+      if (stack2.Count == 0)
+        return;
+      Y b = !peek ? stack2.Pop() : stack2.Top();
+      if (stack1.Count == 0)
+        return;
+      X a = ! peek ? stack1.Pop() : stack1.Top();
+      try {
+        func(a, b);
+      } catch (ArithmeticException) {
+        // Don't care.
+      } catch (Exception e) {
+        throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
+      }
+  }
+}
+
+public class BinaryInstruction<X,Y,Z> : Peekable, Instruction {
+  private Func<X,Y,Z> func;
+
+  public BinaryInstruction(Func<X,Y,Z> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    var istack = inI.GetStack<X>();
+    var i2stack = inI.GetStack<Y>();
+    var ostack = inI.GetStack<Z>();
+    // if (istack.Size() > 1 && i2stack.Size() > 1) {
+    if (i2stack.Count == 0)
+      return;
+    Y b = ! peek ? i2stack.Pop() : i2stack.Top();
+    if (istack.Count == 0)
+      return;
+    X a = ! peek ? istack.Pop() : istack.Top();
+    Z c;
+    try {
+      c = func(a, b);
+    } catch (ArithmeticException) {
+      c = default(Z);
+    } catch (Exception e) {
+      throw new Exception("Instruction failed for arguments " + a + " and " + b, e);
+    }
+    ostack.Push(c);
+  }
+}
+
+public class TrinaryAction<X,Y,Z> : Peekable, Instruction {
+  private Action<X,Y,Z> func;
+  public TrinaryAction(Action<X,Y,Z> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    var stack1 = inI.GetStack<X>();
+    var stack2 = inI.GetStack<Y>();
+    var stack3 = inI.GetStack<Z>();
+
+    // This is no good any more, because X might equal Y in which case
+    // stack1.Size() > 1
+
+    // if (stack1.Size() > 0 && stack2.Size() > 0) {
+    if (stack3.Count == 0)
+      return;
+    Z c = ! peek ? stack3.Pop() : stack3.Top();
+    if (stack2.Count == 0)
+      return;
+    Y b = ! peek ? stack2.Pop() : stack2.Top();
+    if (stack1.Count == 0)
+      return;
+    X a = ! peek ? stack1.Pop() : stack1.Top();
+    try {
+      func(a, b, c);
+    } catch (ArithmeticException) {
+      // Don't care.
+    } catch (Exception e) {
+      throw new Exception("Instruction failed for arguments " + a + " and " + b + " and " + c, e);
+    }
+  }
+}
+
+public class TrinaryInsruction<X,Y,Z,W> : Peekable, Instruction {
+  private Func<X,Y,Z,W> func;
+  public TrinaryInsruction(Func<X,Y,Z,W> func) {
+    this.func = func;
+  }
+
+  public void Execute(Interpreter inI) {
+    var stack1 = inI.GetStack<X>();
+    var stack2 = inI.GetStack<Y>();
+    var stack3 = inI.GetStack<Z>();
+    var stack4 = inI.GetStack<W>();
+
+    // This is no good any more, because X might equal Y in which case
+    // stack1.Size() > 1
+
+    // if (stack1.Size() > 0 && stack2.Size() > 0) {
+    if (stack3.Count == 0)
+      return;
+    Z c = ! peek ? stack3.Pop() : stack3.Top();
+    if (stack2.Count == 0)
+      return;
+    Y b = ! peek ? stack2.Pop() : stack2.Top();
+    if (stack1.Count == 0)
+      return;
+    X a = ! peek ? stack1.Pop() : stack1.Top();
+    W d;
+    try {
+      d = func(a, b, c);
+    } catch (ArithmeticException) {
+      // Don't care.
+      d = default(W);
+    } catch (Exception e) {
+      throw new Exception("Instruction failed for arguments " + a + " and " + b + " and " + c, e);
+    }
+    stack4.Push(d);
+  }
 }
 
 internal class IntegerRand : Instruction {
@@ -202,7 +272,6 @@ internal class IntegerRand : Instruction {
 
 // internal class FloatTan : UnaryFloatInstruction
 // {
-
 //   internal override float UnaryOperator(float inValue)
 //   {
 //     // Test for overflow
@@ -577,7 +646,7 @@ internal class ExecK : ObjectStackInstruction {
 internal class ExecYield : Instruction {
   // End exec iteration functions.
   public void Execute(Interpreter inI) {
-    inI.stop = true;
+    inI.Yield();
   }
 }
 

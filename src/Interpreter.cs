@@ -15,31 +15,31 @@
 */
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
-using SharpenMinimal;
 
 namespace Psh {
 /// <summary>The Push language interpreter.</summary>
 public class Interpreter {
 
-  protected internal Dictionary<string, Instruction>               _instructions = new Dictionary<string, Instruction>();
+  public Dictionary<string, Instruction>               _instructions = new Dictionary<string, Instruction>();
 
   protected internal Dictionary<string, Interpreter.AtomGenerator> _generators = new Dictionary<string, Interpreter.AtomGenerator>();
 
-  protected internal List<Interpreter.AtomGenerator>               _randomGenerators = new List<Interpreter.AtomGenerator>();
+  public List<Interpreter.AtomGenerator>                           _randomGenerators = new List<Interpreter.AtomGenerator>();
 
-  protected internal Psh.IntStack         _intStack = new Psh.IntStack();
+  protected internal Psh.IntStack         _intStack   = new Psh.IntStack();
 
   protected internal Psh.FloatStack       _floatStack = new Psh.FloatStack();
 
-  protected internal BooleanStack         _boolStack = new BooleanStack();
+  protected internal BooleanStack         _boolStack  = new BooleanStack();
 
-  protected internal ObjectStack          _codeStack = new ObjectStack();
+  protected internal ObjectStack          _codeStack  = new ObjectStack();
 
-  protected internal GenericStack<string> _nameStack = new GenericStack<string>();
+  protected internal GenericStack<string> _nameStack  = new GenericStack<string>();
 
-  protected internal ObjectStack          _execStack = new ObjectStack();
+  protected internal ObjectStack          _execStack  = new ObjectStack();
 
   protected internal ObjectStack          _inputStack = new ObjectStack();
 
@@ -78,7 +78,7 @@ public class Interpreter {
   protected internal InputPusher _inputPusher = new InputPusher();
 
   // XXX yield flag?
-  public bool stop = false;
+  private bool stop = false;
 
   public Interpreter() {
     // All generators
@@ -129,7 +129,7 @@ public class Interpreter {
 
     // How it is now:
     // --------------
-    DefineInstruction<int>("integer.+", (a, b) => unchecked(a + b));
+    DefineInstruction("integer.+", (int a, int b) => unchecked(a + b));
     // Let's use some lambdas and unchecked arithmetic.
 
     // Sympathy for the Original Author, Jon Klein
@@ -139,61 +139,63 @@ public class Interpreter {
     // don't believe there's a nice way just turning off Java's over- and
     // under-flow checking.
 
-    DefineInstruction<int>("integer.-", (a, b) => unchecked(a - b));
-    // DefineInstruction<int>("integer./", (a, b) => { return (b != 0 ? a / b : 0); } );
-    DefineInstruction<int>("integer./", (a, b) => unchecked(b != 0 ? (a / b) : 0));
-    DefineInstruction<int>("integer.%", (a, b) => unchecked(b != 0 ? (a % b) : 0));
-    // DefineInstruction<int>("integer.%", (a, b) => { unchecked { var c = (b != 0 ? (a % b) : 0); return c; } } );
-    DefineInstruction<int>("integer.*", (a, b) => unchecked(a * b));
-    DefineInstruction<int>("integer.pow", (a, b) => unchecked((int) Math.Pow(a, b)));
-    DefineInstruction<int>("integer.log", (a, b) => unchecked((int) Math.Log(a, b)));
-    DefineInstruction<int, bool>("integer.=", (a, b) => (a == b));
-    DefineInstruction<int, bool>("integer.>", (a, b) => (a > b));
-    DefineInstruction<int, bool>("integer.<", (a, b) => (a < b));
-    DefineInstruction<int>("integer.min", (a, b) => (a < b ? a : b));
-    DefineInstruction<int>("integer.max", (a, b) => (a > b ? a : b));
-    DefineInstruction<int>("integer.abs", (a, b) => unchecked(a < 0 ? -a : a));
-    DefineInstruction<int>("integer.neg", (a) => unchecked(-a));
-    DefineInstruction<int>("integer.log", (a) => unchecked((int) Math.Log(a)));
+    DefineInstruction("integer.-", (int a, int b) => unchecked(a - b));
+    // DefineInstruction("integer./", (int a, int b) => { return (b != 0 ? a / b : 0); } );
+    DefineInstruction("integer./", (int a, int b) => unchecked(b != 0 ? (a / b) : 0));
+    DefineInstruction("integer.%", (int a, int b) => unchecked(b != 0 ? (a % b) : 0));
+    // DefineInstruction("integer.%", (int a, int b) => { unchecked { var c = (b != 0 ? (a % b) : 0); return c; } } );
+    DefineInstruction("integer.*", (int a, int b) => unchecked(a * b));
+    DefineInstruction("integer.pow", (int a, int b) => unchecked((int) Math.Pow(a, b)));
+    DefineInstruction("integer.log", (int a, int b) => unchecked((int) Math.Log(a, b)));
+    DefineInstruction("integer.=", (int a, int b) => (a == b));
+    DefineInstruction("integer.>", (int a, int b) => (a > b));
+    DefineInstruction("integer.<", (int a, int b) => (a < b));
+    DefineInstruction("integer.min", (int a, int b) => (a < b ? a : b));
+    DefineInstruction("integer.max", (int a, int b) => (a > b ? a : b));
+    DefineInstruction("integer.abs", (int a, int b) => unchecked(a < 0 ? -a : a));
+    DefineInstruction("integer.neg", (int a) => unchecked(-a));
+    DefineInstruction("integer.log", (int a) => unchecked((int) Math.Log(a)));
     DefineInstruction("integer.define", (int i, string name) => { DefineConstant(name, i); });
     // DefineInstruction("integer.ln", new IntegerLn());
     DefineInstruction("integer.fromfloat", (float a) => (int) a);
     DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);
     DefineInstruction("integer.rand", new IntegerRand());
 
-    DefineInstruction<float>("float.+", (a, b) => unchecked(a + b));
-    DefineInstruction<float>("float.-", (a, b) => unchecked(a - b));
-    DefineInstruction<float>("float./", (a, b) => unchecked(b != 0f ? a / b : 0f));
-    DefineInstruction<float>("float.%", (a, b) => unchecked(b != 0f ? a % b : 0f));
-    DefineInstruction<float>("float.*", (a, b) => unchecked(a * b));
-    DefineInstruction<float>("float.pow", (a, b) => unchecked((float) Math.Pow(a, b)));
-    DefineInstruction<float>("float.log", (a, b) => unchecked((float) Math.Log(a, b)));
-    DefineInstruction<float, bool>("float.=", (a, b) => unchecked(a == b));
-    DefineInstruction<float, bool>("float.>", (a, b) => unchecked(a > b));
-    DefineInstruction<float, bool>("float.<", (a, b) => unchecked(a < b));
-    DefineInstruction<float>("float.min", (a, b) => unchecked(a < b ? a : b));
-    DefineInstruction<float>("float.max", (a, b) => unchecked(a > b ? a : b));
-    DefineInstruction<float>("float.sin", (a) => unchecked((float) Math.Sin(a)));
-    DefineInstruction<float>("float.cos", (a) => unchecked((float) Math.Cos(a)));
-    DefineInstruction<float>("float.tan", (a) => unchecked((float) Math.Tan(a)));
-    DefineInstruction<float>("float.exp", (a) => unchecked((float) Math.Exp(a)));
-    DefineInstruction<float>("float.abs", (a) => unchecked(a < 0 ? -a : a));
-    DefineInstruction<float>("float.neg", (a) => unchecked(-a));
-    DefineInstruction<float>("float.ln", (a) => unchecked((float) Math.Log(a)));
+    DefineInstruction("float.+", (float a, float b) => unchecked(a + b));
+    DefineInstruction("float.-", (float a, float b) => unchecked(a - b));
+    DefineInstruction("float./", (float a, float b) => unchecked(b != 0f ? a / b : 0f));
+    DefineInstruction("float.%", (float a, float b) => unchecked(b != 0f ? a % b : 0f));
+    DefineInstruction("float.*", (float a, float b) => unchecked(a * b));
+    DefineInstruction("float.pow", (float a, float b) => unchecked((float) Math.Pow(a, b)));
+    DefineInstruction("float.log", (float a, float b) => unchecked((float) Math.Log(a, b)));
+    DefineInstruction("float.=", (float a, float b) => unchecked(a == b));
+    DefineInstruction("float.>", (float a, float b) => unchecked(a > b));
+    DefineInstruction("float.<", (float a, float b) => unchecked(a < b));
+    DefineInstruction("float.min", (float a, float b) => unchecked(a < b ? a : b));
+    DefineInstruction("float.max", (float a, float b) => unchecked(a > b ? a : b));
+    DefineInstruction("float.sin", (float a) => unchecked((float) Math.Sin(a)));
+    DefineInstruction("float.cos", (float a) => unchecked((float) Math.Cos(a)));
+    DefineInstruction("float.tan", (float a) => unchecked((float) Math.Tan(a)));
+    DefineInstruction("float.exp", (float a) => unchecked((float) Math.Exp(a)));
+    DefineInstruction("float.abs", (float a) => unchecked(a < 0 ? -a : a));
+    DefineInstruction("float.neg", (float a) => unchecked(-a));
+    DefineInstruction("float.ln", (float a) => unchecked((float) Math.Log(a)));
     DefineInstruction("float.frominteger", (int a) => (float) a);
     DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
     DefineInstruction("float.rand", new FloatRand());
     DefineInstruction("float.define", (float i, string name) => { DefineConstant(name, i); });
 
-    DefineInstruction<bool>("boolean.=", (a, b) => a == b);
-    DefineInstruction<bool>("boolean.not", a => ! a);
-    DefineInstruction<bool>("boolean.and", (a, b) => a & b);
-    DefineInstruction<bool>("boolean.or", (a, b) => a | b);
-    DefineInstruction<bool>("boolean.xor", (a, b) => a ^ b);
+    DefineInstruction("boolean.=", (bool a, bool b) => a == b);
+    DefineInstruction("boolean.not", (bool a) => ! a);
+    DefineInstruction("boolean.and", (bool a, bool b) => a & b);
+    DefineInstruction("boolean.or", (bool a, bool b) => a | b);
+    DefineInstruction("boolean.xor", (bool a, bool b) => a ^ b);
     DefineInstruction("boolean.frominteger", (int a) => a != 0);
     DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
     DefineInstruction("boolean.rand", new BoolRand());
     DefineInstruction("boolean.define", (bool b, string name) => { DefineConstant(name, b); });
+
+    DefineInstruction("name.=", (string a, string b) => a == b);
 
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.fromboolean", new CodeFromBoolean());
@@ -223,8 +225,10 @@ public class Interpreter {
     DefineInstruction("input.inall", new InputInAll(_inputStack));
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
     DefineInstruction("input.stackdepth", new Depth(_inputStack));
-    _generators[InstructionCase("float.erc")] = new Interpreter.FloatAtomGenerator();
-    _generators[InstructionCase("integer.erc")] = new Interpreter.IntAtomGenerator();
+    // What's the difference between generators and instructions?
+    // It seems like 
+    _generators["float.erc"] = new Interpreter.FloatAtomGenerator();
+    _generators["integer.erc"] = new Interpreter.IntAtomGenerator();
   }
 
   // XXX What are frames?
@@ -270,6 +274,7 @@ public class Interpreter {
         }
       }
       // Check for registered
+      // I don't understand this "registered.X" bit.
       if (name.IndexOf("registered.") == 0) {
         string registeredType = SharpenMinimal.Runtime.Substring(name, 11);
         if (   !registeredType.Equals("integer")
@@ -279,7 +284,8 @@ public class Interpreter {
             && !registeredType.Equals("code")
             && !registeredType.Equals("name")
             && !registeredType.Equals("input")
-            && !registeredType.Equals("frame")) {
+            // && !registeredType.Equals("frame")
+               ) {
           Console.Error.WriteLine("Unknown instruction \"" + name + "\" in instruction set");
         } else {
           // Legal stack type, so add all generators matching
@@ -289,6 +295,7 @@ public class Interpreter {
           // {
           //   string key = (string)keys[i];
           foreach (string key in _instructions.Keys) {
+            // So we're searching for anything with a type prefix.
             if (key.IndexOf(registeredType) == 0) {
               Interpreter.AtomGenerator g = _generators[key];
               _randomGenerators.Add(g);
@@ -331,6 +338,19 @@ public class Interpreter {
   }
 
   /*
+    Provide some regex patterns to white list the instructions.
+   */
+  public void SetInstructions(params string[] patterns) {
+    _randomGenerators.Clear();
+    foreach (var pattern in patterns) {
+      var regex = new Regex(pattern);
+      foreach (var instructionName in _instructions.Keys.Where(k => regex.IsMatch(k))) {
+        _randomGenerators.Add(_generators[instructionName]);
+      }
+    }
+  }
+
+  /*
     Define a new instruction and add it to the random generators.
    */
   public void AddInstruction(string inName, Instruction inInstruction) {
@@ -345,24 +365,20 @@ public class Interpreter {
     DefineInstruction(inName, new Constant<T>(value));
   }
 
-  public void DefineInstruction<T>(string inName, Func<T> f) {
-    DefineInstruction(inName, new NullaryInstruction<T>(f));
-  }
-
   public void DefineInstruction(string inName, Action f) {
     DefineInstruction(inName, new NullaryAction(f));
   }
 
-  public void DefineInstruction<T>(string inName, Func<T,T> f) {
-    DefineInstruction(inName, new UnaryInstruction<T>(f));
+  public void DefineInstruction<T>(string inName, Func<T> f) {
+    DefineInstruction(inName, new NullaryInstruction<T>(f));
   }
 
   public void DefineInstruction<T>(string inName, Action<T> f) {
     DefineInstruction(inName, new UnaryAction<T>(f));
   }
 
-  public void DefineInstruction<T>(string inName, Func<T,T,T> f) {
-    DefineInstruction(inName, new BinaryInstruction<T>(f));
+  public void DefineInstruction<X,Y>(string inName, Func<X,Y> f) {
+    DefineInstruction(inName, new UnaryInstruction<X,Y>(f));
   }
 
   public void DefineInstruction<X,Y,Z>(string inName, Func<X,Y,Z> f) {
@@ -373,16 +389,45 @@ public class Interpreter {
     DefineInstruction(inName, new BinaryAction<X,Y>(f));
   }
 
-  public void DefineInstruction<T>(string inName, Action<T,T> f) {
-    DefineInstruction(inName, new BinaryAction<T>(f));
+  public void DefineInstruction<X,Y,Z>(string inName, Action<X,Y,Z> f) {
+    DefineInstruction(inName, new TrinaryAction<X,Y,Z>(f));
   }
 
-  public void DefineInstruction<inT,outT>(string inName, Func<inT,outT> f) {
-    DefineInstruction(inName, new UnaryInstruction<inT,outT>(f));
+  public void DefineInstruction<X,Y,Z,W>(string inName, Func<X,Y,Z,W> f) {
+    DefineInstruction(inName, new TrinaryInsruction<X,Y,Z,W>(f));
   }
 
-  public void DefineInstruction<inT,outT>(string inName, Func<inT,inT,outT> f) {
-    DefineInstruction(inName, new BinaryInstruction<inT,outT>(f));
+  // These don't make sense.
+  // public void DefinePeekInstruction(string inName, Action f) {
+  //   DefineInstruction(inName, new NullaryAction(f) { peek = true });
+  // }
+
+  // public void DefinePeekInstruction<T>(string inName, Func<T> f) {
+  //   DefineInstruction(inName, new NullaryInstruction<T>(f) { peek = true });
+  // }
+
+  public void DefinePeekInstruction<T>(string inName, Action<T> f) {
+    DefineInstruction(inName, new UnaryAction<T>(f) { peek = true });
+  }
+
+  public void DefinePeekInstruction<X,Y>(string inName, Func<X,Y> f) {
+    DefineInstruction(inName, new UnaryInstruction<X,Y>(f) { peek = true });
+  }
+
+  public void DefinePeekInstruction<X,Y,Z>(string inName, Func<X,Y,Z> f) {
+    DefineInstruction(inName, new BinaryInstruction<X,Y,Z>(f) { peek = true });
+  }
+
+  public void DefinePeekInstruction<X,Y>(string inName, Action<X,Y> f) {
+    DefineInstruction(inName, new BinaryAction<X,Y>(f) { peek = true });
+  }
+
+  public void DefinePeekInstruction<X,Y,Z>(string inName, Action<X,Y,Z> f) {
+    DefineInstruction(inName, new TrinaryAction<X,Y,Z>(f) { peek = true });
+  }
+
+  public void DefinePeekInstruction<X,Y,Z,W>(string inName, Func<X,Y,Z,W> f) {
+    DefineInstruction(inName, new TrinaryInsruction<X,Y,Z,W>(f) { peek = true });
   }
 
   public void DefineInstruction(string inName, Instruction inInstruction) {
@@ -630,7 +675,8 @@ public class Interpreter {
   public string GetInstructionsString() {
     // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
     // List<string> strings = new List<string>();
-    List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators[key])).ToList();
+    // List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators[key])).ToList();
+    List<string> strings = _instructions.Keys.ToList();
     // string str = string.Empty;
     // for (int i = 0; i < keys.Length; i++)
     // {
@@ -640,11 +686,13 @@ public class Interpreter {
     //     strings.Add(key);
     //   }
     // }
-    if (_randomGenerators.Contains(_generators[InstructionCase("float.erc")])) {
-      strings.Add(InstructionCase("float.erc"));
+
+    // XXX But float.erc isn't an instruction is it?
+    if (_randomGenerators.Contains(_generators["float.erc"])) {
+      strings.Add("float.erc");
     }
-    if (_randomGenerators.Contains(_generators[InstructionCase("integer.erc")])) {
-      strings.Add(InstructionCase("integer.erc"));
+    if (_randomGenerators.Contains(_generators["integer.erc"])) {
+      strings.Add("integer.erc");
     }
     return strings.OrderBy(x => x).Aggregate((current, next) => current + next);
     // strings.Sort();
@@ -771,7 +819,6 @@ public class Interpreter {
     public object Generate(Interpreter inInterpreter) {
       return this._instruction;
     }
-
   }
 
   private class FloatAtomGenerator : Interpreter.AtomGenerator {
@@ -781,7 +828,6 @@ public class Interpreter {
       r -= (r % inInterpreter._randomFloatResolution);
       return r + inInterpreter._minRandomFloat;
     }
-
   }
 
   private class IntAtomGenerator : Interpreter.AtomGenerator {
@@ -791,6 +837,14 @@ public class Interpreter {
       r -= (r % inInterpreter._randomIntResolution);
       return r + inInterpreter._minRandomInt;
     }
+  }
+
+  /*
+    Make the interpreter yield. The interpreter stops even if there are more
+    instructions left.
+   */
+  public void Yield() {
+    stop = true;
   }
 }
 }
