@@ -16,52 +16,53 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SharpenMinimal;
 
 namespace Psh {
 /// <summary>An abstract class for running genetic algorithms.</summary>
+
+// This should be split into GA and GenerationalGA.
+// Test cases should also be taken out (harder).
 public abstract class GA {
 
+  // Runtime variables
+  // =================
+  // These seem like generational parameters.
+  // _populations just flips between two same-sized populations.
   protected internal GAIndividual[][] _populations;
-
   protected internal int _currentPopulation;
-
   protected internal int _generationCount;
 
-  protected internal float _mutationPercent;
-
-  protected internal float _crossoverPercent;
-
+  protected internal double _populationMeanFitness;
   protected internal float _bestMeanFitness;
 
-  protected internal double _populationMeanFitness;
-
-  protected internal int _bestIndividual;
-
-  protected internal List<float> _bestErrors;
-
-  protected internal int _maxGenerations;
-
-  protected internal int _tournamentSize;
-
-  protected internal int _trivialGeographyRadius;
-
-  protected internal Random Rng;
-
-  protected internal Dictionary<string, string> _parameters;
-
+  // Test cases
   public List<GATestCase> _testCases;
 
-  protected internal Type _individualClass;
+  // Reporting stats
+  protected internal int _bestIndividual;
+  protected internal List<float> _bestErrors;
 
+  // Parameters
+  // ==========
+  // Stuff to keep here.
+  protected internal float _mutationPercent = 40f;
+  protected internal float _crossoverPercent = 40f;
+  protected internal int _tournamentSize = 7;
+  protected internal int _trivialGeographyRadius = 0; // default 0 is off
+  protected internal int _maxGenerations = 100;
+  public int _populationSize = 50;
+
+  protected internal Dictionary<string, string> _parameters;
+  protected internal Type _individualClass;
+  protected internal Random Rng;
   [System.NonSerialized]
   public TextWriter _outputStream;
 
+  // XXX Checkpoint feature gone.
   // protected internal Psh.Checkpoint _checkpoint;
+  // protected internal string _checkpointPrefix;
 
-  protected internal string _checkpointPrefix;
-
-  protected internal string _outputfile;
+  // protected internal string _outputfile;
 
   /// <summary>
   /// Factor method for creating a GA object, with the GA class specified by
@@ -80,9 +81,9 @@ public abstract class GA {
     return ga;
   }
 
-  /// <exception cref="System.Exception"/>
   // XXX Are checkpoints why everything was marked serializable?
   // Let's remove checkpoints for now.
+  /// <exception cref="System.Exception"/>
   // public static GA GAWithCheckpoint(string checkpoint)
   // {
   //   FilePath checkpointFile = new FilePath(checkpoint);
@@ -116,6 +117,13 @@ public abstract class GA {
     _testCases = new List<GATestCase>();
     _bestMeanFitness = float.MaxValue;
     _outputStream = System.Console.Out;
+  }
+
+  public Dictionary<string, string> parameters {
+    get { return _parameters; }
+    set { _parameters = value;
+      InitFromParameters();
+    }
   }
 
   /// <summary>Sets the parameters dictionary for this GA run.</summary>
@@ -215,10 +223,11 @@ public abstract class GA {
     } else {
       _trivialGeographyRadius = (int)GetFloatParam("trivial-geography-radius", true);
     }
-    _checkpointPrefix = GetParam("checkpoint-prefix", true);
+    // _checkpointPrefix = GetParam("checkpoint-prefix", true);
     // _checkpoint = new Psh.Checkpoint(this);
-    ResizeAndInitialize((int)GetFloatParam("population-size"));
-    _outputfile = GetParam("output-file", true);
+    _populationSize = (int)GetFloatParam("population-size");
+    ResizeAndInitialize(_populationSize);
+    var _outputfile = GetParam("output-file", true);
     if (_outputfile != null) {
       _outputStream = new StreamWriter(_outputfile);
     }

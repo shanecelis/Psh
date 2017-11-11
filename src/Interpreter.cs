@@ -23,11 +23,14 @@ namespace Psh {
 /// <summary>The Push language interpreter.</summary>
 public class Interpreter {
 
-  public Dictionary<string, Instruction>               _instructions = new Dictionary<string, Instruction>();
+  public Dictionary<string, Instruction> _instructions
+    = new Dictionary<string, Instruction>();
 
-  protected internal Dictionary<string, Interpreter.AtomGenerator> _generators = new Dictionary<string, Interpreter.AtomGenerator>();
+  protected internal Dictionary<string, Interpreter.AtomGenerator> _generators
+    = new Dictionary<string, Interpreter.AtomGenerator>();
 
-  public List<Interpreter.AtomGenerator>                           _randomGenerators = new List<Interpreter.AtomGenerator>();
+  public List<Interpreter.AtomGenerator> _randomGenerators
+    = new List<Interpreter.AtomGenerator>();
 
   protected internal Psh.IntStack         _intStack   = new Psh.IntStack();
 
@@ -142,8 +145,8 @@ public class Interpreter {
     DefineInstruction("integer.-", (int a, int b) => unchecked(a - b));
     // DefineInstruction("integer./", (int a, int b) => { return (b != 0 ? a / b : 0); } );
     DefineInstruction("integer./", (int a, int b) => unchecked(b != 0 ? (a / b) : 0));
-    DefineInstruction("integer.%", (int a, int b) => unchecked(b != 0 ? (a % b) : 0));
     // DefineInstruction("integer.%", (int a, int b) => { unchecked { var c = (b != 0 ? (a % b) : 0); return c; } } );
+    DefineInstruction("integer.%", (int a, int b) => unchecked(b != 0 ? (a % b) : 0));
     DefineInstruction("integer.*", (int a, int b) => unchecked(a * b));
     DefineInstruction("integer.pow", (int a, int b) => unchecked((int) Math.Pow(a, b)));
     DefineInstruction("integer.log", (int a, int b) => unchecked((int) Math.Log(a, b)));
@@ -156,7 +159,7 @@ public class Interpreter {
     DefineInstruction("integer.neg", (int a) => unchecked(-a));
     DefineInstruction("integer.log", (int a) => unchecked((int) Math.Log(a)));
     DefineInstruction("integer.define", (int i, string name) => { DefineConstant(name, i); });
-    // DefineInstruction("integer.ln", new IntegerLn());
+    DefineInstruction("integer.ln", (int a) => unchecked((int) Math.Log(a)));
     DefineInstruction("integer.fromfloat", (float a) => (int) a);
     DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);
     DefineInstruction("integer.rand", new IntegerRand());

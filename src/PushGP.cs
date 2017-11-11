@@ -21,7 +21,7 @@ namespace Psh {
 /// <summary>The Push Genetic Programming core class.</summary>
 public abstract class PushGP : GA {
 
-  protected internal Interpreter _interpreter;
+  public Interpreter _interpreter;
 
   protected internal int _maxRandomCodeSize;
 
@@ -156,9 +156,9 @@ public abstract class PushGP : GA {
       throw new Exception("interpreter-class must inherit from class Interpreter");
     }
     _interpreter = (Interpreter)iObject;
+    // XXX This isn't a program.
     _interpreter.SetInstructions(new Program(GetParam("instruction-set")));
-    _interpreter.SetRandomParameters(minRandomInt, maxRandomInt, randomIntResolution, minRandomFloat, maxRandomFloat, randomFloatResolution, _maxRandomCodeSize, _maxPointsInProgram
-                                    );
+    _interpreter.SetRandomParameters(minRandomInt, maxRandomInt, randomIntResolution, minRandomFloat, maxRandomFloat, randomFloatResolution, _maxRandomCodeSize, _maxPointsInProgram);
     // Frame mode and input pusher class
     // string framemode = GetParam("push-frame-mode", true);
     string inputpusherClass = GetParam("inputpusher-class", true);
@@ -240,7 +240,11 @@ public abstract class PushGP : GA {
     _populationMeanFitness = totalFitness / _populations[_currentPopulation].Length;
   }
 
-  protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify = false) {
+  protected internal override void EvaluateIndividual(GAIndividual inIndividual) {
+    EvaluateIndividual(inIndividual, false);
+  }
+
+  protected internal virtual void EvaluateIndividual(GAIndividual inIndividual, bool duringSimplify) {
     List<float> errors = new List<float>();
     if (!duringSimplify) {
       _averageSize += ((PushGPIndividual)inIndividual)._program.ProgramSize();

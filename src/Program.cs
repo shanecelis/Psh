@@ -43,6 +43,7 @@ public class Program : ObjectStack {
   /// <returns>The point size of the new program.</returns>
   /// <exception cref="System.Exception"/>
   public int Parse(string inString) {
+    // XXX We could do something much better here.
     Clear();
     inString = inString.Replace("(", " ( ");
     inString = inString.Replace(")", " ) ");
