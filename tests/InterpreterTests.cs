@@ -30,12 +30,50 @@ public class InterpreterTests {
 
   [Test]
   public void TestSetInstructions() {
-    interpreter.SetInstructions();
-    Assert.AreEqual(0, interpreter._randomGenerators.Count);
-    interpreter.SetInstructions(@".*\+");
-    Assert.AreEqual(2, interpreter._randomGenerators.Count);
-    interpreter.SetInstructions(@"boolean.*");
-    Assert.AreEqual(21, interpreter._randomGenerators.Count);
+    interpreter.randCode.randProgram.SetInstructions(interpreter);
+    Assert.AreEqual(0, interpreter.randCode.randProgram._randomGenerators.Count);
+    interpreter.randCode.randProgram.SetInstructions(interpreter, @".*\+");
+    Assert.AreEqual(2, interpreter.randCode.randProgram._randomGenerators.Count);
+    interpreter.randCode.randProgram.SetInstructions(interpreter, @"boolean.*");
+    Assert.AreEqual(22, interpreter.randCode.randProgram._randomGenerators.Count);
+  }
+
+  [Test]
+  public void TestRandBool() {
+    var boolGen = new Interpreter.BoolAtomGenerator();
+    object o = boolGen.Generate();
+    Assert.IsNotNull(o);
+    Assert.IsTrue(o is bool);
+    bool b = (bool) o;
+    Assert.IsTrue(b == true || b == false);
+    // Assert.Fail("b is " + b);
+  }
+
+  [Test]
+  public void TestRandFloat() {
+    var floatGen = new Interpreter.FloatAtomGenerator();
+    object o = floatGen.Generate();
+    Assert.IsNotNull(o);
+    Assert.IsTrue(o is float);
+    float b = (float) o;
+    Assert.IsTrue(b > 0f || b < 0f || b == 0f, "What the heck is b? " + b);
+    var f = floatGen.GenerateT();
+    Assert.AreNotEqual(0f, f);
+  }
+
+  [Test]
+  public void TestResolution() {
+    Assert.AreEqual(0.100000381f, 11.1f % 1f);
+    Assert.AreEqual(0f, 11f % 1f);
+    Assert.AreEqual(0f, 1f % 1f);
+    Assert.AreEqual(2f, 12f % 10f);
+    Assert.AreEqual(float.NaN, 1f % 0f);
+    Assert.AreEqual(0.1f, 0.1f % 1f);
+
+    Assert.AreEqual(0, 11 % 1);
+    Assert.AreEqual(0, 1 % 1);
+    Assert.AreEqual(2, 12 % 10);
+    // Assert.AreEqual(-1, 1 % 0);
   }
 
 }

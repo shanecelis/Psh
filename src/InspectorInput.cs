@@ -78,18 +78,18 @@ public class InspectorInput {
     // Get the available instructions for random code generation
     indexNewline = fileString.IndexOf("\n");
     if (!SharpenMinimal.Extensions.Trim(fileString).Equals(string.Empty)) {
-      _interpreter.SetInstructions(new Program(SharpenMinimal.Extensions.Trim(fileString)));
+      _interpreter.randCode.randProgram.SetInstructions(_interpreter, new Program(SharpenMinimal.Extensions.Trim(fileString)));
     }
     // Check for input.inN instructions
     CheckForInputIn(programString);
     // Add random integer and float parameters
-    _interpreter._minRandomInt = -10;
-    _interpreter._maxRandomInt = 10;
-    _interpreter._randomIntResolution = 1;
-    _interpreter._minRandomFloat = -10.0f;
-    _interpreter._maxRandomFloat = 10.0f;
-    _interpreter._randomFloatResolution = 0.01f;
-    _interpreter._maxRandomCodeSize = 50;
+    _interpreter.randInt.min = -10;
+    _interpreter.randInt.max = 10;
+    _interpreter.randInt.resolution = 1;
+    _interpreter.randFloat.min = -10.0f;
+    _interpreter.randFloat.max = 10.0f;
+    _interpreter.randFloat.resolution = 0.01f;
+    _interpreter.randCode.maxSize = 50;
     // Load the program
     _program = new Program(programString);
     _interpreter.LoadProgram(_program);
@@ -179,7 +179,7 @@ public class InspectorInput {
       // Check for doubles in added
       if (added.IndexOf(" " + numstr + " ") == -1) {
         added = added + " " + numstr + " ";
-        _interpreter.AddInstruction("input.in" + numstr, new InputInN(System.Convert.ToInt32(numstr)));
+        _interpreter.DefineInstruction("input.in" + numstr, new InputInN(System.Convert.ToInt32(numstr)));
       }
       programString = SharpenMinimal.Runtime.Substring(programString, numindex);
     }

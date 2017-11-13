@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Psh {
 
@@ -674,91 +678,69 @@ internal class IF : ObjectStackInstruction {
     }
   }
 }
-
-internal class RandomPushCode : ObjectStackInstruction {
-  internal Random Rng;
+public class RandomPushCode : ObjectStackInstruction {
+  protected internal int maxSize = 100;
+  public RandomProgram randProgram = new RandomProgram();
+  Random Rng = new Random();
 
   internal RandomPushCode(ObjectStack inStack)
-    : base(inStack) {
-    Rng = new Random();
-  }
+    : base(inStack) { }
 
   public override void Execute(Interpreter inI) {
     int randCodeMaxPoints = 0;
     if (inI.IntStack().Size() > 0) {
       randCodeMaxPoints = inI.IntStack().Pop();
-      randCodeMaxPoints = Math.Min(Math.Abs(randCodeMaxPoints), inI._maxRandomCodeSize);
+      randCodeMaxPoints = Math.Min(Math.Abs(randCodeMaxPoints), maxSize);
       int randomCodeSize;
       if (randCodeMaxPoints > 0) {
         randomCodeSize = Rng.Next(randCodeMaxPoints) + 2;
       } else {
         randomCodeSize = 2;
       }
-      Program p = inI.RandomCode(randomCodeSize);
+      Program p = randProgram.RandomCode(randomCodeSize);
       _stack.Push(p);
     }
   }
 }
 
-internal class IntegerRand : Instruction {
-  internal Random Rng;
 
-  internal IntegerRand() {
-    Rng = new Random();
-  }
+// internal class IntegerRand : Instruction {
+//   internal Random Rng;
 
-  public void Execute(Interpreter inI) {
-    int range = (inI._maxRandomInt - inI._minRandomInt) / inI._randomIntResolution;
-    int randInt = (Rng.Next(range) * inI._randomIntResolution) + inI._minRandomInt;
-    inI.IntStack().Push(randInt);
-  }
-}
+//   internal IntegerRand() {
+//     Rng = new Random();
+//   }
 
-// internal class FloatTan : UnaryFloatInstruction
-// {
-//   internal override float UnaryOperator(float inValue)
-//   {
-//     // Test for overflow
-//     float result = (float)Math.Tan(inValue);
-//     if (float.IsInfinity(result) && result > 0)
-//     {
-//       return float.MaxValue;
-//     }
-//     if (float.IsInfinity(result) && result < 0)
-//     {
-//       return (1.0f - float.MaxValue);
-//     }
-//     if (float.IsNaN(result))
-//     {
-//       return 0.0f;
-//     }
-//     return result;
+//   public void Execute(Interpreter inI) {
+//     int range = (inI._maxRandomInt - inI._minRandomInt) / inI._randomIntResolution;
+//     int randInt = (Rng.Next(range) * inI._randomIntResolution) + inI._minRandomInt;
+//     inI.IntStack().Push(randInt);
 //   }
 // }
 
-internal class FloatRand : Instruction {
-  internal Random Rng;
+// internal class FloatRand : Instruction {
+//   internal Random Rng;
 
-  internal FloatRand() {
-    Rng = new Random();
-  }
+//   internal FloatRand() {
+//     Rng = new Random();
+//   }
 
-  public void Execute(Interpreter inI) {
-    float range = (inI._maxRandomFloat - inI._minRandomFloat) / inI._randomFloatResolution;
-    float randFloat = ((float)Rng.NextDouble() * range * inI._randomFloatResolution) + inI._minRandomFloat;
-    inI.FloatStack().Push(randFloat);
-  }
-}
+//   public void Execute(Interpreter inI) {
+//     float range = (inI._maxRandomFloat - inI._minRandomFloat) / inI._randomFloatResolution;
+//     float randFloat = ((float)Rng.NextDouble() * range * inI._randomFloatResolution) + inI._minRandomFloat;
+//     inI.FloatStack().Push(randFloat);
+//   }
+// }
 
-internal class BoolRand : Instruction {
-  internal Random Rng;
+// internal class BoolRand : Instruction {
+//   internal Random Rng;
 
-  internal BoolRand() {
-    Rng = new Random();
-  }
+//   internal BoolRand() {
+//     Rng = new Random();
+//   }
 
-  public void Execute(Interpreter inI) {
-    inI.BoolStack().Push(Rng.Next(2) == 1);
-  }
-}
+//   public void Execute(Interpreter inI) {
+//     inI.BoolStack().Push(Rng.Next(2) == 1);
+//   }
+// }
 }

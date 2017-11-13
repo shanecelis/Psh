@@ -9,6 +9,7 @@
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
+
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
@@ -54,6 +55,7 @@ public abstract class PushGP : GA {
   protected internal int _finalSimplifications;
 
   protected internal string _targetFunctionString;
+  RandomProgram randProgram = new RandomProgram();
 
   /// <exception cref="System.Exception"/>
   protected internal override void InitFromParameters() {
@@ -157,8 +159,15 @@ public abstract class PushGP : GA {
     }
     _interpreter = (Interpreter)iObject;
     // XXX This isn't a program.
-    _interpreter.SetInstructions(new Program(GetParam("instruction-set")));
-    _interpreter.SetRandomParameters(minRandomInt, maxRandomInt, randomIntResolution, minRandomFloat, maxRandomFloat, randomFloatResolution, _maxRandomCodeSize, _maxPointsInProgram);
+    // _interpreter.randCode.SetInstructions(_interpreter, new Program(GetParam("instruction-set")));
+    _interpreter.randInt.min = minRandomInt;
+    _interpreter.randInt.max = maxRandomInt;
+    _interpreter.randInt.resolution = randomIntResolution;
+    _interpreter.randFloat.min = minRandomFloat;
+    _interpreter.randFloat.max = maxRandomFloat;
+    _interpreter.randFloat.resolution = randomFloatResolution;
+    _interpreter.randCode.maxSize = _maxRandomCodeSize;
+    _interpreter.execS._maxPointsInProgram = _maxPointsInProgram;
     // Frame mode and input pusher class
     // string framemode = GetParam("push-frame-mode", true);
     string inputpusherClass = GetParam("inputpusher-class", true);
@@ -202,14 +211,14 @@ public abstract class PushGP : GA {
     }
     Print("Node Selection Mode: " + _nodeSelectionMode);
     Print("\n");
-    Print("Instructions: " + _interpreter.GetInstructionsString() + "\n");
+    Print("Instructions: " + _interpreter.randCode.randProgram.GetInstructionsString(_interpreter) + "\n");
     Print("\n");
   }
 
   protected internal override void InitIndividual(GAIndividual inIndividual) {
     PushGPIndividual i = (PushGPIndividual)inIndividual;
     int randomCodeSize = Rng.Next(_maxRandomCodeSize) + 2;
-    Program p = _interpreter.RandomCode(randomCodeSize);
+    Program p = _interpreter.randCode.randProgram.RandomCode(randomCodeSize);
     i.SetProgram(p);
   }
 
@@ -435,9 +444,9 @@ public abstract class PushGP : GA {
     }
     object newtree;
     if (newsize == 1) {
-      newtree = _interpreter.RandomAtom();
+      newtree = randProgram.RandomAtom();
     } else {
-      newtree = _interpreter.RandomCode(newsize);
+      newtree = randProgram.RandomCode(newsize);
     }
     if (newsize + totalsize - oldsize <= _maxPointsInProgram) {
       i._program.ReplaceSubtree(which, newtree);

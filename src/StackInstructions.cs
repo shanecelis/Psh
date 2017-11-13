@@ -38,7 +38,7 @@ internal abstract class StackInstruction : Instruction {
 /// Abstract instruction class for instructions which operate on one of the
 /// standard ObjectStacks (code & exec).
 /// </summary>
-internal abstract class ObjectStackInstruction : Instruction {
+public abstract class ObjectStackInstruction : Instruction {
 
   protected internal ObjectStack _stack;
 

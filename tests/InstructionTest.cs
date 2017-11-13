@@ -16,7 +16,7 @@
 
 using NUnit.Framework;
 using Psh;
-namespace Psh.Tests {
+namespace Psh/*.Tests*/ {
 
 /**
  *
@@ -36,7 +36,7 @@ public class InstructionTest
   {
     interpreter = new Interpreter();
     Program instructionList = new Program("( )");
-    interpreter.SetInstructions(instructionList);
+    interpreter.randCode.randProgram.SetInstructions(interpreter, instructionList);
     istack = new IntStack();
     fstack = new FloatStack();
     bstack = new BooleanStack();

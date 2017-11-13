@@ -3,6 +3,7 @@
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
+
 * You may obtain a copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +16,6 @@
 */
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,11 +26,8 @@ public class Interpreter {
   public Dictionary<string, Instruction> _instructions
     = new Dictionary<string, Instruction>();
 
-  protected internal Dictionary<string, Interpreter.AtomGenerator> _generators
-    = new Dictionary<string, Interpreter.AtomGenerator>();
-
-  public List<Interpreter.AtomGenerator> _randomGenerators
-    = new List<Interpreter.AtomGenerator>();
+  protected internal Dictionary<string, AtomGenerator> _generators
+    = new Dictionary<string, AtomGenerator>();
 
   protected internal Psh.IntStack         _intStack   = new Psh.IntStack();
 
@@ -55,27 +52,15 @@ public class Interpreter {
 
   // These parameters seem weird to have in the interpreter.
 
-  protected internal int   _maxRandomInt;
-
-  protected internal int   _minRandomInt;
-
-  protected internal int   _randomIntResolution;
-
-  protected internal float _maxRandomFloat;
-
-  protected internal float _minRandomFloat;
-
-  protected internal float _randomFloatResolution;
-
-  protected internal int   _maxRandomCodeSize;
-
-  protected internal int   _maxPointsInProgram;
-
   // XXX This value needs to be set at the beginning somehow.
   // Or setting it is just more complicated.
   public bool caseSensitive = false;
 
-  protected internal Random Rng = new Random();
+  internal FloatAtomGenerator randFloat;
+  internal IntAtomGenerator randInt;
+  internal BoolAtomGenerator randBool;
+  public RandomPushCode randCode;
+  internal ExecS execS;
 
   // XXX What is the input stack and pusher really for?
   protected internal InputPusher _inputPusher = new InputPusher();
@@ -142,6 +127,10 @@ public class Interpreter {
     // don't believe there's a nice way just turning off Java's over- and
     // under-flow checking.
 
+    _generators["float.erc"] = randFloat = new Interpreter.FloatAtomGenerator();
+    _generators["integer.erc"] = randInt = new Interpreter.IntAtomGenerator();
+    _generators["boolean.erc"] = randBool = new Interpreter.BoolAtomGenerator();
+
     DefineInstruction("integer.-", (int a, int b) => unchecked(a - b));
     // DefineInstruction("integer./", (int a, int b) => { return (b != 0 ? a / b : 0); } );
     DefineInstruction("integer./", (int a, int b) => unchecked(b != 0 ? (a / b) : 0));
@@ -162,7 +151,7 @@ public class Interpreter {
     DefineInstruction("integer.ln", (int a) => unchecked((int) Math.Log(a)));
     DefineInstruction("integer.fromfloat", (float a) => (int) a);
     DefineInstruction("integer.fromboolean", (bool a) => a ? 1 : 0);
-    DefineInstruction("integer.rand", new IntegerRand());
+    DefineInstruction("integer.rand", () => randInt.GenerateT());
 
     DefineInstruction("float.+", (float a, float b) => unchecked(a + b));
     DefineInstruction("float.-", (float a, float b) => unchecked(a - b));
@@ -185,7 +174,7 @@ public class Interpreter {
     DefineInstruction("float.ln", (float a) => unchecked((float) Math.Log(a)));
     DefineInstruction("float.frominteger", (int a) => (float) a);
     DefineInstruction("float.fromboolean", (bool a) => a ? 1f : 0f);
-    DefineInstruction("float.rand", new FloatRand());
+    DefineInstruction("float.rand", () => randFloat.GenerateT());
     DefineInstruction("float.define", (float i, string name) => { DefineConstant(name, i); });
 
     DefineInstruction("boolean.=", (bool a, bool b) => a == b);
@@ -195,18 +184,19 @@ public class Interpreter {
     DefineInstruction("boolean.xor", (bool a, bool b) => a ^ b);
     DefineInstruction("boolean.frominteger", (int a) => a != 0);
     DefineInstruction("boolean.fromfloat", (float a) => a != 0f);
-    DefineInstruction("boolean.rand", new BoolRand());
+    DefineInstruction("boolean.rand", () => randBool.GenerateT());
     DefineInstruction("boolean.define", (bool b, string name) => { DefineConstant(name, b); });
 
     DefineInstruction("name.=", (string a, string b) => a == b);
 
     DefineInstruction("code.quote", new Quote());
+    DefineInstruction("code.rand", randCode = new RandomPushCode(_codeStack));
     DefineInstruction("code.fromboolean", new CodeFromBoolean());
     DefineInstruction("code.frominteger", new CodeFromInteger());
     DefineInstruction("code.fromfloat", new CodeFromFloat());
     DefineInstruction("code.noop", new ExecNoop());
     DefineInstruction("exec.k", new ExecK(_execStack));
-    DefineInstruction("exec.s", new ExecS(_execStack, _maxPointsInProgram));
+    DefineInstruction("exec.s", execS = new ExecS(_execStack, 100/* default max points in program */));
     DefineInstruction("exec.y", new ExecY(_execStack));
     DefineInstruction("exec.yield", new ExecYield());
     DefineInstruction("exec.noop", new ExecNoop());
@@ -220,7 +210,6 @@ public class Interpreter {
     DefineInstruction("exec.=", new ObjectEquals(_execStack));
     DefineInstruction("code.if", new IF(_codeStack));
     DefineInstruction("exec.if", new IF(_execStack));
-    DefineInstruction("code.rand", new RandomPushCode(_codeStack));
     DefineInstruction("exec.rand", new RandomPushCode(_execStack));
     DefineInstruction("true", new Constant<bool>(true));
     DefineInstruction("false", new Constant<bool>(false));
@@ -229,9 +218,6 @@ public class Interpreter {
     DefineInstruction("input.inallrev", new InputInRev(_inputStack));
     DefineInstruction("input.stackdepth", new Depth(_inputStack));
     // What's the difference between generators and instructions?
-    // It seems like 
-    _generators["float.erc"] = new Interpreter.FloatAtomGenerator();
-    _generators["integer.erc"] = new Interpreter.IntAtomGenerator();
   }
 
   // XXX What are frames?
@@ -261,108 +247,16 @@ public class Interpreter {
   /// be placed in the instruction set.
   /// </param>
   /// <exception cref="Sharpen.Exception"/>
-  public void SetInstructions(Program inInstructionList) {
-    _randomGenerators.Clear();
-    for (int n = 0; n < inInstructionList.Size(); n++) {
-      object o = inInstructionList.DeepPeek(n);
-      string name = null;
-      if (o is Instruction) {
-        if (_instructions.Keys.Contains(o))
-          break;
-      } else {
-        if (o is string) {
-          name = (string)o;
-        } else {
-          throw new Exception("Instruction list must contain a list of Push instruction names only");
-        }
-      }
-      // Check for registered
-      // I don't understand this "registered.X" bit.
-      if (name.IndexOf("registered.") == 0) {
-        string registeredType = SharpenMinimal.Runtime.Substring(name, 11);
-        if (   !registeredType.Equals("integer")
-            && !registeredType.Equals("float")
-            && !registeredType.Equals("boolean")
-            && !registeredType.Equals("exec")
-            && !registeredType.Equals("code")
-            && !registeredType.Equals("name")
-            && !registeredType.Equals("input")
-            // && !registeredType.Equals("frame")
-               ) {
-          Console.Error.WriteLine("Unknown instruction \"" + name + "\" in instruction set");
-        } else {
-          // Legal stack type, so add all generators matching
-          // registeredType to _randomGenerators.
-          // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
-          // for (int i = 0; i < keys.Length; i++)
-          // {
-          //   string key = (string)keys[i];
-          foreach (string key in _instructions.Keys) {
-            // So we're searching for anything with a type prefix.
-            if (key.IndexOf(registeredType) == 0) {
-              Interpreter.AtomGenerator g = _generators[key];
-              _randomGenerators.Add(g);
-            }
-          }
-          if (registeredType.Equals("boolean")) {
-            var t = _generators["true"];
-            _randomGenerators.Add(t);
-            var f = _generators["false"];
-            _randomGenerators.Add(f);
-          }
-          if (registeredType.Equals("integer")) {
-            var g = _generators["integer.erc"];
-            _randomGenerators.Add(g);
-          }
-          if (registeredType.Equals("float")) {
-            var g = _generators["float.erc"];
-            _randomGenerators.Add(g);
-          }
-        }
-      } else {
-        if (name.IndexOf("input.makeinputs") == 0) {
-          string strnum = SharpenMinimal.Runtime.Substring(name, 16);
-          int num = System.Convert.ToInt32(strnum);
-          for (int i = 0; i < num; i++) {
-            DefineInstruction("input.in" + i, new InputInN(i));
-            var g = _generators["input.in" + i];
-            _randomGenerators.Add(g);
-          }
-        } else {
-          var g = _generators[name];
-          if (g == null) {
-            throw new Exception("Unknown instruction \"" + name + "\" in instruction set");
-          } else {
-            _randomGenerators.Add(g);
-          }
-        }
-      }
-    }
-  }
-
-  /*
-    Provide some regex patterns to white list the instructions.
-   */
-  public void SetInstructions(params string[] patterns) {
-    _randomGenerators.Clear();
-    foreach (var pattern in patterns) {
-      var regex = new Regex(pattern);
-      foreach (var instructionName in _instructions.Keys.Where(k => regex.IsMatch(k))) {
-        _randomGenerators.Add(_generators[instructionName]);
-      }
-    }
-  }
 
   /*
     Define a new instruction and add it to the random generators.
    */
-  public void AddInstruction(string inName, Instruction inInstruction) {
-    inName = InstructionCase(inName);
-    var iag = new Interpreter.InstructionAtomGenerator(inName);
-    _instructions[inName] = inInstruction;
-    _generators[inName] = iag;
-    _randomGenerators.Add(iag);
-  }
+  // public void AddInstruction(string inName, Instruction inInstruction) {
+  //   // inName = InstructionCase(inName);
+  //   _instructions[inName] = inInstruction;
+  //   _generators[inName] = new Interpreter.InstructionAtomGenerator(inName);
+  //   // randCode._randomGenerators[inName] = (iag);
+  // }
 
   public void DefineConstant<T>(string inName, T value) {
     DefineInstruction(inName, new Constant<T>(value));
@@ -434,7 +328,7 @@ public class Interpreter {
   }
 
   public void DefineInstruction(string inName, Instruction inInstruction) {
-    inName = InstructionCase(inName);
+    // inName = InstructionCase(inName);
     _instructions[inName] = inInstruction;
     _generators[inName] = new Interpreter.InstructionAtomGenerator(inName);
   }
@@ -449,29 +343,6 @@ public class Interpreter {
     DefineInstruction(inTypeName + ".shove",      new Shove(inStack));
     DefineInstruction(inTypeName + ".yank",       new Yank(inStack));
     DefineInstruction(inTypeName + ".yankdup",    new YankDup(inStack));
-  }
-
-  /// <summary>Sets the parameters for the ERCs.</summary>
-  /// <param name="minRandomInt"/>
-  /// <param name="maxRandomInt"/>
-  /// <param name="randomIntResolution"/>
-  /// <param name="minRandomFloat"/>
-  /// <param name="maxRandomFloat"/>
-  /// <param name="randomFloatResolution"/>
-  public void SetRandomParameters(int minRandomInt, int maxRandomInt,
-                                  int randomIntResolution,
-                                  float minRandomFloat, float maxRandomFloat,
-                                  float randomFloatResolution,
-                                  int maxRandomCodeSize,
-                                  int maxPointsInProgram) {
-    _minRandomInt = minRandomInt;
-    _maxRandomInt = maxRandomInt;
-    _randomIntResolution = randomIntResolution;
-    _minRandomFloat = minRandomFloat;
-    _maxRandomFloat = maxRandomFloat;
-    _randomFloatResolution = randomFloatResolution;
-    _maxRandomCodeSize = maxRandomCodeSize;
-    _maxPointsInProgram = maxPointsInProgram;
   }
 
   /// <summary>Executes a Push program with no execution limit.</summary>
@@ -542,6 +413,10 @@ public class Interpreter {
       _floatStack.Push((float)inObject);
       return 0;
     }
+    if (inObject is bool) {
+      _boolStack.Push((bool) inObject);
+      return 0;
+    }
     if (inObject is Instruction) {
       ((Instruction)inObject).Execute(this);
       return 0;
@@ -565,16 +440,6 @@ public class Interpreter {
       .Cast<GenericStack<T>>()
       .Where(s => s.stackType == typeof(T))
       .Single();
-    // if (typeof(T) == typeof(int))
-    //   return _intStack as Psh.GenericStack<T>;
-    // else if (typeof(T) == typeof(bool))
-    //   return _boolStack as Psh.GenericStack<T>;
-    // else if (typeof(T) == typeof(float))
-    //   return _floatStack as Psh.GenericStack<T>;
-    // else
-    //   throw new Exception("No stack for type " + typeof(T));
-    // XXX Do the good thing!
-    // return null;
   }
 
   /// <summary>Fetch the active integer stack.</summary>
@@ -673,38 +538,6 @@ public class Interpreter {
     return caseSensitive ? instructionName : instructionName.ToLower();
   }
 
-  /// <summary>Returns a string of all the instructions used in this run.</summary>
-  /// <returns/>
-  public string GetInstructionsString() {
-    // object[] keys = SharpenMinimal.Collections.ToArray(_instructions.Keys);
-    // List<string> strings = new List<string>();
-    // List<string> strings = _instructions.Keys.Where(key => _randomGenerators.Contains(_generators[key])).ToList();
-    List<string> strings = _instructions.Keys.ToList();
-    // string str = string.Empty;
-    // for (int i = 0; i < keys.Length; i++)
-    // {
-    //   string key = (string)keys[i];
-    //   if (_randomGenerators.Contains(_generators[key))]
-    //   {
-    //     strings.Add(key);
-    //   }
-    // }
-
-    // XXX But float.erc isn't an instruction is it?
-    if (_randomGenerators.Contains(_generators["float.erc"])) {
-      strings.Add("float.erc");
-    }
-    if (_randomGenerators.Contains(_generators["integer.erc"])) {
-      strings.Add("integer.erc");
-    }
-    return strings.OrderBy(x => x).Aggregate((current, next) => current + next);
-    // strings.Sort();
-    // foreach (string s in strings)
-    // {
-    //   str += s + " ";
-    // }
-    // return SharpenMinimal.Runtime.Substring(str, 0, str.Length - 1);
-  }
 
   /// <summary>Returns the Instruction whose name is given in instr.</summary>
   /// <param name="instr"/>
@@ -727,118 +560,69 @@ public class Interpreter {
     this._inputPusher = _inputPusher;
   }
 
-  /// <summary>
-  /// Generates a single random Push atom (instruction name, integer, float,
-  /// etc) for use in random code generation algorithms.
-  /// </summary>
-  /// <returns>
-  /// A random atom based on the interpreter's current active
-  /// instruction set.
-  /// </returns>
-  public object RandomAtom() {
-    int index = Rng.Next(_randomGenerators.Count);
-    try {
-      return _randomGenerators[index].Generate(this);
-    } catch (Exception e) {
-      throw new Exception("got bad generator for index " + index + " rg " + _randomGenerators[index], e);
-    }
-  }
-
-  /// <summary>Generates a random Push program of a given size.</summary>
-  /// <param name="inSize">The requested size for the program to be generated.</param>
-  /// <returns>A random Push program of the given size.</returns>
-  public Program RandomCode(int inSize) {
-    Program p = new Program();
-    IList<int> distribution = RandomCodeDistribution(inSize - 1, inSize - 1);
-    for (int i = 0; i < distribution.Count; i++) {
-      int count = distribution[i];
-      if (count == 1) {
-        p.Push(RandomAtom());
-      } else {
-        p.Push(RandomCode(count));
-      }
-    }
-    return p;
-  }
-
-  /// <summary>
-  /// Generates a list specifying a size distribution to be used for random
-  /// code.
-  /// </summary>
-  /// <remarks>
-  /// Generates a list specifying a size distribution to be used for random
-  /// code.
-  /// Note: This method is called "decompose" in the lisp implementation.
-  /// </remarks>
-  /// <param name="inCount">The desired resulting program size.</param>
-  /// <param name="inMaxElements">The maxmimum number of elements at this level.</param>
-  /// <returns>A list of integers representing the size distribution.</returns>
-  public IList<int> RandomCodeDistribution(int inCount, int inMaxElements) {
-    List<int> result = new List<int>();
-    RandomCodeDistribution(result, inCount, inMaxElements);
-    Shuffle(result);
-    return result;
-  }
-
-  // Fisher-Yates-Durstenfeld shuffle
-  //$ cite -ma 1653204 -t excerpt -u \
-  // http://stackoverflow.com/questions/1651619/optimal-linq-query-to-get-a-random-sub-collection-shuffle
-  public static IEnumerable<T> Shuffle<T>(IEnumerable<T> source, Random rng = null) {
-    if (rng == null)
-      rng = new Random();
-    var buffer = source.ToList();
-    for (int i = 0; i < buffer.Count; i++) {
-      int j = rng.Next(i, buffer.Count);
-      yield return buffer[j];
-      buffer[j] = buffer[i];
-    }
-  }
-
-  /// <summary>The recursive worker function for the public RandomCodeDistribution.</summary>
-  /// <param name="ioList">The working list of distribution values to append to.</param>
-  /// <param name="inCount">The desired resulting program size.</param>
-  /// <param name="inMaxElements">The maxmimum number of elements at this level.</param>
-  private void RandomCodeDistribution(IList<int> ioList, int inCount, int inMaxElements) {
-    if (inCount < 1) {
-      return;
-    }
-    int thisSize = inCount < 2 ? 1 : (Rng.Next(inCount) + 1);
-    ioList.Add(thisSize);
-    RandomCodeDistribution(ioList, inCount - thisSize, inMaxElements - 1);
-  }
-
-  public interface AtomGenerator {
-    object Generate(Interpreter inInterpreter);
-  }
-
-  private class InstructionAtomGenerator : Interpreter.AtomGenerator {
-
+  private class InstructionAtomGenerator : AtomGenerator {
     internal string _instruction;
 
     internal InstructionAtomGenerator(string inInstructionName) {
       this._instruction = inInstructionName;
     }
 
-    public object Generate(Interpreter inInterpreter) {
+    public object Generate() {
       return this._instruction;
     }
   }
 
-  private class FloatAtomGenerator : Interpreter.AtomGenerator {
+  internal abstract class RandAtomGenerator<T> : AtomGenerator, AtomGenerator<T> {
+    protected Random Rng = new Random();
 
-    public object Generate(Interpreter inInterpreter) {
-      float r = (float) inInterpreter.Rng.NextDouble() * (inInterpreter._maxRandomFloat - inInterpreter._minRandomFloat);
-      r -= (r % inInterpreter._randomFloatResolution);
-      return r + inInterpreter._minRandomFloat;
+    protected internal T min;
+    protected internal T max;
+    protected internal T resolution;
+
+    public abstract T GenerateT();// { return default(T); }
+
+    public object Generate() {
+      // return null;
+      return GenerateT();
+      // return (object) AtomGenerator<T>.Generate();
     }
   }
 
-  private class IntAtomGenerator : Interpreter.AtomGenerator {
+  internal class FloatAtomGenerator : Interpreter.RandAtomGenerator<float> {
+    public FloatAtomGenerator() {
+      min = 0f;
+      max = 1f;
+      resolution = -1f;
+    }
+    public override float GenerateT() {
+      float r = ((float) Rng.NextDouble()) * (max - min);
+      if (resolution > 0f) 
+        r -= (r % resolution);
+      return r + min;
+    }
+  }
 
-    public object Generate(Interpreter inInterpreter) {
-      int r = inInterpreter.Rng.Next(inInterpreter._maxRandomInt - inInterpreter._minRandomInt);
-      r -= (r % inInterpreter._randomIntResolution);
-      return r + inInterpreter._minRandomInt;
+  internal class BoolAtomGenerator : AtomGenerator<bool>, AtomGenerator {
+    Random Rng = new Random();
+    public bool GenerateT() {
+      return (Rng.Next(2) == 1);
+    }
+    public object Generate() {
+      return (object) GenerateT();
+    }
+  }
+
+  internal class IntAtomGenerator : Interpreter.RandAtomGenerator<int> {
+    public IntAtomGenerator() {
+      min = 0;
+      max = 100;
+      resolution = -1;
+    }
+    public override int GenerateT() {
+      int r = Rng.Next(max - min);
+      if (resolution > 0)
+        r -= (r % resolution);
+      return r + min;
     }
   }
 
@@ -850,4 +634,14 @@ public class Interpreter {
     stop = true;
   }
 }
+
+public interface AtomGenerator {
+  object Generate();
+}
+
+// XXX OMG, I tried to make a new T Generate(), but it's just not worth it.
+public interface AtomGenerator<out T> : AtomGenerator {
+  T GenerateT();
+}
+
 }
