@@ -36,7 +36,7 @@ public class InstructionTest
   {
     interpreter = new Interpreter();
     Program instructionList = new Program("( )");
-    interpreter.randCode.randProgram.SetInstructions(interpreter, instructionList);
+    interpreter.randProgram.SetInstructions(interpreter, instructionList);
     istack = new IntStack();
     fstack = new FloatStack();
     bstack = new BooleanStack();

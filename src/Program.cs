@@ -231,29 +231,17 @@ public class Program : ObjectStack {
   /// </remarks>
   private object Cloneforprogram(object inObject) {
     // Java clone() is useless :(
-    if (inObject is string
+    if (   inObject is string
         || inObject is int
         || inObject is float
         || inObject is Instruction
-        || inObject is bool
-        ) {
+        || inObject is bool) {
       return inObject;
     }
-    // if () {
-    //   return System.Convert.ToInt32((int)inObject);
-    // }
-    // if () {
-    //   return System.Convert.ToSingle((float)inObject);
-    // }
     if (inObject is Psh.Program) {
       return new Psh.Program((Psh.Program)inObject);
     }
-    // if () {
-    //   return inObject;
-    // }
-    // no need to copy; instructions are singletons
     throw new Exception("Not sure how to clone program piece " + inObject);
-    // return null;
   }
 
 

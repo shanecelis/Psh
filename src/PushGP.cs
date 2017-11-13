@@ -55,7 +55,6 @@ public abstract class PushGP : GA {
   protected internal int _finalSimplifications;
 
   protected internal string _targetFunctionString;
-  RandomProgram randProgram = new RandomProgram();
 
   /// <exception cref="System.Exception"/>
   protected internal override void InitFromParameters() {
@@ -211,14 +210,14 @@ public abstract class PushGP : GA {
     }
     Print("Node Selection Mode: " + _nodeSelectionMode);
     Print("\n");
-    Print("Instructions: " + _interpreter.randCode.randProgram.GetInstructionsString(_interpreter) + "\n");
+    Print("Instructions: " + _interpreter.randProgram.GetInstructionsString(_interpreter) + "\n");
     Print("\n");
   }
 
   protected internal override void InitIndividual(GAIndividual inIndividual) {
     PushGPIndividual i = (PushGPIndividual)inIndividual;
     int randomCodeSize = Rng.Next(_maxRandomCodeSize) + 2;
-    Program p = _interpreter.randCode.randProgram.RandomCode(randomCodeSize);
+    Program p = _interpreter.randProgram.RandomCode(randomCodeSize);
     i.SetProgram(p);
   }
 
@@ -444,9 +443,9 @@ public abstract class PushGP : GA {
     }
     object newtree;
     if (newsize == 1) {
-      newtree = randProgram.RandomAtom();
+      newtree = _interpreter.randProgram.RandomAtom();
     } else {
-      newtree = randProgram.RandomCode(newsize);
+      newtree = _interpreter.randProgram.RandomCode(newsize);
     }
     if (newsize + totalsize - oldsize <= _maxPointsInProgram) {
       i._program.ReplaceSubtree(which, newtree);

@@ -30,12 +30,12 @@ public class InterpreterTests {
 
   [Test]
   public void TestSetInstructions() {
-    interpreter.randCode.randProgram.SetInstructions(interpreter);
-    Assert.AreEqual(0, interpreter.randCode.randProgram._randomGenerators.Count);
-    interpreter.randCode.randProgram.SetInstructions(interpreter, @".*\+");
-    Assert.AreEqual(2, interpreter.randCode.randProgram._randomGenerators.Count);
-    interpreter.randCode.randProgram.SetInstructions(interpreter, @"boolean.*");
-    Assert.AreEqual(22, interpreter.randCode.randProgram._randomGenerators.Count);
+    interpreter.randProgram.SetInstructions(interpreter);
+    Assert.AreEqual(0, interpreter.randProgram._randomGenerators.Count);
+    interpreter.randProgram.SetInstructions(interpreter, @".*\+");
+    Assert.AreEqual(2, interpreter.randProgram._randomGenerators.Count);
+    interpreter.randProgram.SetInstructions(interpreter, @"boolean.*");
+    Assert.AreEqual(22, interpreter.randProgram._randomGenerators.Count);
   }
 
   [Test]

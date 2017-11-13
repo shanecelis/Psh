@@ -279,13 +279,18 @@ public abstract class GA {
     // inGenerations below must have !=, not >, since often inGenerations
     // is called at -1
     while (!Terminate() && inGenerations != 0) {
+      // Console.Out.WriteLine("begin gen");
       BeginGeneration();
+      // Console.Out.WriteLine("eval");
       Evaluate();
+      // Console.Out.WriteLine("repro");
       Reproduce();
+      // Console.Out.WriteLine("end gen");
       EndGeneration();
+      // Console.Out.WriteLine("report");
       Print(Report());
       // Checkpoint();
-      System.GC.Collect();
+      // System.GC.Collect();
       _currentPopulation = (_currentPopulation == 0 ? 1 : 0);
       _generationCount++;
       inGenerations--;

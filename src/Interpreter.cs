@@ -26,7 +26,7 @@ public class Interpreter {
   public Dictionary<string, Instruction> _instructions
     = new Dictionary<string, Instruction>();
 
-  protected internal Dictionary<string, AtomGenerator> _generators
+  public Dictionary<string, AtomGenerator> _generators
     = new Dictionary<string, AtomGenerator>();
 
   protected internal Psh.IntStack         _intStack   = new Psh.IntStack();
@@ -56,10 +56,11 @@ public class Interpreter {
   // Or setting it is just more complicated.
   public bool caseSensitive = false;
 
-  internal FloatAtomGenerator randFloat;
-  internal IntAtomGenerator randInt;
+  public FloatAtomGenerator randFloat;
+  public IntAtomGenerator randInt;
   internal BoolAtomGenerator randBool;
-  public RandomPushCode randCode;
+  internal RandomPushCode randCode;
+  public RandomProgram randProgram = new RandomProgram();
   internal ExecS execS;
 
   // XXX What is the input stack and pusher really for?
@@ -394,7 +395,7 @@ public class Interpreter {
     return executed;
   }
 
-  public int ExecuteInstruction(object inObject) {
+  public virtual int ExecuteInstruction(object inObject) {
     if (inObject is Program) {
       Program p = (Program)inObject;
       p.PushAllReverse(_execStack);
@@ -572,12 +573,12 @@ public class Interpreter {
     }
   }
 
-  internal abstract class RandAtomGenerator<T> : AtomGenerator, AtomGenerator<T> {
+  public abstract class RandAtomGenerator<T> : AtomGenerator, AtomGenerator<T> {
     protected Random Rng = new Random();
 
-    protected internal T min;
-    protected internal T max;
-    protected internal T resolution;
+    public T min;
+    public T max;
+    public T resolution;
 
     public abstract T GenerateT();// { return default(T); }
 
@@ -588,7 +589,7 @@ public class Interpreter {
     }
   }
 
-  internal class FloatAtomGenerator : Interpreter.RandAtomGenerator<float> {
+  public class FloatAtomGenerator : Interpreter.RandAtomGenerator<float> {
     public FloatAtomGenerator() {
       min = 0f;
       max = 1f;
@@ -612,7 +613,7 @@ public class Interpreter {
     }
   }
 
-  internal class IntAtomGenerator : Interpreter.RandAtomGenerator<int> {
+  public class IntAtomGenerator : Interpreter.RandAtomGenerator<int> {
     public IntAtomGenerator() {
       min = 0;
       max = 100;

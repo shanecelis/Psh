@@ -78,7 +78,7 @@ public class InspectorInput {
     // Get the available instructions for random code generation
     indexNewline = fileString.IndexOf("\n");
     if (!SharpenMinimal.Extensions.Trim(fileString).Equals(string.Empty)) {
-      _interpreter.randCode.randProgram.SetInstructions(_interpreter, new Program(SharpenMinimal.Extensions.Trim(fileString)));
+      _interpreter.randProgram.SetInstructions(_interpreter, new Program(SharpenMinimal.Extensions.Trim(fileString)));
     }
     // Check for input.inN instructions
     CheckForInputIn(programString);

@@ -680,7 +680,6 @@ internal class IF : ObjectStackInstruction {
 }
 public class RandomPushCode : ObjectStackInstruction {
   protected internal int maxSize = 100;
-  public RandomProgram randProgram = new RandomProgram();
   Random Rng = new Random();
 
   internal RandomPushCode(ObjectStack inStack)
@@ -697,7 +696,7 @@ public class RandomPushCode : ObjectStackInstruction {
       } else {
         randomCodeSize = 2;
       }
-      Program p = randProgram.RandomCode(randomCodeSize);
+      Program p = inI.randProgram.RandomCode(randomCodeSize);
       _stack.Push(p);
     }
   }

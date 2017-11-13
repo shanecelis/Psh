@@ -20,7 +20,7 @@ public class RandomProgram {
   /// A random atom based on the interpreter's current active
   /// instruction set.
   /// </returns>
-  public object RandomAtom() {
+  public virtual object RandomAtom() {
     var generators = _randomGenerators.Values.ToList();
     int index = Rng.Next(generators.Count);
     try {
@@ -175,7 +175,7 @@ public class RandomProgram {
   /*
     Provide some regex patterns to white list the instructions.
    */
-  public void SetInstructions(Interpreter interp, params string[] patterns) {
+  public virtual void SetInstructions(Interpreter interp, params string[] patterns) {
     _randomGenerators.Clear();
     foreach (var pattern in patterns) {
       var regex = new Regex(pattern);
