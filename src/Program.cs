@@ -235,6 +235,7 @@ public class Program : ObjectStack {
         || inObject is int
         || inObject is float
         || inObject is Instruction
+        || inObject is bool
         ) {
       return inObject;
     }
@@ -251,7 +252,8 @@ public class Program : ObjectStack {
     //   return inObject;
     // }
     // no need to copy; instructions are singletons
-    return null;
+    throw new Exception("Not sure how to clone program piece " + inObject);
+    // return null;
   }
 
 
@@ -265,6 +267,12 @@ public class Program : ObjectStack {
     }
     result.Append(")");
     return result.ToString();
+  }
+
+  public override void Push(object inValue) {
+    if (inValue == null)
+      throw new ArgumentNullException("inValue (cannot have null in programs)");
+    base.Push(inValue);
   }
 }
 }

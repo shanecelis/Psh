@@ -162,6 +162,9 @@ public class GenericStack<T> : List<T>, Stack {
     // if (Count >= _maxsize) {
     //   Resize(_maxsize + _blocksize);
     // }
+    // XXX one test actually relies on this behavior.  Moving to Program.
+    // if (inValue == null)
+    //   throw new ArgumentNullException("inValue");
     Add(inValue);
   }
 
