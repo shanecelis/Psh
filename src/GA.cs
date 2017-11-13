@@ -226,7 +226,8 @@ public abstract class GA {
     // _checkpointPrefix = GetParam("checkpoint-prefix", true);
     // _checkpoint = new Psh.Checkpoint(this);
     _populationSize = (int)GetFloatParam("population-size");
-    ResizeAndInitialize(_populationSize);
+    // This sets up the population before I've really setup the instruction set.
+    // ResizeAndInitialize(_populationSize);
     var _outputfile = GetParam("output-file", true);
     if (_outputfile != null) {
       _outputStream = new StreamWriter(_outputfile);
@@ -273,6 +274,8 @@ public abstract class GA {
   /// <returns>true if the the execution of the GA is complete.</returns>
   /// <exception cref="System.Exception"/>
   public virtual bool Run(int inGenerations) {
+    if (_populations == null)
+      ResizeAndInitialize(_populationSize);
     // inGenerations below must have !=, not >, since often inGenerations
     // is called at -1
     while (!Terminate() && inGenerations != 0) {
