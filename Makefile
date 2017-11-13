@@ -43,8 +43,11 @@ $(LIBRARY): $(CSHARP_SOURCE_FILES)
 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library $(CSHARP_SOURCE_FILES) -out:$(LIBRARY)
 
 
-Tests.dll: $(CSHARP_TEST_FILES) $(LIBRARY)
-	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:$(NUNIT_DIR)/nunit.framework.dll -r:$(LIBRARY) $(CSHARP_TEST_FILES) -out:Tests.dll
+# Tests.dll: $(CSHARP_TEST_FILES) $(LIBRARY)
+# 	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:$(NUNIT_DIR)/nunit.framework.dll -r:$(LIBRARY) $(CSHARP_TEST_FILES) -out:Tests.dll
+
+Tests.dll: $(CSHARP_TEST_FILES) $(CSHARP_SOURCE_FILES)
+	$(CSHARP_COMPILER) $(CSHARP_FLAGS) -target:library -r:$(NUNIT_DIR)/nunit.framework.dll $(CSHARP_SOURCE_FILES) $(CSHARP_TEST_FILES) -out:Tests.dll
 
 test: Tests.dll
 	$(MONO) --debug $(NUNIT_DIR)/nunitlite-runner.exe -noresult -noheader Tests.dll
