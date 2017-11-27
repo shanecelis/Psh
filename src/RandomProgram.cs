@@ -4,13 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Psh { 
+namespace Psh {
 
 public class RandomProgram {
 
   internal Random Rng = new Random();
-  public Dictionary<string, AtomGenerator> _randomGenerators
+  protected Dictionary<string, AtomGenerator> _randomGenerators
     = new Dictionary<string, AtomGenerator>();
+
+  protected Dictionary<string, AtomGenerator> availableGenerators;
+
+  public IEnumerable<string> instructions {
+    get { return _randomGenerators.Keys; }
+  }
+
+  public IEnumerable<string> availableInstructions {
+    get { return availableGenerators.Keys; }
+  }
 
   /// <summary>
   /// Generates a single random Push atom (instruction name, integer, float,
@@ -26,7 +36,7 @@ public class RandomProgram {
     try {
       return generators[index].Generate();
     } catch (Exception e) {
-      throw new Exception("got bad generator for index " + index + " rg " + generators[index], e);
+      throw new Exception("got bad generator for index " + index + " with count " + generators.Count + " and " + _randomGenerators.Count(), e);
     }
   }
 
@@ -36,13 +46,8 @@ public class RandomProgram {
   public Program RandomCode(int inSize) {
     Program p = new Program();
     IList<int> distribution = RandomCodeDistribution(inSize - 1, inSize - 1);
-    for (int i = 0; i < distribution.Count; i++) {
-      int count = distribution[i];
-      if (count == 1) {
-        p.Push(RandomAtom());
-      } else {
-        p.Push(RandomCode(count));
-      }
+    foreach(int count in distribution) {
+      p.Push(count == 1 ? RandomAtom() : RandomCode(count));
     }
     return p;
   }
@@ -62,7 +67,7 @@ public class RandomProgram {
   public IList<int> RandomCodeDistribution(int inCount, int inMaxElements) {
     List<int> result = new List<int>();
     RandomCodeDistribution(result, inCount, inMaxElements);
-    Shuffle(result);
+    Shuffle(result, Rng);
     return result;
   }
 
@@ -172,18 +177,42 @@ public class RandomProgram {
     }
   }
 
+  public virtual void LoadInstructions(Interpreter interp) {
+    availableGenerators = new Dictionary<string, AtomGenerator>(interp._generators);
+  }
+
+  public virtual void SetInstructions(Interpreter interp, params string[] patterns) {
+    LoadInstructions(interp);
+    _randomGenerators.Clear();
+    AddInstructions(patterns);
+  }
+
   /*
     Provide some regex patterns to white list the instructions.
    */
-  public virtual void SetInstructions(Interpreter interp, params string[] patterns) {
-    _randomGenerators.Clear();
+  public virtual void AddInstructions(params string[] patterns) {
     foreach (var pattern in patterns) {
       var regex = new Regex(pattern);
       // foreach (var instructionName in interp._instructions.Keys.Where(k => regex.IsMatch(k))) {
       //   _randomGenerators[instructionName] = (interp._generators[instructionName]);
       // }
-      foreach (var instructionName in interp._generators.Keys.Where(k => regex.IsMatch(k))) {
-        _randomGenerators[instructionName] = (interp._generators[instructionName]);
+      foreach (var instructionName in availableGenerators.Keys.Where(k => regex.IsMatch(k))) {
+        _randomGenerators[instructionName] = availableGenerators[instructionName];
+      }
+    }
+  }
+
+  /*
+    Provide some regex patterns to black list the instructions.
+  */
+  public virtual void RemoveInstructions(params string[] patterns) {
+    foreach (var pattern in patterns) {
+      var regex = new Regex(pattern);
+      // foreach (var instructionName in interp._instructions.Keys.Where(k => regex.IsMatch(k))) {
+      //   _randomGenerators[instructionName] = (interp._generators[instructionName]);
+      // }
+      foreach (var instructionName in _randomGenerators.Keys.Where(k => regex.IsMatch(k)).ToList()) {
+        _randomGenerators.Remove(instructionName);
       }
     }
   }

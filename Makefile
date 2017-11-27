@@ -9,7 +9,8 @@ CSHARP_TEST_FILES = $(wildcard tests/*/*/*.cs tests/*/*.cs tests/*.cs)
 # UNITY_HOME=/Applications/Unity5.3.2f1
 UNITY_HOME=/Applications/Unity2017.1.0.f3
 #add needed flags to the compilerCSHARP_FLAGS = -out:$(EXECUTABLE)
-CSHARP_FLAGS = -unsafe -debug -checked- -langversion:4
+# CSHARP_FLAGS = -unsafe -debug -checked- -langversion:4
+CSHARP_FLAGS = -unsafe -debug -checked-
 # -doc:doc.xml
 # CSHARP_FLAGS = -r:$(UNITY_HOME)/Unity.app/Contents/Frameworks/Mono/lib/mono/micro/mscorlib.dll
 
@@ -57,6 +58,9 @@ sample-run: all
 
 install: $(LIBRARY)
 	cp $(LIBRARY) $(INSTALL_LOCATION)
+
+install-ga: $(LIBRARY)
+	cp $(LIBRARY) $(LIBRARY).mdb ../better-ga/lib
 
 doc:
 	doxygen Doxyfile.txt

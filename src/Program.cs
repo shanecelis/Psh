@@ -158,7 +158,10 @@ public class Program : ObjectStack {
   /// <param name="inReplacement">The replacement for the subtree</param>
   /// <returns>True if a replacement was made (the index was valid).</returns>
   public bool ReplaceSubtree(int inIndex, object inReplacement) {
-    if (inIndex < _size) {
+    if (_size == 0) {
+      this.Push(inReplacement);
+      return true;
+    } if (inIndex < _size) {
       this[inIndex] = Cloneforprogram(inReplacement);
       return true;
     } else {

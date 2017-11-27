@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Psh;
 namespace Psh.Tests {
@@ -30,12 +31,20 @@ public class InterpreterTests {
 
   [Test]
   public void TestSetInstructions() {
-    interpreter.randProgram.SetInstructions(interpreter);
-    Assert.AreEqual(0, interpreter.randProgram._randomGenerators.Count);
+    interpreter.randProgram.LoadInstructions(interpreter);
+    Assert.AreEqual(0, interpreter.randProgram.instructions.Count());
     interpreter.randProgram.SetInstructions(interpreter, @".*\+");
-    Assert.AreEqual(2, interpreter.randProgram._randomGenerators.Count);
+    Assert.AreEqual(2, interpreter.randProgram.instructions.Count());
     interpreter.randProgram.SetInstructions(interpreter, @"boolean.*");
-    Assert.AreEqual(22, interpreter.randProgram._randomGenerators.Count);
+    Assert.AreEqual(22, interpreter.randProgram.instructions.Count());
+    interpreter.randProgram.SetInstructions(interpreter, @".*");
+    Assert.AreEqual(145, interpreter.randProgram.instructions.Count());
+    interpreter.randProgram.SetInstructions(interpreter, ".*");
+    Assert.AreEqual(145, interpreter.randProgram.instructions.Count());
+
+
+    interpreter.randProgram.RemoveInstructions(@".*\.rand$");
+    Assert.AreEqual(140, interpreter.randProgram.instructions.Count());
   }
 
   [Test]
