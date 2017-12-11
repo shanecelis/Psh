@@ -396,42 +396,42 @@ public class Interpreter {
   }
 
   public virtual int ExecuteInstruction(object inObject) {
-    if (inObject is Program) {
-      Program p = (Program)inObject;
-      p.PushAllReverse(_execStack);
-      return 0;
+    switch (Type.GetTypeCode(inObject.GetType())) {
+      case TypeCode.Int16:
+      case TypeCode.Int32:
+      case TypeCode.Int64:
+        _intStack.Push((int)inObject);
+        return 0;
+      case TypeCode.Single:
+      case TypeCode.Double:
+        _floatStack.Push((float)inObject);
+        return 0;
+      case TypeCode.Boolean:
+        _boolStack.Push((bool)inObject);
+        return 0;
+      case TypeCode.String:
+        Instruction i;
+        if (_instructions.TryGetValue(InstructionCase((string)inObject), out i)) {
+          i.Execute(this);
+        } else {
+          _nameStack.Push((string)inObject);
+        }
+        return 0;
+      case TypeCode.Object:
+        if (inObject is Program) {
+          Program p = (Program)inObject;
+          p.PushAllReverse(_execStack);
+          return 0;
+        } else if (inObject is Instruction) {
+          ((Instruction)inObject).Execute(this);
+          return 0;
+        } else {
+          throw new Exception("No idea how to execute instruction " + inObject);
+        }
+      default:
+        throw new Exception("No idea how to execute instruction " + inObject);
+        // return -1;
     }
-    if (inObject is int) {
-      _intStack.Push((int)inObject);
-      return 0;
-    }
-    // if (inObject is Number)
-    // {
-    //   _floatStack.Push(((Number)inObject).FloatValue());
-    //   return 0;
-    // }
-    if (inObject is float) {
-      _floatStack.Push((float)inObject);
-      return 0;
-    }
-    if (inObject is bool) {
-      _boolStack.Push((bool) inObject);
-      return 0;
-    }
-    if (inObject is Instruction) {
-      ((Instruction)inObject).Execute(this);
-      return 0;
-    }
-    if (inObject is string) {
-      Instruction i;
-      if (_instructions.TryGetValue(InstructionCase((string)inObject), out i)) {
-        i.Execute(this);
-      } else {
-        _nameStack.Push((string)inObject);
-      }
-      return 0;
-    }
-    return -1;
   }
 
   public GenericStack<T> GetStack<T>() {
