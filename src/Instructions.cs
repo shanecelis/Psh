@@ -31,6 +31,10 @@ public interface IPeekable {
   bool peek { get; set; }
 }
 
+public interface IArity {
+  Type[] parameterTypes { get; }
+}
+
 public class Constant<T> : Instruction {
 
   internal T _value;
@@ -95,8 +99,10 @@ public class NullaryInstruction<T> : Instruction {
   }
 }
 
-public class UnaryAction<T> : Peekable, Instruction {
+public class UnaryAction<T> : Peekable, Instruction, IArity {
   private Action<T> func;
+
+  public Type[] parameterTypes => new [] { typeof(T) };
 
   public UnaryAction(Action<T> func) {
     this.func = func;
@@ -105,13 +111,15 @@ public class UnaryAction<T> : Peekable, Instruction {
   public void Execute(Interpreter inI) {
     GenericStack<T> stack = inI.GetStack<T>();
     if (stack.Size() > 0) {
-    func(! peek ? stack.Pop() : stack.Top());
+      func(! peek ? stack.Pop() : stack.Top());
     }
   }
 }
 
-public class UnaryInstruction<inT,outT> : Peekable, Instruction {
+public class UnaryInstruction<inT,outT> : Peekable, Instruction, IArity {
   private Func<inT,outT> func;
+
+  public Type[] parameterTypes => new [] { typeof(inT) };
 
   public UnaryInstruction(Func<inT,outT> func) {
     this.func = func;
@@ -126,9 +134,10 @@ public class UnaryInstruction<inT,outT> : Peekable, Instruction {
   }
 }
 
-public class BinaryAction<X,Y> : Peekable, Instruction {
+public class BinaryAction<X,Y> : Peekable, Instruction, IArity {
   private Action<X,Y> func;
 
+  public Type[] parameterTypes => new [] { typeof(X), typeof(Y) };
   public BinaryAction(Action<X,Y> func) {
     this.func = func;
   }
@@ -157,9 +166,10 @@ public class BinaryAction<X,Y> : Peekable, Instruction {
   }
 }
 
-public class BinaryInstruction<X,Y,Z> : Peekable, Instruction {
+public class BinaryInstruction<X,Y,Z> : Peekable, Instruction, IArity {
   private Func<X,Y,Z> func;
 
+  public Type[] parameterTypes => new [] { typeof(X), typeof(Y) };
   public BinaryInstruction(Func<X,Y,Z> func) {
     this.func = func;
   }
@@ -187,8 +197,9 @@ public class BinaryInstruction<X,Y,Z> : Peekable, Instruction {
   }
 }
 
-public class TrinaryAction<X,Y,Z> : Peekable, Instruction {
+public class TrinaryAction<X,Y,Z> : Peekable, Instruction, IArity {
   private Action<X,Y,Z> func;
+  public Type[] parameterTypes => new [] { typeof(X), typeof(Y), typeof(Z) };
   public TrinaryAction(Action<X,Y,Z> func) {
     this.func = func;
   }
@@ -221,8 +232,9 @@ public class TrinaryAction<X,Y,Z> : Peekable, Instruction {
   }
 }
 
-public class TrinaryInsruction<X,Y,Z,W> : Peekable, Instruction {
+public class TrinaryInsruction<X,Y,Z,W> : Peekable, Instruction, IArity {
   private Func<X,Y,Z,W> func;
+  public Type[] parameterTypes => new [] { typeof(X), typeof(Y), typeof(Z) };
   public TrinaryInsruction(Func<X,Y,Z,W> func) {
     this.func = func;
   }
@@ -517,17 +529,18 @@ internal class ExecDoTimes : ObjectStackInstruction {
     if (_stack.Size() > 0 && istack.Size() > 0) {
       if (istack.Top() > 0) {
         object bodyObj = _stack.Pop();
-        if (bodyObj is Program) {
-          // insert integer.pop in front of program
-          ((Program)bodyObj).Shove("integer.pop", ((Program)bodyObj)._size);
-        } else {
+        // XXX This conditional broke anything that had the form 3 exec.do*times (<integer> ...)
+        // if (bodyObj is Program) {
+        //   // insert integer.pop in front of program
+        //   ((Program)bodyObj).Shove("integer.pop", ((Program)bodyObj)._size);
+        // } else {
           // create a new program with integer.pop in front of
           // the popped object
           Program newProgram = new Program();
           newProgram.Push("integer.pop");
           newProgram.Push(bodyObj);
           bodyObj = newProgram;
-        }
+        // }
         int stop = istack.Pop() - 1;
         try {
           Program doRangeMacroProgram = new Program();

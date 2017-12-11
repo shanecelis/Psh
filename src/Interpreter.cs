@@ -58,7 +58,7 @@ public class Interpreter {
 
   public FloatAtomGenerator randFloat;
   public IntAtomGenerator randInt;
-  internal BoolAtomGenerator randBool;
+  public BoolAtomGenerator randBool;
   internal RandomPushCode randCode;
   public RandomProgram randProgram = new RandomProgram();
   internal ExecS execS;
@@ -603,7 +603,7 @@ public class Interpreter {
     }
   }
 
-  internal class BoolAtomGenerator : AtomGenerator<bool>, AtomGenerator {
+  public class BoolAtomGenerator : AtomGenerator<bool>, AtomGenerator {
     Random Rng = new Random();
     public bool GenerateT() {
       return (Rng.Next(2) == 1);

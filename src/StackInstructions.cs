@@ -42,7 +42,7 @@ public abstract class ObjectStackInstruction : Instruction {
 
   protected internal ObjectStack _stack;
 
-  internal ObjectStackInstruction(ObjectStack inStack) {
+  protected ObjectStackInstruction(ObjectStack inStack) {
     _stack = inStack;
   }
 

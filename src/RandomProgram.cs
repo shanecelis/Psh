@@ -243,6 +243,7 @@ public class RandomProgram {
     //   strings.Add("integer.erc");
     // }
     // return strings.OrderBy(x => x).Aggregate((current, next) => current + next);
+    // XXX The performance for this sucks.  Replace it.
     if (strings.Any())
       return strings.OrderBy(x => x).Aggregate((current, next) => current + " " + next);
     else
