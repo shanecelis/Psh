@@ -18,6 +18,8 @@ public class RandomProgram {
     get { return _randomGenerators.Keys; }
   }
 
+  public IEnumerable<AtomGenerator> generators => _randomGenerators.Values;
+
   public IEnumerable<string> availableInstructions {
     get { return availableGenerators.Keys; }
   }

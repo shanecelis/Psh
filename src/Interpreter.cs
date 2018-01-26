@@ -23,28 +23,21 @@ namespace Psh {
 /// <summary>The Push language interpreter.</summary>
 public class Interpreter {
 
-  public Dictionary<string, Instruction> _instructions
-    = new Dictionary<string, Instruction>();
+  public Dictionary<string, Instruction> _instructions  = new Dictionary<string, Instruction>();
 
-  public Dictionary<string, AtomGenerator> _generators
-    = new Dictionary<string, AtomGenerator>();
+  public Dictionary<string, AtomGenerator> _generators  = new Dictionary<string, AtomGenerator>();
 
-  protected internal Psh.IntStack         _intStack   = new Psh.IntStack();
-
-  protected internal Psh.FloatStack       _floatStack = new Psh.FloatStack();
-
-  protected internal BooleanStack         _boolStack  = new BooleanStack();
-
-  protected internal ObjectStack          _codeStack  = new ObjectStack();
-
-  protected internal GenericStack<string> _nameStack  = new GenericStack<string>();
-
-  protected internal ObjectStack          _execStack  = new ObjectStack();
-
-  protected internal ObjectStack          _inputStack = new ObjectStack();
+  protected internal Psh.IntStack         _intStack     = new Psh.IntStack();
+  protected internal Psh.FloatStack       _floatStack   = new Psh.FloatStack();
+  protected internal BooleanStack         _boolStack    = new BooleanStack();
+  protected internal ObjectStack          _codeStack    = new ObjectStack();
+  protected internal GenericStack<string> _nameStack    = new GenericStack<string>();
+  protected internal ObjectStack          _execStack    = new ObjectStack();
+  protected internal ObjectStack          _inputStack   = new ObjectStack();
 
   // This kind of looks like it wants to be a map, but I think the order is more important.
   protected internal List<Tuple<string, Stack>> _stacks = new List<Tuple<string, Stack>>();
+  // protected internal GenericStack<OneOf<ProgramTree, ProgramAtom>> _execStack2 = new Generic<OneOf<ProgramTree, ProgramAtom>>();
 
   protected internal int _totalStepsTaken;
 
@@ -59,6 +52,7 @@ public class Interpreter {
   public FloatAtomGenerator randFloat;
   public IntAtomGenerator randInt;
   public BoolAtomGenerator randBool;
+  // This is available so a parameters can be set on it by InspectorInput.cs:92.
   internal RandomPushCode randCode;
   public RandomProgram randProgram = new RandomProgram();
   internal ExecS execS;
@@ -189,6 +183,7 @@ public class Interpreter {
     DefineInstruction("boolean.define", (bool b, string name) => { DefineConstant(name, b); });
 
     DefineInstruction("name.=", (string a, string b) => a == b);
+    DefineInstruction("name.+", (string a, string b) => a + b);
 
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.rand", randCode = new RandomPushCode(_codeStack));
@@ -394,6 +389,36 @@ public class Interpreter {
     _totalStepsTaken += executed;
     return executed;
   }
+
+  /* XXX This is how things could be. */
+  // public virtual int ExecuteInstruction(OneOf<ProgramTree, ProgramAtom> o) {
+  //   o.Switch(
+  //     tree => {
+  //       foreach(var child in tree.children.Reverse()) {
+  //         if (child.isLeaf)
+  //           _execStack.Push(child.Value);
+  //         else
+  //           _execStack.Push(child);
+  //       }
+  //       _execStack.Push(tree.Value);
+  //     },
+  //     atom => {
+  //       atom.Switch(
+  //                   i => _intStack.Push(i),
+  //                   f => _floatStack.Push(f),
+  //                   b => _boolStack.Push(b),
+  //                   s => {
+  //                     Instruction i;
+  //                     if (_instructions.TryGetValue(InstructionCase(s), out i)) {
+  //                       i.Execute(this);
+  //                     } else {
+  //                       _nameStack.Push(s);
+  //                     }
+  //                     return 0;
+  //                   },
+  //                   instr => instr.Execute(this));
+  //     });
+  // }
 
   public virtual int ExecuteInstruction(object inObject) {
     switch (Type.GetTypeCode(inObject.GetType())) {

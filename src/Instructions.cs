@@ -691,6 +691,7 @@ internal class IF : ObjectStackInstruction {
     }
   }
 }
+
 public class RandomPushCode : ObjectStackInstruction {
   protected internal int maxSize = 100;
   Random Rng = new Random();
