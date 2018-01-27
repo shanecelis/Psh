@@ -172,4 +172,15 @@ internal class Depth : StackInstruction {
   }
 }
 
+
+internal class Any : StackInstruction {
+
+  internal Any(Stack inStack) : base(inStack) {}
+
+  public override void Execute(Interpreter inI) {
+    BooleanStack stack = inI.BoolStack();
+    stack.Push(_stack.Size() > 0);
+  }
+}
+
 }

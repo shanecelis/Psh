@@ -62,6 +62,7 @@ public class Interpreter {
 
   // XXX yield flag?
   private bool stop = false;
+  private bool quoting = false;
 
   public Interpreter() {
     // All generators
@@ -184,6 +185,7 @@ public class Interpreter {
 
     DefineInstruction("name.=", (string a, string b) => a == b);
     DefineInstruction("name.+", (string a, string b) => a + b);
+    DefineInstruction("name.quote", () => { quoting = true; });
 
     DefineInstruction("code.quote", new Quote());
     DefineInstruction("code.rand", randCode = new RandomPushCode(_codeStack));
@@ -255,7 +257,8 @@ public class Interpreter {
   // }
 
   public void DefineConstant<T>(string inName, T value) {
-    DefineInstruction(inName, new Constant<T>(value));
+    // DefineInstruction(inName, new Constant<T>(value));
+    DefineInstruction(inName, () => value);
   }
 
   public void DefineInstruction(string inName, Action f) {
@@ -339,6 +342,17 @@ public class Interpreter {
     DefineInstruction(inTypeName + ".shove",      new Shove(inStack));
     DefineInstruction(inTypeName + ".yank",       new Yank(inStack));
     DefineInstruction(inTypeName + ".yankdup",    new YankDup(inStack));
+    DefineInstruction(inTypeName + ".any",        new Any(inStack));
+  }
+
+  /// <summary>Adds instructions for each enum member.</summary>
+  public void DefineEnumConstants(string prefix, Type enumType) {
+    foreach(var name in Enum.GetNames(enumType))
+      DefineConstant<int>(prefix + "." + name.ToLower(), (int) Enum.Parse(enumType, name));
+  }
+
+  public void DefineEnumConstants(Type enumType) {
+    DefineEnumConstants(enumType.Name.ToLower(), enumType);
   }
 
   /// <summary>Executes a Push program with no execution limit.</summary>
@@ -436,10 +450,12 @@ public class Interpreter {
         return 0;
       case TypeCode.String:
         Instruction i;
-        if (_instructions.TryGetValue(InstructionCase((string)inObject), out i)) {
+        // if (_instructions.TryGetValue(InstructionCase((string)inObject), out i)) {
+        if (! quoting && _instructions.TryGetValue((string)inObject, out i)) {
           i.Execute(this);
         } else {
           _nameStack.Push((string)inObject);
+          quoting = false;
         }
         return 0;
       case TypeCode.Object:
@@ -560,9 +576,9 @@ public class Interpreter {
     // return list;
   }
 
-  public string InstructionCase(string instructionName) {
-    return caseSensitive ? instructionName : instructionName.ToLower();
-  }
+  // public string InstructionCase(string instructionName) {
+  //   return caseSensitive ? instructionName : instructionName.ToLower();
+  // }
 
 
   /// <summary>Returns the Instruction whose name is given in instr.</summary>
