@@ -93,9 +93,7 @@ public class NullaryInstruction<T> : Instruction {
 
   public void Execute(Interpreter inI) {
     GenericStack<T> stack = inI.GetStack<T>();
-    if (stack.Size() > 0) {
-      stack.Push(func());
-    }
+    stack.Push(func());
   }
 }
 
