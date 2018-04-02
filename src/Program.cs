@@ -86,6 +86,7 @@ public class Program : ObjectStack {
               else
               push(token);
               */
+              try {
               object number;
               if (token.IndexOf('.') != -1) {
                 number = float.Parse(token);
@@ -93,6 +94,9 @@ public class Program : ObjectStack {
                 number = System.Convert.ToInt32(token);
               }
               Push(number);
+              } catch(FormatException fe) {
+                throw new Exception("Could not convert '" + token + "' to number.", fe);
+              }
             }
           }
         }

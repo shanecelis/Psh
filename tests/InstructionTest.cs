@@ -32,7 +32,7 @@ public class InstructionTest
 
   // Sets things up before each test.
   [SetUp]
-  protected void setUp() 
+  protected void setUp()
   {
     interpreter = new Interpreter();
     Program instructionList = new Program("( )");
@@ -43,7 +43,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testNumberName() 
+  public void testNumberName()
   {
     Program p = new Program("( 1 false 1.0 0 0.0 x true )");
     interpreter.Execute(p);
@@ -62,7 +62,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testPop() 
+  public void testPop()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "boolean.Pop integer.Pop float.Pop )");
@@ -81,7 +81,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testDup() 
+  public void testDup()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "boolean.dup integer.dup float.dup )");
@@ -106,7 +106,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testSwap() 
+  public void testSwap()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "boolean.swap integer.swap float.swap )");
@@ -128,7 +128,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testRot() 
+  public void testRot()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 6.0 true false true " +
                             "boolean.rot integer.rot float.rot )");
@@ -152,7 +152,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testFlush() 
+  public void testFlush()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "boolean.flush integer.flush float.flush )");
@@ -164,7 +164,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testStackDepth() 
+  public void testStackDepth()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "boolean.stackdepth integer.stackdepth float.stackdepth )");
@@ -181,7 +181,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testAdd() 
+  public void testAdd()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "integer.+ float.+ )");
@@ -201,7 +201,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testSub() 
+  public void testSub()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "integer.- float.- )");
@@ -221,7 +221,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testMul() 
+  public void testMul()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "integer.* float.* )");
@@ -253,7 +253,7 @@ public class InstructionTest
 
 
   [Test]
-  public void testDiv() 
+  public void testDiv()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
                             "integer./ float./ )");
@@ -277,7 +277,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testMod() 
+  public void testMod()
   {
     Program p = new Program("( 1 5 3 7.0 5.0 true false " +
                             "integer.% float.% )");
@@ -297,7 +297,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testEq() 
+  public void testEq()
   {
     Program p = new Program("( 1 3 3 7.0 5.0 true false " +
                             "integer.= float.= true false boolean.= false false boolean.=)");
@@ -318,7 +318,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testLt() 
+  public void testLt()
   {
     Program p = new Program("( 1 3 3 5.0 6.0 true false " +
                             "integer.< float.< )");
@@ -337,7 +337,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testGt() 
+  public void testGt()
   {
     Program p = new Program("( 1 3 3 5.0 6.0 true false " +
                             "integer.> float.> )");
@@ -356,7 +356,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testBoolOps() 
+  public void testBoolOps()
   {
     Program p = new Program("( true false boolean.or " +
                             "true false boolean.and true false boolean.xor true boolean.not )");
@@ -373,7 +373,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testInputIndex() 
+  public void testInputIndex()
   {
     Program p = new Program("( 1 input.index 1 input.index 0 input.index " +
                             "0 input.index 2 input.index 2 input.index 1000 input.index -1 input.index)");
@@ -406,7 +406,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testInputStackDepth() 
+  public void testInputStackDepth()
   {
     Program p = new Program("( input.stackdepth )");
     interpreter.InputStack().Push(true);
@@ -424,7 +424,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testInputInAll() 
+  public void testInputInAll()
   {
     Program p = new Program("( input.inall )");
     interpreter.InputStack().Push(true);
@@ -447,7 +447,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testInputInAllRev() 
+  public void testInputInAllRev()
   {
     Program p = new Program("( input.inallrev )");
     interpreter.InputStack().Push(true);
@@ -470,7 +470,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeQuote() 
+  public void testCodeQuote()
   {
     Program p = new Program("( 1 code.quote integer.Pop code.quote code.quote)");
     interpreter.Execute(p);
@@ -487,7 +487,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeEquals() 
+  public void testCodeEquals()
   {
     Program p = new Program("( 1 " +
                             "code.quote integer.Pop code.quote integer.Pop code.= " +
@@ -505,7 +505,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testExecEquals() 
+  public void testExecEquals()
   {
     Program p = new Program("( 1 " +
                             "exec.= code.quote integer.Pop " +
@@ -523,7 +523,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeIf() 
+  public void testCodeIf()
   {
     Program p = new Program("( 1 2 1.0 2.0 " +
                             "code.quote integer.Pop code.quote float.Pop true code.if " +
@@ -540,7 +540,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testExecIf() 
+  public void testExecIf()
   {
     Program p = new Program("( 1 2 1.0 2.0 " +
                             "true exec.if integer.Pop float.Pop " +
@@ -557,7 +557,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testExecDoRange() 
+  public void testExecDoRange()
   {
     Program p = new Program("( 1 3 " +
                             "exec.do*range 2.0 )");
@@ -577,7 +577,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testExecDoTimes() 
+  public void testExecDoTimes()
   {
     Program p = new Program("( 1 3 " +
                             "exec.do*times 2.0 )");
@@ -595,7 +595,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testExecDoCount() 
+  public void testExecDoCount()
   {
     Program p = new Program("( 1 3 " +
                             "exec.do*count 2.0 )");
@@ -616,7 +616,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeDoRange() 
+  public void testCodeDoRange()
   {
     Program p = new Program("( 1 3 " +
                             "code.quote 2.0 code.do*range )");
@@ -636,7 +636,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeDoTimes() 
+  public void testCodeDoTimes()
   {
     Program p = new Program("( 1 3 " +
                             "code.quote 2.0 code.do*times )");
@@ -654,7 +654,7 @@ public class InstructionTest
   }
 
   [Test]
-  public void testCodeDoCount() 
+  public void testCodeDoCount()
   {
     Program p = new Program("( 1 3 " +
                             "code.quote 2.0 code.do*count )");

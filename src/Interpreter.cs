@@ -476,12 +476,16 @@ public class Interpreter {
   }
 
   public GenericStack<T> GetStack<T>() {
+    try {
     return _stacks
       .Select(x => x.Item2)
       .Where(y => y is GenericStack<T>)
       .Cast<GenericStack<T>>()
       .Where(s => s.stackType == typeof(T))
       .Single();
+    } catch (Exception e) {
+      throw new Exception("Unable to get stack for type " + typeof(T), e);
+    }
   }
 
   /// <summary>Fetch the active integer stack.</summary>

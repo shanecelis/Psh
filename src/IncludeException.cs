@@ -16,9 +16,19 @@
 using System;
 
 namespace Psh {
+
 public class IncludeException : Exception {
-  internal IncludeException(string inStr)
-  : base(inStr) {
-  }
+  internal IncludeException(string inStr) : base(inStr) { }
+  internal IncludeException(string inStr, Exception e) : base(inStr, e) { }
 }
+
+/**
+   Thrown by FuncInstruction and ActionInstruction to represent that no value
+   should be returned.
+ */
+public class NoReturnValueException : Exception {
+  internal NoReturnValueException(string message) : base(message) { }
+  internal NoReturnValueException(string message, Exception e) : base(message, e) { }
+}
+
 }

@@ -92,8 +92,10 @@ public class NullaryInstruction<T> : Instruction {
   }
 
   public void Execute(Interpreter inI) {
-    GenericStack<T> stack = inI.GetStack<T>();
-    stack.Push(func());
+    try {
+      GenericStack<T> stack = inI.GetStack<T>();
+      stack.Push(func());
+    } catch (NoReturnValueException) { }
   }
 }
 
@@ -127,7 +129,9 @@ public class UnaryInstruction<inT,outT> : Peekable, Instruction, IArity {
     var istack = inI.GetStack<inT>();
     var ostack = inI.GetStack<outT>();
     if (istack.Size() > 0) {
-      ostack.Push(func(! peek ? istack.Pop() : istack.Top()));
+      try {
+        ostack.Push(func(! peek ? istack.Pop() : istack.Top()));
+      } catch (NoReturnValueException) { }
     }
   }
 }
@@ -185,7 +189,9 @@ public class BinaryInstruction<X,Y,Z> : Peekable, Instruction, IArity {
     X a = ! peek ? istack.Pop() : istack.Top();
     Z c;
     try {
-      c = func(a, b);
+        c = func(a, b);
+    } catch (NoReturnValueException) {
+      return;
     } catch (ArithmeticException) {
       c = default(Z);
     } catch (Exception e) {
@@ -259,6 +265,8 @@ public class TrinaryInsruction<X,Y,Z,W> : Peekable, Instruction, IArity {
     W d;
     try {
       d = func(a, b, c);
+    } catch (NoReturnValueException) {
+      return;
     } catch (ArithmeticException) {
       // Don't care.
       d = default(W);
