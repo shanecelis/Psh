@@ -33,18 +33,19 @@ public class InterpreterTests {
   public void TestSetInstructions() {
     interpreter.randProgram.LoadInstructions(interpreter);
     Assert.AreEqual(0, interpreter.randProgram.instructions.Count());
-    interpreter.randProgram.SetInstructions(interpreter, @".*\+");
-    Assert.AreEqual(2, interpreter.randProgram.instructions.Count());
+    interpreter.randProgram.SetInstructions(interpreter, @".*\+$");
+    // System.Console.WriteLine(string.Join(" ", interpreter.randProgram.instructions));
+    Assert.AreEqual(3, interpreter.randProgram.instructions.Count());
     interpreter.randProgram.SetInstructions(interpreter, @"boolean.*");
-    Assert.AreEqual(22, interpreter.randProgram.instructions.Count());
+    Assert.AreEqual(23, interpreter.randProgram.instructions.Count());
     interpreter.randProgram.SetInstructions(interpreter, @".*");
-    Assert.AreEqual(145, interpreter.randProgram.instructions.Count());
+    Assert.AreEqual(154, interpreter.randProgram.instructions.Count());
     interpreter.randProgram.SetInstructions(interpreter, ".*");
-    Assert.AreEqual(145, interpreter.randProgram.instructions.Count());
+    Assert.AreEqual(154, interpreter.randProgram.instructions.Count());
 
 
     interpreter.randProgram.RemoveInstructions(@".*\.rand$");
-    Assert.AreEqual(140, interpreter.randProgram.instructions.Count());
+    Assert.AreEqual(149, interpreter.randProgram.instructions.Count());
   }
 
   [Test]

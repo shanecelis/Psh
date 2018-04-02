@@ -65,7 +65,7 @@ public class InstructionTest
   public void testPop()
   {
     Program p = new Program("( 1 2 3 4.0 5.0 true false " +
-                            "boolean.Pop integer.Pop float.Pop )");
+                            "boolean.pop integer.pop float.pop )");
     interpreter.Execute(p);
 
     istack.Push(1);
@@ -526,8 +526,8 @@ public class InstructionTest
   public void testCodeIf()
   {
     Program p = new Program("( 1 2 1.0 2.0 " +
-                            "code.quote integer.Pop code.quote float.Pop true code.if " +
-                            "code.quote integer.Pop code.quote float.Pop false code.if )");
+                            "code.quote integer.pop code.quote float.pop true code.if " +
+                            "code.quote integer.pop code.quote float.pop false code.if )");
     interpreter.Execute(p);
 
     istack.Push(1);
@@ -543,8 +543,8 @@ public class InstructionTest
   public void testExecIf()
   {
     Program p = new Program("( 1 2 1.0 2.0 " +
-                            "true exec.if integer.Pop float.Pop " +
-                            "false exec.if integer.Pop float.Pop )");
+                            "true exec.if integer.pop float.pop " +
+                            "false exec.if integer.pop float.pop )");
     interpreter.Execute(p);
 
     istack.Push(1);
