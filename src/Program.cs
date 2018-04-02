@@ -258,7 +258,10 @@ public class Program : ObjectStack {
       if (n != 0) {
         result.Append(" ");
       }
-      result.Append(this[n].ToString());
+      if (this[n] is float)
+        result.Append(((float) this[n]).ToString("0.0##############"));
+      else
+        result.Append(this[n].ToString());
     }
     result.Append(")");
     return result.ToString();

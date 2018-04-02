@@ -56,6 +56,14 @@ public class ProgramTest {
 	}
 
   [Test]
+  public void testProgramToStringAndBack() {
+    var p = new Program("(0 1 0.0 1.0)");
+    Assert.AreEqual("(0 1 0.0 1.0)", p.ToString());
+    var q = new Program(p.ToString());
+    Assert.AreEqual("(0 1 0.0 1.0)", q.ToString());
+  }
+
+  [Test]
 	public void testSubtreeReplace() {
 		Program p = new Program();
 		Program q = new Program();
