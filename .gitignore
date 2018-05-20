@@ -3,3 +3,5 @@
 *.mdb
 *.dll
 NUnit.Framework*
+*/obj/
+*/bin/
